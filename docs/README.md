@@ -31,7 +31,7 @@ If this is not your desired mode, you can do two things:
 - engage another vertical mode (i.e. V/S or FPA)
 - disengage both flight directors, this will force the Autothrust into SPEED mode
 
-**Reminder**: Speed is only controlled properly using thrust when Autothrust is engaged and active, thrust levers are in detent `CLB`, active FMA mode is `SPEED` or `MACH`.
+**Reminder**: Speed is only controlled properly using thrust when Autothrust is engaged and active, thrust levers are in detent CLB, active FMA mode is `SPEED` or `MACH`.
 
 #### `SRS` does not engage on take-off
 
