@@ -225,6 +225,7 @@ impl Aircraft for A320 {
             &self.pressurization_overhead,
             [&self.lgciu1, &self.lgciu2],
         );
+
         self.presets.update(context);
     }
 }

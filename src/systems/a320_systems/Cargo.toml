@@ -9,6 +9,8 @@ uom = "0.32.0"
 rand = "0.8.0"
 nalgebra = "0.25.0"
 ntest = "0.7.2"
+rust-ini = "0.18.0"
+dirs = "4.0.0"
 systems = { path = "../systems" }
 
 [dev-dependencies]

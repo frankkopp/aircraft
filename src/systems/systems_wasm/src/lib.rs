@@ -3,6 +3,7 @@
 pub mod aspects;
 mod electrical;
 mod failures;
+pub mod presets;
 
 use crate::aspects::{Aspect, ExecuteOn, MsfsAspectBuilder};
 use crate::electrical::{auxiliary_power_unit, electrical_buses};
