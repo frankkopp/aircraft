@@ -5,9 +5,9 @@ mod electrical;
 mod fuel;
 pub mod hydraulic;
 mod navigation;
-mod presets;
 mod pneumatic;
 mod power_consumption;
+mod presets;
 
 use self::{
     air_conditioning::A320AirConditioning,
