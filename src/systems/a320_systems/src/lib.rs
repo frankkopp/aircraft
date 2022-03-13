@@ -5,6 +5,7 @@ mod electrical;
 mod fuel;
 pub mod hydraulic;
 mod navigation;
+mod presets;
 mod pneumatic;
 mod power_consumption;
 
@@ -12,6 +13,7 @@ use self::{
     air_conditioning::A320AirConditioning,
     fuel::A320Fuel,
     pneumatic::{A320Pneumatic, A320PneumaticOverheadPanel},
+    presets::A320Presets,
 };
 use electrical::{
     A320Electrical, A320ElectricalOverheadPanel, A320EmergencyElectricalOverheadPanel,
@@ -62,6 +64,7 @@ pub struct A320 {
     hydraulic_overhead: A320HydraulicOverheadPanel,
     autobrake_panel: AutobrakePanel,
     landing_gear: LandingGear,
+    presets: A320Presets,
     pressurization: Pressurization,
     pressurization_overhead: PressurizationOverheadPanel,
     pneumatic: A320Pneumatic,
@@ -106,6 +109,7 @@ impl A320 {
             hydraulic_overhead: A320HydraulicOverheadPanel::new(context),
             autobrake_panel: AutobrakePanel::new(context),
             landing_gear: LandingGear::new(context),
+            presets: A320Presets::new(context),
             pressurization: Pressurization::new(context),
             pressurization_overhead: PressurizationOverheadPanel::new(context),
             pneumatic: A320Pneumatic::new(context),
@@ -221,6 +225,7 @@ impl Aircraft for A320 {
             &self.pressurization_overhead,
             [&self.lgciu1, &self.lgciu2],
         );
+        self.presets.update(context);
     }
 }
 impl SimulationElement for A320 {
@@ -248,6 +253,7 @@ impl SimulationElement for A320 {
         self.hydraulic.accept(visitor);
         self.hydraulic_overhead.accept(visitor);
         self.landing_gear.accept(visitor);
+        self.presets.accept(visitor);
         self.pressurization.accept(visitor);
         self.pressurization_overhead.accept(visitor);
         self.pneumatic.accept(visitor);
