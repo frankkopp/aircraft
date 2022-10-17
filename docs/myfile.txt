@@ -1,0 +1,40 @@
+
+    Directory: C:\Users\frank\Documents\gitprojects\a32nx
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----          18.10.2022    00:17                .ace
+d----          17.10.2022    23:59                .cargo
+d----          18.10.2022    00:17                .github
+d----          18.10.2022    00:17                .vscode
+d----          18.10.2022    00:17                docs
+d----          18.10.2022    00:17                flybywire-aircraft-a320-neo
+d----          18.10.2022    00:17                flybywire-aircraft-a320-neo-lock-highlight
+d----          18.10.2022    00:00                jest
+d----          18.10.2022    00:17                msfs-avionics-mirror
+d----          18.10.2022    00:17                scripts
+d----          18.10.2022    00:17                src
+d----          18.10.2022    00:17                typings
+-a---          17.10.2022    23:59             67 .clang-format
+-a---          17.10.2022    23:59            332 .editorconfig
+-a---          18.10.2022    00:17           1151 .eslintignore
+-a---          18.10.2022    00:17           1979 .eslintrc
+-a---          18.10.2022    00:17            293 .gitattributes
+-a---          18.10.2022    00:17           2382 .gitignore
+-a---          18.10.2022    00:17              0 .npmrc
+-a---          17.10.2022    23:59             10 .prettierignore
+-a---          18.10.2022    00:17          28555 Cargo.lock
+-a---          18.10.2022    00:17            320 Cargo.toml
+-a---          17.10.2022    23:59           3432 CODE_OF_CONDUCT.md
+-a---          18.10.2022    00:17           3598 igniter.config.mjs
+-a---          18.10.2022    00:00            542 jest.config.js
+-a---          18.10.2022    00:00            323 jsconfig.json
+-a---          17.10.2022    23:59          35823 LICENSE
+-a---          18.10.2022    00:17            403 manifest-base-lock-highlight.json
+-a---          18.10.2022    00:17            492 manifest-base.json
+-a---          18.10.2022    00:27              0 myfile.txt
+-a---          18.10.2022    00:17        2535608 package-lock.json
+-a---          18.10.2022    00:17           5726 package.json
+-a---          18.10.2022    00:17           7055 README.md
+-a---          18.10.2022    00:00             60 rust-toolchain.toml
+
