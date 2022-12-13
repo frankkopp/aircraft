@@ -100,8 +100,7 @@ export const FlightWidget = () => {
 
     const avgWind = `${weather.avgWindDir}/${weather.avgWindSpeed}`;
 
-    const eZfwUnround = weights.estZeroFuelWeight / 100;
-    const eZfw = Math.round(eZfwUnround) / 10;
+    const eZfw = Math.round(parseInt(weights.estZeroFuelWeight) / 100) / 10;
     const estimatedZfw = `${eZfw}`;
 
     const fetchData = async () => {
