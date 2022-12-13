@@ -1,5 +1,5 @@
-/* eslint-disable max-len */
-import React, { useState } from 'react';
+/* eslint-disable max-len,no-console */
+import React, { useEffect, useState } from 'react';
 import { IconPlane } from '@tabler/icons';
 import { CloudArrowDown } from 'react-bootstrap-icons';
 import { usePersistentProperty } from '@instruments/common/persistence';
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../Store/store';
 
 import { ScrollableContainer } from '../../UtilComponents/ScrollableContainer';
 import { t } from '../../translation';
+import { MSFSFlightPlanLoader } from '../../Utils/MSFSFlightPlanLoader';
 
 interface InformationEntryProps {
     title: string;
@@ -119,6 +120,17 @@ export const FlightWidget = () => {
 
     const simbriefDataLoaded = isSimbriefDataLoaded();
 
+    const loadFromGame = () => {
+        console.log('Loading flight plan from game');
+        MSFSFlightPlanLoader.LoadFromGame().then(() => {
+            console.log(MSFSFlightPlanLoader.rawData);
+        });
+    };
+
+    useEffect(() => {
+        loadFromGame();
+    }, []);
+
     return (
         <div className="w-1/2">
             <div className="flex flex-row justify-between items-center mb-4">
@@ -223,6 +235,7 @@ export const FlightWidget = () => {
                     fetchData={fetchData}
                 />
             </div>
+
         </div>
     );
 };
