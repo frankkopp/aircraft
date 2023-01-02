@@ -1,7 +1,9 @@
 extern crate systems;
+extern crate systems_wasm;
 
 mod air_conditioning;
 mod electrical;
+mod flypad_backend;
 mod fuel;
 pub mod hydraulic;
 mod navigation;
@@ -17,6 +19,7 @@ use electrical::{
     A320Electrical, A320ElectricalOverheadPanel, A320EmergencyElectricalOverheadPanel,
     APU_START_MOTOR_BUS_TYPE,
 };
+use flypad_backend::FlyPadBackend;
 use hydraulic::{A320Hydraulic, A320HydraulicOverheadPanel};
 use navigation::A320RadioAltimeters;
 use power_consumption::A320PowerConsumption;
@@ -65,6 +68,7 @@ pub struct A320 {
     pressurization_overhead: PressurizationOverheadPanel,
     pneumatic: A320Pneumatic,
     radio_altimeters: A320RadioAltimeters,
+    flypad_backend: FlyPadBackend,
 }
 impl A320 {
     pub fn new(context: &mut InitContext) -> A320 {
@@ -104,6 +108,7 @@ impl A320 {
             pressurization_overhead: PressurizationOverheadPanel::new(context),
             pneumatic: A320Pneumatic::new(context),
             radio_altimeters: A320RadioAltimeters::new(context),
+            flypad_backend: FlyPadBackend::new(context),
         }
     }
 }
@@ -215,6 +220,8 @@ impl Aircraft for A320 {
             &self.pressurization_overhead,
             [self.lgcius.lgciu1(), self.lgcius.lgciu2()],
         );
+
+        self.flypad_backend.update(context);
     }
 }
 impl SimulationElement for A320 {
@@ -244,6 +251,7 @@ impl SimulationElement for A320 {
         self.pressurization.accept(visitor);
         self.pressurization_overhead.accept(visitor);
         self.pneumatic.accept(visitor);
+        self.flypad_backend.accept(visitor);
 
         visitor.visit(self);
     }
