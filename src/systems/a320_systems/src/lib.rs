@@ -1,5 +1,4 @@
 extern crate systems;
-extern crate systems_wasm;
 
 mod air_conditioning;
 mod electrical;
