@@ -8,6 +8,7 @@ members = [
     "src/systems/systems",
     "src/systems/systems_wasm",
     "src/systems/a320_hydraulic_simulation_graphs",
+    "src/systems/a320_flypad_backend",
 ]
 
 [profile.release]

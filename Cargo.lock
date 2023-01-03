@@ -3,6 +3,19 @@
 version = 3
 
 [[package]]
+name = "a320_flypad_backend"
+version = "0.1.0"
+dependencies = [
+ "msfs",
+ "nalgebra",
+ "ntest",
+ "rand",
+ "rstest",
+ "systems",
+ "uom",
+]
+
+[[package]]
 name = "a320_hydraulic_simulation_graphs"
 version = "0.1.0"
 dependencies = [

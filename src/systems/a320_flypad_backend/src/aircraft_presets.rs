@@ -4,11 +4,11 @@
 use msfs::sys::execute_calculator_code;
 use std::ffi::CString;
 
-use crate::flypad_backend::aircraft_procedures::AircraftProcedures;
+use crate::aircraft_procedures::AircraftProcedures;
 
 use systems::simulation::{
-    InitContext, Read, SimulationElement, SimulationElementVisitor, SimulatorReader, SimulatorWriter, UpdateContext,
-    VariableIdentifier, Write,
+    InitContext, Read, SimulationElement, SimulationElementVisitor, SimulatorReader,
+    SimulatorWriter, UpdateContext, VariableIdentifier, Write,
 };
 
 pub struct AircraftPresets {
@@ -35,13 +35,16 @@ impl AircraftPresets {
             test_simvar_id: context.get_identifier("TEST_SIMVAR".to_owned()),
             test_simvar: 0,
 
-            load_aircraft_preset_request_id: context.get_identifier("AIRCRAFT_PRESET_LOAD".to_owned()),
+            load_aircraft_preset_request_id: context
+                .get_identifier("AIRCRAFT_PRESET_LOAD".to_owned()),
             load_aircraft_preset_request: 0,
 
-            progress_aircraft_percent_id: context.get_identifier("AIRCRAFT_PRESET_LOAD_PROGRESS".to_owned()),
+            progress_aircraft_percent_id: context
+                .get_identifier("AIRCRAFT_PRESET_LOAD_PROGRESS".to_owned()),
             progress_aircraft_percent: 0.0,
 
-            progress_aircraft_preset_id: context.get_identifier("AIRCRAFT_PRESET_LOAD_CURRENT_ID".to_owned()),
+            progress_aircraft_preset_id: context
+                .get_identifier("AIRCRAFT_PRESET_LOAD_CURRENT_ID".to_owned()),
             progress_aircraft_preset: 0,
         }
     }
@@ -49,10 +52,23 @@ impl AircraftPresets {
     pub fn update(&mut self, context: &UpdateContext) {
         self.test_simvar += 1;
         if self.test_simvar % 100 == 0 {
-            println!("AircraftPresets TEST = {} ({}ms)", self.test_simvar, context.delta().as_millis());
-            println!("AircraftPresets Loading Preset request {}", self.load_aircraft_preset_request);
-            println!("AircraftPresets Progress Percent {}", self.progress_aircraft_percent);
-            println!("AircraftPresets Progress Preset ID {}", self.progress_aircraft_preset);
+            println!(
+                "AircraftPresets TEST = {} ({}ms)",
+                self.test_simvar,
+                context.delta().as_millis()
+            );
+            println!(
+                "AircraftPresets Loading Preset request {}",
+                self.load_aircraft_preset_request
+            );
+            println!(
+                "AircraftPresets Progress Percent {}",
+                self.progress_aircraft_percent
+            );
+            println!(
+                "AircraftPresets Progress Preset ID {}",
+                self.progress_aircraft_preset
+            );
             println!("AircraftPresets SIM ON GROUND {}", context.is_on_ground());
         }
         if self.test_simvar % 2000 == 0 {
@@ -64,9 +80,17 @@ impl AircraftPresets {
     fn ex_calc_test(&self) -> Option<f64> {
         let mut n = 0.0;
 
-        let code_str = CString::new("(A:EXTERNAL POWER ON:1, BOOL) ! if{ 1 (>K:TOGGLE_EXTERNAL_POWER) }").unwrap();
+        let code_str =
+            CString::new("(A:EXTERNAL POWER ON:1, BOOL) ! if{ 1 (>K:TOGGLE_EXTERNAL_POWER) }")
+                .unwrap();
         unsafe {
-            if execute_calculator_code(code_str.as_ptr(), &mut n, std::ptr::null_mut(), std::ptr::null_mut()) == 1 {
+            if execute_calculator_code(
+                code_str.as_ptr(),
+                &mut n,
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+            ) == 1
+            {
                 Some(n)
             } else {
                 None
@@ -89,8 +113,17 @@ impl SimulationElement for AircraftPresets {
 
     fn write(&self, writer: &mut SimulatorWriter) {
         writer.write(&self.test_simvar_id, self.test_simvar);
-        writer.write(&self.load_aircraft_preset_request_id, self.load_aircraft_preset_request);
-        writer.write(&self.progress_aircraft_percent_id, self.progress_aircraft_percent);
-        writer.write(&self.progress_aircraft_preset_id, self.progress_aircraft_preset);
+        writer.write(
+            &self.load_aircraft_preset_request_id,
+            self.load_aircraft_preset_request,
+        );
+        writer.write(
+            &self.progress_aircraft_percent_id,
+            self.progress_aircraft_percent,
+        );
+        writer.write(
+            &self.progress_aircraft_preset_id,
+            self.progress_aircraft_preset,
+        );
     }
 }

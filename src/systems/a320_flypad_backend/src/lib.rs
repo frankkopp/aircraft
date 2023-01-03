@@ -1,6 +1,8 @@
 // Copyright (c) 2022 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
 
+extern crate systems;
+
 mod aircraft_presets;
 mod aircraft_procedures;
 
@@ -18,7 +20,9 @@ pub struct FlyPadBackend {
 impl FlyPadBackend {
     pub fn new(context: &mut InitContext) -> FlyPadBackend {
         println!("New FlyPadBackEnd");
-        FlyPadBackend { aircraft_presets: AircraftPresets::new(context) }
+        FlyPadBackend {
+            aircraft_presets: AircraftPresets::new(context),
+        }
     }
 
     pub fn update(&mut self, context: &UpdateContext) {
