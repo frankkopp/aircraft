@@ -51,6 +51,7 @@ pub struct A320 {
     pneumatic_overhead: A320PneumaticOverheadPanel,
     electrical_overhead: A320ElectricalOverheadPanel,
     emergency_electrical_overhead: A320EmergencyElectricalOverheadPanel,
+    flypad_backend: FlyPadBackend,
     fuel: A320Fuel,
     engine_1: LeapEngine,
     engine_2: LeapEngine,
@@ -67,7 +68,6 @@ pub struct A320 {
     pressurization_overhead: PressurizationOverheadPanel,
     pneumatic: A320Pneumatic,
     radio_altimeters: A320RadioAltimeters,
-    flypad_backend: FlyPadBackend,
 }
 impl A320 {
     pub fn new(context: &mut InitContext) -> A320 {
@@ -233,6 +233,7 @@ impl SimulationElement for A320 {
         self.apu_overhead.accept(visitor);
         self.electrical_overhead.accept(visitor);
         self.emergency_electrical_overhead.accept(visitor);
+        self.flypad_backend.accept(visitor);
         self.fuel.accept(visitor);
         self.pneumatic_overhead.accept(visitor);
         self.engine_1.accept(visitor);
@@ -250,7 +251,6 @@ impl SimulationElement for A320 {
         self.pressurization.accept(visitor);
         self.pressurization_overhead.accept(visitor);
         self.pneumatic.accept(visitor);
-        self.flypad_backend.accept(visitor);
 
         visitor.visit(self);
     }

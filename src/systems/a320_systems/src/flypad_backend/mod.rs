@@ -4,10 +4,10 @@
 mod aircraft_presets;
 mod aircraft_procedures;
 
-use systems::simulation::{
-    InitContext, Read, SimulationElement, SimulationElementVisitor, SimulatorReader, SimulatorWriter, UpdateContext,
-    VariableIdentifier, Write,
-};
+use systems::simulation::InitContext;
+use systems::simulation::SimulationElement;
+use systems::simulation::SimulationElementVisitor;
+use systems::simulation::UpdateContext;
 
 use self::aircraft_presets::AircraftPresets;
 

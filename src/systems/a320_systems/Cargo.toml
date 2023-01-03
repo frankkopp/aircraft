@@ -10,6 +10,7 @@ rand = "0.8.0"
 nalgebra = "0.25.0"
 ntest = "0.7.2"
 systems = { path = "../systems" }
+msfs = { git = "https://github.com/flybywiresim/msfs-rs", branch = "main" }
 
 [dev-dependencies]
 rstest = "0.10.0"

@@ -1,10 +1,8 @@
 // Copyright (c) 2022 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
 
-#[cfg(not(target_arch = "wasm32"))]
-use crate::msfs::legacy::execute_calculator_code;
-#[cfg(target_arch = "wasm32")]
-use msfs::legacy::execute_calculator_code;
+use msfs::sys::execute_calculator_code;
+use std::ffi::CString;
 
 use crate::flypad_backend::aircraft_procedures::AircraftProcedures;
 
@@ -57,10 +55,23 @@ impl AircraftPresets {
             println!("AircraftPresets Progress Preset ID {}", self.progress_aircraft_preset);
             println!("AircraftPresets SIM ON GROUND {}", context.is_on_ground());
         }
+        if self.test_simvar % 2000 == 0 {
+            println!("Testing Calculator Code");
+            self.ex_calc_test();
+        }
     }
 
-    fn test(&self) {
-        execute_calculator_code::<()>("(A:EXTERNAL POWER ON:1, BOOL) ! if{ 1 (>K:TOGGLE_EXTERNAL_POWER) }");
+    fn ex_calc_test(&self) -> Option<f64> {
+        let mut n = 0.0;
+
+        let code_str = CString::new("(A:EXTERNAL POWER ON:1, BOOL) ! if{ 1 (>K:TOGGLE_EXTERNAL_POWER) }").unwrap();
+        unsafe {
+            if execute_calculator_code(code_str.as_ptr(), &mut n, std::ptr::null_mut(), std::ptr::null_mut()) == 1 {
+                Some(n)
+            } else {
+                None
+            }
+        }
     }
 }
 
