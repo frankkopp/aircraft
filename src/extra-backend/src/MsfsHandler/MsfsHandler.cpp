@@ -8,8 +8,6 @@
 #include "MsfsHandler.h"
 #include "Units.h"
 
-inline Units UNITS{};
-
 // PUBLIC METHODS
 // ===========================
 

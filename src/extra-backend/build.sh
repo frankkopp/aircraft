@@ -45,8 +45,11 @@ clang++ \
   -I "${DIR}/src/LightingPresets" \
   "${DIR}/src/Gauge_Extra_Backend.cpp" \
   "${DIR}/src/MsfsHandler/MsfsHandler.cpp" \
-  "${DIR}/src/MsfsHandler/Module.cpp" \
   "${DIR}/src/MsfsHandler/DataManager.cpp" \
+  "${DIR}/src/MsfsHandler/Variable.cpp" \
+  "${DIR}/src/MsfsHandler/CacheableVariable.cpp" \
+  "${DIR}/src/DataManager/NamedVariable.cpp" \
+  "${DIR}/src/MsfsHandler/Module.cpp" \
   "${DIR}/src/LightingPresets/LightingPresets.cpp"
 
 
