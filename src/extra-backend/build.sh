@@ -20,7 +20,7 @@ pushd "${DIR}/obj"
 # compile c++ code
 clang++ \
   -c \
-  ${CLANG_ARGS} \
+  "${CLANG_ARGS}" \
   -std=c++20 \
   -Wno-unused-command-line-argument \
   -Wno-ignored-attributes \
@@ -40,10 +40,15 @@ clang++ \
   -I "${MSFS_SDK}/WASM/include" \
   -I "${MSFS_SDK}/SimConnect SDK/include" \
   -I "${DIR}/src" \
-  -I "${DIR}/src/Lighting" \
-  -I "${DIR}/src/Aircraft" \
-  -I "${DIR}/src/Pushback" \
-  "${DIR}/src/Gauge_Extra_Backend.cpp"
+  -I "${DIR}/src/lib" \
+  -I "${DIR}/src/MsfsHandler" \
+  -I "${DIR}/src/LightingPresets" \
+  "${DIR}/src/Gauge_Extra_Backend.cpp" \
+  "${DIR}/src/MsfsHandler/MsfsHandler.cpp" \
+  "${DIR}/src/MsfsHandler/Module.cpp" \
+  "${DIR}/src/MsfsHandler/DataManager.cpp" \
+  "${DIR}/src/LightingPresets/LightingPresets.cpp"
+
 
 # restore directory
 popd

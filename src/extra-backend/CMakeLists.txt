@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(flybywire-a32nx-flypad-backend)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(MSFS_SDK "C:\\MSFS SDK")
 
 set(CMAKE_CXX_FLAGS "-c -g -DDEBUG -Wno-unused-command-line-argument -Wno-ignored-attributes -Wno-macro-redefined --sysroot \"${MSFS_SDK}/WASM/wasi-sysroot\" -target wasm32-unknown-wasi -flto -D_MSFS_WASM=1 -D__wasi__ -D_LIBCPP_HAS_NO_THREADS -D_WINDLL -D_MBCS -mthread-model single -fno-exceptions -fms-extensions")
@@ -17,4 +17,6 @@ add_executable(flybywire-a32nx-extra-backend
         src/Gauge_Extra_Backend.cpp
         src/MsfsHandler/MsfsHandler.cpp src/MsfsHandler/MsfsHandler.h
         src/LightingPresets/LightingPresets.cpp src/LightingPresets/LightingPresets.h
-        src/lib/IDGenerator.h)
+        src/MsfsHandler/Module.cpp src/MsfsHandler/Module.h
+        src/MsfsHandler/DataManager.cpp src/MsfsHandler/DataManager.h)
+        src/lib/IDGenerator.h

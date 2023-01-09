@@ -11,12 +11,19 @@
 #define __restrict__
 #endif
 
+#include <iostream>
+
 #include <MSFS/Legacy/gauges.h>
 #include <MSFS/MSFS.h>
 #include <MSFS/MSFS_Render.h>
 #include <SimConnect.h>
 
-#include <iostream>
+#include "LightingPresets/LightingPresets.h"
+#include "MsfsHandler/Module.h"
+#include "MsfsHandler/MsfsHandler.h"
+
+MsfsHandler msfsHandler("Gauge_Extra_Backend");
+LightingPresets lightingPresets(&msfsHandler);
 
 /**
  * Gauge Callback
@@ -29,47 +36,45 @@ __attribute__((export_name("Gauge_Extra_Backend_gauge_callback"))) extern "C" __
 Gauge_Extra_Backend(__attribute__((unused)) FsContext ctx, int service_id, void *pData) {
   switch (service_id) {
   case PANEL_SERVICE_PRE_INSTALL: {
-    std::cout << "EXTRA1: PANEL_SERVICE_PRE_INSTALL" << std::endl;
-    //      return FLYPAD_BACKEND.initialize();
-    return true;
+    //    std::cout << "PANEL_SERVICE_PRE_INSTALL" << std::endl;
+    return msfsHandler.initialize();
   }
   case PANEL_SERVICE_POST_INSTALL: {
-    std::cout << "EXTRA1: PANEL_SERVICE_POST_INSTALL" << std::endl;
+    //    std::cout << "PANEL_SERVICE_POST_INSTALL" << std::endl;
     return true;
   }
   case PANEL_SERVICE_PRE_INITIALIZE: {
-    std::cout << "EXTRA1: PANEL_SERVICE_PRE_INITIALIZE" << std::endl;
+    //    std::cout << "PANEL_SERVICE_PRE_INITIALIZE" << std::endl;
     return true;
   }
   case PANEL_SERVICE_POST_INITIALIZE: {
-    std::cout << "EXTRA1: PANEL_SERVICE_POST_INITIALIZE" << std::endl;
+    //    std::cout << "PANEL_SERVICE_POST_INITIALIZE" << std::endl;
     return true;
   }
   case PANEL_SERVICE_PRE_UPDATE: {
-    std::cout << "EXTRA1: PANEL_SERVICE_PRE_UPDATE" << std::endl;
+    //    std::cout << "PANEL_SERVICE_PRE_UPDATE" << std::endl;
     return true;
   }
   case PANEL_SERVICE_POST_UPDATE: {
-    std::cout << "EXTRA1: PANEL_SERVICE_POST_UPDATE" << std::endl;
+    //    std::cout << "PANEL_SERVICE_POST_UPDATE" << std::endl;
     return true;
   }
   case PANEL_SERVICE_PRE_DRAW: {
-    std::cout << "EXTRA1: PANEL_SERVICE_PRE_DRAW" << std::endl;
-    //      auto drawData = static_cast<sGaugeDrawData*>(pData);
-    //      return FLYPAD_BACKEND.onUpdate(drawData->dt);
-    return true;
+    //    std::cout << "PANEL_SERVICE_PRE_DRAW" << std::endl;
+    auto drawData = static_cast<sGaugeDrawData *>(pData);
+    return msfsHandler.update(drawData);
   }
   case PANEL_SERVICE_POST_DRAW: {
-    std::cout << "EXTRA1: PANEL_SERVICE_POST_DRAW" << std::endl;
+    //    std::cout << "PANEL_SERVICE_POST_DRAW" << std::endl;
     return true;
   }
   case PANEL_SERVICE_PRE_KILL: {
-    std::cout << "EXTRA1: PANEL_SERVICE_PRE_KILL" << std::endl;
-    //      return FLYPAD_BACKEND.shutdown();
+    //    std::cout << "PANEL_SERVICE_PRE_KILL" << std::endl;
+    return msfsHandler.shutdown();
     return true;
   }
   case PANEL_SERVICE_POST_KILL: {
-    std::cout << "EXTRA1: PANEL_SERVICE_POST_KILL" << std::endl;
+    //    std::cout << "PANEL_SERVICE_POST_KILL" << std::endl;
     return true;
   }
   default:
@@ -77,4 +82,3 @@ Gauge_Extra_Backend(__attribute__((unused)) FsContext ctx, int service_id, void 
   }
   return false;
 }
-

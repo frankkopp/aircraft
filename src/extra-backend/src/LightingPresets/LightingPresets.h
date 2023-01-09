@@ -1,13 +1,22 @@
 // Copyright (c) 2022 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
 
-//
-// Created by frank on 09.01.2023.
-//
-
 #ifndef FLYBYWIRE_A32NX_LIGHTINGPRESETS_H
 #define FLYBYWIRE_A32NX_LIGHTINGPRESETS_H
 
-class LightingPresets {};
+#include "MsfsHandler/Module.h"
+
+class MsfsHandler;
+
+class LightingPresets : public Module {
+
+public:
+  explicit LightingPresets(MsfsHandler *msfsHandler);
+  bool initialize() override;
+  bool preUpdate(sGaugeDrawData *pData) override;
+  bool update(sGaugeDrawData *pData) override;
+  bool postUpdate(sGaugeDrawData *pData) override;
+  bool shutdown() override;
+};
 
 #endif // FLYBYWIRE_A32NX_LIGHTINGPRESETS_H
