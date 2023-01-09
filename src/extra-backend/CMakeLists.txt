@@ -11,7 +11,10 @@ include_directories("${MSFS_SDK}/WASM/wasi-sysroot/include")
 include_directories("${MSFS_SDK}/SimConnect SDK/include")
 
 include_directories(src)
+include_directories(src/lib)
 
 add_executable(flybywire-a32nx-extra-backend
-    src/Gauge_Extra_Backend.cpp
-)
+        src/Gauge_Extra_Backend.cpp
+        src/MsfsHandler/MsfsHandler.cpp src/MsfsHandler/MsfsHandler.h
+        src/LightingPresets/LightingPresets.cpp src/LightingPresets/LightingPresets.h
+        src/lib/IDGenerator.h)

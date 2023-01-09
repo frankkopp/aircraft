@@ -20,6 +20,8 @@
 
 /**
  * Gauge Callback
+ * There can by multiple gauges in a single wasm module. Just add another gauge callback function and register it in the
+ * panel.cfg file.
  * @see
  * https://docs.flightsimulator.com/html/Content_Configuration/SimObjects/Aircraft_SimO/Instruments/C_C++_Gauges.htm?rhhlterm=_gauge_callback&rhsearch=_gauge_callback
  */
@@ -68,64 +70,6 @@ Gauge_Extra_Backend(__attribute__((unused)) FsContext ctx, int service_id, void 
   }
   case PANEL_SERVICE_POST_KILL: {
     std::cout << "EXTRA1: PANEL_SERVICE_POST_KILL" << std::endl;
-    return true;
-  }
-  default:
-    break;
-  }
-  return false;
-}
-
-/**
- * Gauge Callback
- * @see
- * https://docs.flightsimulator.com/html/Content_Configuration/SimObjects/Aircraft_SimO/Instruments/C_C++_Gauges.htm?rhhlterm=_gauge_callback&rhsearch=_gauge_callback
- */
-__attribute__((export_name("Gauge_Extra2_Backend_gauge_callback"))) extern "C" __attribute__((unused)) bool
-Gauge_Extra2_Backend(__attribute__((unused)) FsContext ctx, int service_id, void *pData) {
-  switch (service_id) {
-  case PANEL_SERVICE_PRE_INSTALL: {
-    std::cout << "EXTRA2: PANEL_SERVICE_PRE_INSTALL" << std::endl;
-    //      return FLYPAD_BACKEND.initialize();
-    return true;
-  }
-  case PANEL_SERVICE_POST_INSTALL: {
-    std::cout << "EXTRA2: PANEL_SERVICE_POST_INSTALL" << std::endl;
-    return true;
-  }
-  case PANEL_SERVICE_PRE_INITIALIZE: {
-    std::cout << "EXTRA2: PANEL_SERVICE_PRE_INITIALIZE" << std::endl;
-    return true;
-  }
-  case PANEL_SERVICE_POST_INITIALIZE: {
-    std::cout << "EXTRA2: PANEL_SERVICE_POST_INITIALIZE" << std::endl;
-    return true;
-  }
-  case PANEL_SERVICE_PRE_UPDATE: {
-    std::cout << "EXTRA2: PANEL_SERVICE_PRE_UPDATE" << std::endl;
-    return true;
-  }
-  case PANEL_SERVICE_POST_UPDATE: {
-    std::cout << "EXTRA2: PANEL_SERVICE_POST_UPDATE" << std::endl;
-    return true;
-  }
-  case PANEL_SERVICE_PRE_DRAW: {
-    std::cout << "EXTRA2: PANEL_SERVICE_PRE_DRAW" << std::endl;
-    //      auto drawData = static_cast<sGaugeDrawData*>(pData);
-    //      return FLYPAD_BACKEND.onUpdate(drawData->dt);
-    return true;
-  }
-  case PANEL_SERVICE_POST_DRAW: {
-    std::cout << "EXTRA2: PANEL_SERVICE_POST_DRAW" << std::endl;
-    return true;
-  }
-  case PANEL_SERVICE_PRE_KILL: {
-    std::cout << "EXTRA2: PANEL_SERVICE_PRE_KILL" << std::endl;
-    //      return FLYPAD_BACKEND.shutdown();
-    return true;
-  }
-  case PANEL_SERVICE_POST_KILL: {
-    std::cout << "EXTRA2: PANEL_SERVICE_POST_KILL" << std::endl;
     return true;
   }
   default:
