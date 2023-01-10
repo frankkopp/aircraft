@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+
 #include <MSFS/Legacy/gauges.h>
 
 class Units {
@@ -23,6 +26,25 @@ public:
   ENUM Celsius = get_units_enum("Celsius");
   ENUM Hours = get_units_enum("Hours");
   ENUM Seconds = get_units_enum("Seconds");
+
+  std::map<ENUM, std::string> unitStrings = {
+    {Percent,    "Percent"},
+    {Number,     "Number"},
+    {Bool,       "Bool"},
+    {Pounds,     "Pounds"},
+    {Psi,        "Psi"},
+    {Pph,        "Pph"},
+    {Gallons,    "Gallons"},
+    {Feet,       "Feet"},
+    {FootPounds, "FootPounds"},
+    {FeetMin,    "FeetMin"},
+    {FeetSec,    "FeetSec"},
+    {Mach,       "Mach"},
+    {Millibars,  "Millibars"},
+    {Celsius,    "Celsius"},
+    {Hours,      "Hours"},
+    {Seconds,    "Seconds"},
+  };
 };
 
 inline Units UNITS{};

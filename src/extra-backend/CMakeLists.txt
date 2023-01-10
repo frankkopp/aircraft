@@ -19,6 +19,5 @@ add_executable(flybywire-a32nx-extra-backend
         src/LightingPresets/LightingPresets.cpp src/LightingPresets/LightingPresets.h
         src/MsfsHandler/Module.cpp src/MsfsHandler/Module.h
         src/DataManager/DataManager.cpp src/DataManager/DataManager.h
-        src/DataManager/Variable.cpp src/DataManager/Variable.h
         src/DataManager/CacheableVariable.cpp src/DataManager/CacheableVariable.h
         src/DataManager/NamedVariable.cpp src/DataManager/NamedVariable.h)

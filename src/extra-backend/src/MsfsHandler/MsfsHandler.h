@@ -20,10 +20,12 @@ class MsfsHandler {
   DataManager dataManager{};
 
   std::string simConnectName;
-
   HANDLE hSimConnect{};
 
   bool isInitialized = false;
+
+  std::shared_ptr<NamedVariable> a32nxIsDevelopmentState;
+  std::shared_ptr<NamedVariable> a32nxIsReady;
 
 public:
   explicit MsfsHandler(std::string name);

@@ -4,26 +4,23 @@
 #include <iostream>
 
 #include "DataManager.h"
+#include "NamedVariable.h"
 
 DataManager::DataManager() = default;
 
 bool DataManager::initialize() {
-  std::cout << "DataManager::initialize()" << std::endl;
   return true;
 }
 
 bool DataManager::preUpdate(sGaugeDrawData *pData) {
-  std::cout << "DataManager::preUpdate()" << std::endl;
   return true;
 }
 
 bool DataManager::update(sGaugeDrawData *pData) {
-  std::cout << "DataManager::update()" << std::endl;
   return true;
 }
 
 bool DataManager::postUpdate(sGaugeDrawData *pData) {
-  std::cout << "DataManager::postUpdate()" << std::endl;
   return true;
 }
 
@@ -35,4 +32,19 @@ bool DataManager::processSimObjectData(SIMCONNECT_RECV_SIMOBJECT_DATA *pData) {
 bool DataManager::shutdown() {
   std::cout << "DataManager::shutdown()" << std::endl;
   return true;
+}
+
+// clang-format off
+template <>
+std::shared_ptr<NamedVariable> DataManager::make_var<NamedVariable>(
+    std::string nameInSim,
+    int index,
+    ENUM unit,
+    bool autoUpdate,
+    const std::chrono::duration<int64_t, std::milli> &maxAgeTime,
+    int64_t maxAgeTicks)
+{ // clang-format on
+  std::shared_ptr<NamedVariable> var = std::make_shared<NamedVariable>(nameInSim, index, unit, autoUpdate, maxAgeTime, maxAgeTicks);
+  variables[var->getNameInSim()] = var;
+  return var;
 }

@@ -16,18 +16,18 @@ bool LightingPresets::initialize() {
 }
 
 bool LightingPresets::preUpdate(sGaugeDrawData *pData) {
-  std::cout << "LightingPresets::preUpdate()" << std::endl;
+//  std::cout << "LightingPresets::preUpdate()" << std::endl;
   return true;
 }
 bool LightingPresets::update(sGaugeDrawData *pData) {
-  std::cout << "LightingPresets::update()" << std::endl;
+//  std::cout << "LightingPresets::update()" << std::endl;
   return true;
 }
 bool LightingPresets::postUpdate(sGaugeDrawData *pData) {
-  std::cout << "LightingPresets::postUpdate()" << std::endl;
+//  std::cout << "LightingPresets::postUpdate()" << std::endl;
   return true;
 }
 bool LightingPresets::shutdown() {
-  std::cout << "LightingPresets::shutdown()" << std::endl;
+//  std::cout << "LightingPresets::shutdown()" << std::endl;
   return true;
 }

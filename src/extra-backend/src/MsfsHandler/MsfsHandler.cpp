@@ -11,7 +11,10 @@
 // PUBLIC METHODS
 // ===========================
 
-MsfsHandler::MsfsHandler(std::string name) : simConnectName(std::move(name)){};
+MsfsHandler::MsfsHandler(std::string name) : simConnectName(std::move(name)) {
+  a32nxIsDevelopmentState = dataManager.make_var<NamedVariable>("A32NX_DEVELOPER_STATE", 0, UNITS.Bool, true);
+  a32nxIsReady = dataManager.make_var<NamedVariable>("A32NX_IS_READY", 0, UNITS.Bool, true);
+};
 
 void MsfsHandler::registerModule(Module *pModule) { modules.push_back(pModule); }
 
@@ -44,26 +47,30 @@ bool MsfsHandler::initialize() {
   return isInitialized = result;
 }
 
-
-
 bool MsfsHandler::update(sGaugeDrawData *pData) {
   if (!isInitialized) {
     std::cout << simConnectName << ": MsfsHandler::update() - not initialized" << std::endl;
     return false;
   }
 
-/*
-   // pause detected -> return
-    if ((simulationTime == previousSimulationTime) || (simulationTime < 0.2) || (cameraState >= 10.0)) {
-      std::cout << "MsfsHandler::update() - pause detected" << std::endl;
-      return true;
-    }
-    previousSimulationTime = simulationTime;
-*/
+  /*
+     // pause detected -> return
+      if ((simulationTime == previousSimulationTime) || (simulationTime < 0.2) || (cameraState >= 10.0)) {
+        std::cout << "MsfsHandler::update() - pause detected" << std::endl;
+        return true;
+      }
+      previousSimulationTime = simulationTime;
+  */
 
   bool result = true;
   // clang-format off
   result &= dataManager.preUpdate(pData);
+
+  a32nxIsDevelopmentState->getFromSim();
+  a32nxIsReady->getFromSim();
+  std::cout << *a32nxIsDevelopmentState << std::endl;
+  std::cout << *a32nxIsReady << std::endl;
+
   result &= std::all_of(modules.begin(), modules.end(), [&pData](Module *pModule) { return pModule->preUpdate(pData); });
   result &= dataManager.update(pData);
   result &= std::all_of(modules.begin(), modules.end(), [&pData](Module *pModule) { return pModule->update(pData); });
@@ -87,6 +94,6 @@ bool MsfsHandler::shutdown() {
 // PRIVATE METHODS
 // ===================================
 
-bool MsfsHandler::initializeSimConnect()  {
+bool MsfsHandler::initializeSimConnect() {
   return SUCCEEDED(SimConnect_Open(&hSimConnect, simConnectName.c_str(), nullptr, 0, 0, 0));
 }
