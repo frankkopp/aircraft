@@ -1,25 +1,20 @@
 // Copyright (c) 2022 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
 
-#include <iostream>
-
 #include "NamedVariable.h"
 
-// clang-format off
-NamedVariable::NamedVariable(
-    std::string varName,
-    int varIndex,
-    ENUM unit,
-    bool autoUpdate,
-    const std::chrono::duration<int64_t, std::milli> &maxAgeTime,
-    int64_t maxAgeTicks)
-    : CacheableVariable(varName, varIndex, unit, autoUpdate, maxAgeTime, maxAgeTicks)
-{ // clang-format on
-  if (varIndex != 0) {
-    dataID = register_named_variable((varName + ":" + std::to_string(varIndex)).c_str());
-  } else {
-    dataID = register_named_variable(varName.c_str());
-  }
+#include <MSFS/Legacy/gauges.h>
+#include <iostream>
+
+NamedVariable::NamedVariable(std::string varName,
+                             ENUM unit,
+                             bool autoReading,
+                             bool autoWriting,
+                             FLOAT64 maxAgeTime,
+                             UINT64 maxAgeTicks)
+  : CacheableVariable(varName, 0, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks) {
+  // check if variable is indexed and register the correct index
+  dataID = register_named_variable(varName.c_str());
 }
 
 FLOAT64 NamedVariable::getFromSim() {
@@ -29,7 +24,14 @@ FLOAT64 NamedVariable::getFromSim() {
   return value;
 }
 
-void NamedVariable::setToSim(FLOAT64 value) {}
+void NamedVariable::setToSim() {
+  if (cachedValue.has_value()) {
+    dirty = false;
+    set_named_variable_value(dataID, cachedValue.value());
+  }
+  std::cerr << "NamedVariable::setToSim() called on \"" << varName << "\" but no value is cached"
+  << std::endl;
+}
 
-void NamedVariable::writeToSim() {}
+
 

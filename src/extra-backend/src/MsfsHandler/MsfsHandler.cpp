@@ -12,11 +12,12 @@
 // ===========================
 
 MsfsHandler::MsfsHandler(std::string name) : simConnectName(std::move(name)) {
-  a32nxIsDevelopmentState = dataManager.make_var<NamedVariable>("A32NX_DEVELOPER_STATE", 0, UNITS.Bool, true);
-  a32nxIsReady = dataManager.make_var<NamedVariable>("A32NX_IS_READY", 0, UNITS.Bool, true);
+  a32nxIsDevelopmentState = dataManager.make_named_var("A32NX_DEVELOPER_STATE", UNITS.Bool, true, false, 0, 0);
+  a32nxIsReady = dataManager.make_named_var("A32NX_IS_READY", UNITS.Bool, true, false, 0, 0);
+  simOnGround = dataManager.make_aircraft_var("SIM ON GROUND", 0, UNITS.Bool, true, 0, 0);
 };
 
-void MsfsHandler::registerModule(Module *pModule) { modules.push_back(pModule); }
+void MsfsHandler::registerModule(Module* pModule) { modules.push_back(pModule); }
 
 bool MsfsHandler::initialize() {
 
@@ -38,47 +39,48 @@ bool MsfsHandler::initialize() {
 
   // Initialize modules
   result = true;
-  result &= std::all_of(modules.begin(), modules.end(), [](Module *pModule) { return pModule->initialize(); });
+  result &= std::all_of(modules.begin(), modules.end(), [](
+    Module* pModule) { return pModule->initialize(); });
   if (!result) {
     std::cout << simConnectName << ": Failed to initialize modules" << std::endl;
     return false;
   }
 
-  return isInitialized = result;
+  isInitialized = result;
+  return result;
 }
 
-bool MsfsHandler::update(sGaugeDrawData *pData) {
+bool MsfsHandler::update(sGaugeDrawData* pData) {
   if (!isInitialized) {
     std::cout << simConnectName << ": MsfsHandler::update() - not initialized" << std::endl;
     return false;
   }
+  tickCounter++;
 
-  /*
-     // pause detected -> return
-      if ((simulationTime == previousSimulationTime) || (simulationTime < 0.2) || (cameraState >= 10.0)) {
-        std::cout << "MsfsHandler::update() - pause detected" << std::endl;
-        return true;
-      }
-      previousSimulationTime = simulationTime;
-  */
+  // TODO: Pause detection
 
   bool result = true;
-  // clang-format off
   result &= dataManager.preUpdate(pData);
+  result &= std::all_of(modules.begin(), modules.end(), [&pData](
+    Module* pModule) { return pModule->preUpdate(pData); });
 
-  a32nxIsDevelopmentState->getFromSim();
-  a32nxIsReady->getFromSim();
-  std::cout << *a32nxIsDevelopmentState << std::endl;
-  std::cout << *a32nxIsReady << std::endl;
-
-  result &= std::all_of(modules.begin(), modules.end(), [&pData](Module *pModule) { return pModule->preUpdate(pData); });
   result &= dataManager.update(pData);
-  result &= std::all_of(modules.begin(), modules.end(), [&pData](Module *pModule) { return pModule->update(pData); });
+  result &= std::all_of(modules.begin(), modules.end(), [&pData](
+    Module* pModule) { return pModule->update(pData); });
+
   result &= dataManager.postUpdate(pData);
-  result &= std::all_of(modules.begin(), modules.end(), [&pData](Module *pModule) { return pModule->postUpdate(pData); });
-  // clang-format on
+  result &= std::all_of(modules.begin(), modules.end(), [&pData](
+    Module* pModule) { return pModule->postUpdate(pData); });
+
   if (!result) {
     std::cout << simConnectName << ": MsfsHandler::update() - failed" << std::endl;
+  }
+
+  // TODO: Remove these test variables
+  if (tickCounter % 100 == 0) {
+    std::cout << *a32nxIsDevelopmentState << std::endl;
+    std::cout << *a32nxIsReady << std::endl;
+    std::cout << *simOnGround << std::endl;
   }
 
   return result;
@@ -87,7 +89,8 @@ bool MsfsHandler::update(sGaugeDrawData *pData) {
 bool MsfsHandler::shutdown() {
   bool result = true;
   result &= dataManager.shutdown();
-  result &= std::all_of(modules.begin(), modules.end(), [](Module *pModule) { return pModule->shutdown(); });
+  result &= std::all_of(modules.begin(), modules.end(), [](
+    Module* pModule) { return pModule->shutdown(); });
   return result;
 }
 

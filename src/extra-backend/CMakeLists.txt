@@ -20,4 +20,6 @@ add_executable(flybywire-a32nx-extra-backend
         src/MsfsHandler/Module.cpp src/MsfsHandler/Module.h
         src/DataManager/DataManager.cpp src/DataManager/DataManager.h
         src/DataManager/CacheableVariable.cpp src/DataManager/CacheableVariable.h
-        src/DataManager/NamedVariable.cpp src/DataManager/NamedVariable.h)
+        src/DataManager/NamedVariable.cpp src/DataManager/NamedVariable.h
+        src/DataManager/AircraftVariable.cpp src/DataManager/AircraftVariable.h
+        src/lib/IDGenerator.h)
