@@ -40,10 +40,15 @@ DataDefinitionVariable::DataDefinitionVariable(
   // TODO: what happens if definition is wrong - will this cause a sim crash?
   //  Might need to move this out of the constructor and into a separate method
   for (auto &ddef: dataDefinitions) {
+    std::string fullVarName = ddef.name;
+    if (ddef.index != 0) {
+      fullVarName += ":" + std::to_string(ddef.index);
+    }
+
     if (!SUCCEEDED(SimConnect_AddToDataDefinition(
       hSimConnect,
       dataDefinitionId,
-      ddef.name.c_str(),
+      fullVarName.c_str(),
       UNITS.unitStrings[ddef.unit].c_str(),
       SIMCONNECT_DATATYPE_FLOAT64))) {
 
@@ -68,7 +73,7 @@ bool DataDefinitionVariable::requestFromSim() const {
 }
 
 bool DataDefinitionVariable::requestUpdateFromSim(FLOAT64 timeStamp, UINT64 tickCounter) {
-  //  std::cout << "Requesting update from sim for " << name << " called" << std::endl;
+  //  std::cout << "Requesting update from sim for " << name << " with requestID=" << requestId << std::endl;
   //  std::cout << "Time stamp: " << timeStamp << " Tick counter: " << tickCounter << std::endl;
   //  std::cout << timeStampSimTime + maxAgeTime << " " << tickStamp + maxAgeTicks << std::endl;
   // only update if the value is equal or older than the max age for sim time ot ticks
@@ -100,8 +105,12 @@ void DataDefinitionVariable::updateFromSimObjectData(const SIMCONNECT_RECV_SIMOB
 }
 
 bool DataDefinitionVariable::setToSim() {
-  return SUCCEEDED(SimConnect_SetDataOnSimObject(
+  const bool result = SUCCEEDED(SimConnect_SetDataOnSimObject(
     hSimConnect, dataDefId, SIMCONNECT_OBJECT_ID_USER, 0, 0, structSize, pDataStruct));
+  if (!result) {
+    std::cerr << "Setting data to sim for " << name << " with dataDefId=" << dataDefId << " failed!" << std::endl;
+  }
+  return result;
 }
 
 bool DataDefinitionVariable::updateToSim(FLOAT64 timeStamp, UINT64 tickCounter) {

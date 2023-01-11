@@ -3,7 +3,7 @@
 
 #include "FlyPadBackend.h"
 #include "Aircraft/AircraftPreset.h"
-#include "Lighting/LightPreset.h"
+//#include "Lighting/LightPreset.h"
 #include "Pushback/Pushback.h"
 
 FlyPadBackend FLYPAD_BACKEND;
@@ -45,7 +45,7 @@ bool FlyPadBackend::initialize() {
   isConnected = true;
 
   // Create submodules and provide pointers to data required structures
-  lightPresetPtr = std::make_unique<LightPreset>();
+//  lightPresetPtr = std::make_unique<LightPreset>();
   aircraftPresetPtr = std::make_unique<AircraftPreset>();
   pushbackPtr = std::make_unique<Pushback>(hSimConnect, &pushbackData);
 
@@ -65,7 +65,7 @@ bool FlyPadBackend::initialize() {
   result &= SimConnect_MapClientEventToSimEvent(hSimConnect, Events::KEY_TUG_SPEED_EVENT, "KEY_TUG_SPEED");
 
   // initialize submodules
-  lightPresetPtr->initialize();
+//  lightPresetPtr->initialize();
   aircraftPresetPtr->initialize();
   pushbackPtr->initialize();
 
@@ -86,7 +86,7 @@ bool FlyPadBackend::onUpdate(double deltaTime) {
     previousSimulationTime = simulationData.simulationTime;
 
     // update sub modules
-    lightPresetPtr->onUpdate(deltaTime);
+//    lightPresetPtr->onUpdate(deltaTime);
     aircraftPresetPtr->onUpdate(deltaTime);
     pushbackPtr->onUpdate(deltaTime);
 
@@ -99,7 +99,7 @@ bool FlyPadBackend::shutdown() {
   std::cout << "FLYPAD_BACKEND: Disconnecting ..." << std::endl;
 
   // shutdown submodules
-  lightPresetPtr->shutdown();
+//  lightPresetPtr->shutdown();
   aircraftPresetPtr->shutdown();
   pushbackPtr->shutdown();
 

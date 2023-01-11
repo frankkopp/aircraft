@@ -23,9 +23,6 @@ class Module;
  * It does not limit the usage of the SDK or Simconnect in any way!
  */
 class MsfsHandler {
-
-  UINT64 tickCounter = 0; // only for debugging
-
   /**
    * A list of all modules that are currently loaded.
    * This list is used to call the preUpdate, update and postUpdate methods of each module.
@@ -76,9 +73,7 @@ class MsfsHandler {
    */
   FLOAT64 previousSimulationTime{};
 
-  // DEBUG value
-  std::shared_ptr<AircraftVariable> simOnGround;
-
+  UINT64 tickCounter = 0;
 
 public:
   /**
@@ -134,6 +129,12 @@ public:
 
   [[nodiscard]]
   FLOAT64 getA32NxIsDevelopmentState() const { return a32nxIsDevelopmentState->get(); }
+
+  [[nodiscard]]
+  FLOAT64 getPreviousSimulationTime() const { return previousSimulationTime; }
+
+  [[nodiscard]]
+  UINT64 getTickCounter() const { return tickCounter; }
 };
 
 #endif // FLYBYWIRE_A32NX_MSFSHANDLER_H

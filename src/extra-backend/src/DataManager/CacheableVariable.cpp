@@ -33,11 +33,10 @@ FLOAT64 CacheableVariable::updateFromSim(FLOAT64 timeStamp, UINT64 tickCounter) 
   return simValue;
 }
 
-void CacheableVariable::updateToSim(FLOAT64 timeStamp, UINT64 tickCounter) {
-  if (!cachedValue.has_value() || !dirty) {
-    return;
+void CacheableVariable::updateToSim() {
+  if (cachedValue.has_value() && dirty) {
+    setToSim();
   }
-  setToSim();
 }
 
 void CacheableVariable::set(FLOAT64 value) {

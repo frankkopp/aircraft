@@ -48,7 +48,7 @@ enum Events {
   KEY_TUG_SPEED_EVENT
 };
 
-class LightPreset;
+//class LightPreset;
 class AircraftPreset;
 class Pushback;
 
@@ -69,7 +69,7 @@ private:
   double previousSimulationTime = 0;
 
   // Pointers to the flypad backend submodules
-  std::unique_ptr<LightPreset> lightPresetPtr;
+//  std::unique_ptr<LightPreset> lightPresetPtr;
   std::unique_ptr<AircraftPreset> aircraftPresetPtr;
   std::unique_ptr<Pushback> pushbackPtr;
 

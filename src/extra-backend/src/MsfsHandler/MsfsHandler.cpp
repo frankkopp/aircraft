@@ -14,7 +14,9 @@
 
 MsfsHandler::MsfsHandler(std::string name) : simConnectName(std::move(name)) {};
 
-void MsfsHandler::registerModule(Module* pModule) { modules.push_back(pModule); }
+void MsfsHandler::registerModule(Module* pModule) {
+  modules.push_back(pModule);
+}
 
 bool MsfsHandler::initialize() {
   // Initialize SimConnect
@@ -48,9 +50,6 @@ bool MsfsHandler::initialize() {
   std::vector<DataDefinitionVariable::DataDefinition> baseDataDef = {{"SIMULATION TIME", 0, UNITS.Number},};
   baseSimData = dataManager.make_datadefinition_var("BASE DATA", baseDataDef, &simData, sizeof(simData));
 
-  // DEBUG value
-  simOnGround = dataManager.make_aircraft_var("SIM ON GROUND", 0, UNITS.Bool, true, 0, 0);
-
   isInitialized = result;
   return result;
 }
@@ -61,13 +60,12 @@ bool MsfsHandler::update(sGaugeDrawData* pData) {
     return false;
   }
 
-  tickCounter++;
-
   // detect pause - uses the base sim data definition to retrieve the SIMULATION TIME
   // and run a separate pair of requestFromSim() and requestData() for it
   if (baseSimData->requestFromSim()) dataManager.requestData();
   if (simData.simulationTime == previousSimulationTime) return true;
   previousSimulationTime = simData.simulationTime;
+  tickCounter++;
 
   // Call preUpdate(), update() and postUpdate() for all modules
   bool result = true;
@@ -86,11 +84,10 @@ bool MsfsHandler::update(sGaugeDrawData* pData) {
 
   // TODO: Remove these test variables
   if (tickCounter % 100 == 0) {
-    std::cout << *a32nxIsDevelopmentState << std::endl;
-    std::cout << *a32nxIsReady << std::endl;
-    std::cout << *simOnGround << std::endl;
-    std::cout << *baseSimData << std::endl;
-    std::cout << "time=" << simData.simulationTime << std::endl;
+    //    std::cout << *a32nxIsDevelopmentState << std::endl;
+    //    std::cout << *a32nxIsReady << std::endl;
+    //    std::cout << *baseSimData << std::endl;
+    //    std::cout << "time=" << simData.simulationTime << std::endl;
   }
 
   return result;

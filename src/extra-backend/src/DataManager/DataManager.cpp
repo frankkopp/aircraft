@@ -62,11 +62,12 @@ bool DataManager::postUpdate(sGaugeDrawData* pData) {
     return false;
   }
 
+  // write all variables set to automatically write
+  // aircraft variables are not writeable and will return false for isAutoWrite()
+  // so this will not be called
   for (auto &var: variables) {
     if (var.second->isAutoWrite()) {
-      // aircraft variables are not writeable and will return false for isAutoWrite()
-      // so this will not be called
-      var.second->updateToSim(timeStamp, tickCounter);
+      var.second->updateToSim();
     }
   }
 
@@ -130,10 +131,31 @@ DataManager::make_aircraft_var(
   bool autoReading,
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
-  // TODO - check if variable already exists
+
+  // TODO - check if variable already exists and if use the faster updating one
   std::shared_ptr<AircraftVariable> var =
     std::make_shared<AircraftVariable>(varName, index, unit, autoReading, maxAgeTime, maxAgeTicks);
-  variables[var->getVarName()] = var;
+  const std::string &fullName = var->getVarName() + ":" + std::to_string(index);
+  variables[fullName] = var;
+  return var;
+}
+
+std::shared_ptr<WritableAircraftVariable>
+DataManager::make_writable_aircraft_var(
+  const std::string &varName,
+  int index,
+  const std::string &setterEventName,
+  ENUM unit,
+  bool autoReading,
+  bool autoWriting,
+  FLOAT64 maxAgeTime,
+  UINT64 maxAgeTicks) {
+
+  // TODO - check if variable already exists and if use the faster updating one
+  std::shared_ptr<WritableAircraftVariable> var =
+    std::make_shared<WritableAircraftVariable>(varName, index, setterEventName, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
+  const std::string &fullName = var->getVarName() + ":" + std::to_string(index);
+  variables[fullName] = var;
   return var;
 }
 
@@ -186,11 +208,11 @@ void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* cbData) 
       break;
 
     case SIMCONNECT_RECV_ID_EXCEPTION:
-      std::cout << "DataManager: Exception in SimConnect connection: ";
-      std::cout << SimconnectExceptionStrings::getSimConnectExceptionString(
-        static_cast<SIMCONNECT_EXCEPTION>(
-          static_cast<SIMCONNECT_RECV_EXCEPTION*>(pRecv)->dwException));
-      std::cout << std::endl;
+      std::cerr << "DataManager: Exception in SimConnect connection: ";
+      std::cerr << SimconnectExceptionStrings::getSimConnectExceptionString(static_cast<SIMCONNECT_EXCEPTION>(static_cast<SIMCONNECT_RECV_EXCEPTION*>(pRecv)->dwException));
+      // DWORD lastId;
+      // SimConnect_GetLastSentPacketID(hSimConnect, &lastId);
+      // std::cerr << "Last ID: " << lastId << std::endl;
       break;
 
     default:

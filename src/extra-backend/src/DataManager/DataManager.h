@@ -15,6 +15,7 @@
 #include "Units.h"
 #include "NamedVariable.h"
 #include "AircraftVariable.h"
+#include "WritableAircraftVariable.h"
 #include "DataDefinitionVariable.h"
 
 /**
@@ -149,23 +150,46 @@ public:
     UINT64 maxAgeTicks = 0);
 
   /**
-   * Creates a new named variable and adds it to the list of managed variables.
-   * Note: Aircraft variables can't be written back to the sim. Use a DataDefinitionVariable
-   * instead.
-   * @param varName Name of the variable in the sim
-   * @param index Index of the indexed variable in the sim
-   * @param optional unit Unit of the variable (default=Number)
-   * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
-   * @param maxAgeTime optional maximum age of the variable in seconds (default=0)
-   * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
-   * @return A shared pointer to the variable
-   * @see Units.h for available units
-   */
+ * Creates a new AircraftVariable and adds it to the list of managed variables.
+ * Note: Aircraft variables can't be written back to the sim. Use a DataDefinitionVariable
+ * instead.
+ * @param varName Name of the variable in the sim
+ * @param index Index of the indexed variable in the sim
+ * @param optional unit Unit of the variable (default=Number)
+ * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
+ * @param maxAgeTime optional maximum age of the variable in seconds (default=0)
+ * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
+ * @return A shared pointer to the variable
+ * @see Units.h for available units
+ */
   std::shared_ptr<AircraftVariable> make_aircraft_var(
     const std::string &varName,
     int index,
     ENUM unit = UNITS.Number,
     bool autoReading = false,
+    FLOAT64 maxAgeTime = 0.0,
+    UINT64 maxAgeTicks = 0);
+
+  /**
+   * Creates a new WritableAircraftVariable and adds it to the list of managed variables.
+   * @param varName Name of the variable in the sim
+   * @param index Index of the indexed variable in the sim
+   * @param setterEventName the name of the event to set the variable with an event or calculator code
+   * @param optional unit Unit of the variable (default=Number)
+   * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
+   * @param autoWriting optional flag to indicate if the variable should be written automatically (default=false)
+   * @param maxAgeTime optional maximum age of the variable in seconds (default=0)
+   * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
+   * @return A shared pointer to the variable
+   * @see Units.h for available units
+   */
+  std::shared_ptr<WritableAircraftVariable> make_writable_aircraft_var(
+    const std::string &varName,
+    int index,
+    const std::string &setterEventName,
+    ENUM unit = UNITS.Number,
+    bool autoReading = false,
+    bool autoWriting = false,
     FLOAT64 maxAgeTime = 0.0,
     UINT64 maxAgeTicks = 0);
 

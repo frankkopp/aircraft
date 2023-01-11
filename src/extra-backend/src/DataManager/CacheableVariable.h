@@ -183,7 +183,7 @@ public:
    * If the cached value has never been set this method does nothing.
    * This does not update the timeStampSimTime or tickStamp.
    */
-  void updateToSim(FLOAT64 timeStamp, UINT64 tickCounter);
+  void updateToSim();
 
   /**
    * Returns a string representing the object
@@ -251,7 +251,7 @@ public:
   bool getAsBool() const  { return static_cast<bool>(get()); }
 
   [[nodiscard]]
-  bool getAsInt64() const  { return static_cast<INT64>(get()); }
+  INT64 getAsInt64() const  { return static_cast<INT64>(get()); }
 
   [[nodiscard]]
   void setAsBool(bool b)  { set(b ? 1.0 : 0.0); }
