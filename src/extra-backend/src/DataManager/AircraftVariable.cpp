@@ -4,13 +4,15 @@
 #include <iostream>
 #include "AircraftVariable.h"
 
-AircraftVariable::AircraftVariable(std::string varName,
-                             int varIndex,
-                             ENUM unit,
-                             bool autoReading,
-                             FLOAT64 maxAgeTime,
-                             UINT64 maxAgeTicks)
-  : CacheableVariable(varName, varIndex, unit, autoReading, false, maxAgeTime, maxAgeTicks) {
+AircraftVariable::AircraftVariable(
+  const std::string& varName,
+  int varIndex,
+  ENUM unit,
+  bool autoReading,
+  FLOAT64 maxAgeTime,
+  UINT64 maxAgeTicks)
+  : CacheableVariable(varName, varIndex, unit, autoReading, false, maxAgeTime, maxAgeTicks)
+{
   // check if variable is indexed and register the correct index
   dataID = get_aircraft_var_enum(varName.c_str());
   if (dataID == -1) { // cannot throw an exception in MSFS

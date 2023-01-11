@@ -29,7 +29,7 @@ public:
    * @see Units.h
    */
   explicit AircraftVariable(
-    std::string varName,
+    const std::string& varName,
     int varIndex = 0,
     ENUM unit = UNITS.Number,
     bool autoReading = false,

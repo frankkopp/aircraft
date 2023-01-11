@@ -5,11 +5,12 @@
 
 #include "DataManager.h"
 #include "NamedVariable.h"
+#include "SimconnectExceptionStrings.h"
 
 DataManager::DataManager() = default;
 
-bool DataManager::initialize() {
-  // empty
+bool DataManager::initialize(HANDLE hdl) {
+  hSimConnect = hdl;
   return true;
 }
 
@@ -17,14 +18,29 @@ bool DataManager::preUpdate(sGaugeDrawData* pData) {
   tickCounter++;
   timeStamp = pData->t;
   //  std::cout << "DataManager::preUpdate(): " << tickCounter << " " << timeStampSimTime << std::endl;
+
+  // get variables
   for (auto &var: variables) {
     if (var.second->isAutoRead()) {
       var.second->updateFromSim(timeStamp, tickCounter);
     }
   }
+
+  // request data
+  for (auto &ddv: dataDefinitionVariables) {
+    if (ddv->isAutoRead()) {
+      if (!ddv->requestUpdateFromSim(timeStamp, tickCounter)) {
+        std::cerr << "DataManager::preUpdate(): requestUpdateFromSim() failed for "
+                  << ddv->getName() << std::endl;
+      }
+    }
+  }
+
+  // get requested sim object data
+  requestData();
+
   return true;
 }
-
 bool DataManager::update(sGaugeDrawData* pData) {
   // empty
   return true;
@@ -40,8 +56,15 @@ bool DataManager::postUpdate(sGaugeDrawData* pData) {
   return true;
 }
 
-bool DataManager::processSimObjectData(SIMCONNECT_RECV_SIMOBJECT_DATA* pData) {
-  std::cout << "DataManager::processSimObjectData()" << std::endl;
+bool DataManager::processSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* data) {
+  //  std::cout << "DataManager::processSimObjectData(): ID = " << data->dwRequestID << std::endl;
+  for (auto &ddv: dataDefinitionVariables) {
+    if (ddv->getRequestId() == data->dwRequestID) {
+      ddv->updateFromSimObjectData(data);
+      return true;
+    }
+  }
+  std::cout << "DataManager::processSimObjectData(): no matching request id found" << std::endl;
   return false;
 }
 
@@ -50,15 +73,22 @@ bool DataManager::shutdown() {
   return true;
 }
 
-// clang-format off
+void DataManager::requestData() {
+  DWORD cbData;
+  SIMCONNECT_RECV* ptrData;
+  while (SUCCEEDED(SimConnect_GetNextDispatch(hSimConnect, &ptrData, &cbData))) {
+    processDispatchMessage(ptrData, &cbData);
+  }
+}
+
 std::shared_ptr<NamedVariable>
 DataManager::make_named_var(
-  std::string varName,
+  const std::string &varName,
   ENUM unit,
   bool autoReading,
   bool autoWriting,
   FLOAT64 maxAgeTime,
-  UINT64 maxAgeTicks) { // clang-format on
+  UINT64 maxAgeTicks) {
   // TODO - check if variable already exists
   std::shared_ptr<NamedVariable> var =
     std::make_shared<NamedVariable>(varName, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
@@ -68,7 +98,7 @@ DataManager::make_named_var(
 
 std::shared_ptr<AircraftVariable>
 DataManager::make_aircraft_var(
-  std::string varName,
+  const std::string &varName,
   int index,
   ENUM unit,
   bool autoReading,
@@ -80,3 +110,65 @@ DataManager::make_aircraft_var(
   variables[var->getVarName()] = var;
   return var;
 }
+
+std::shared_ptr<DataDefinitionVariable>
+DataManager::make_datadefinition_var(
+  const std::string &name,
+  std::vector<DataDefinitionVariable::DataDefinition> &dataDefinitions,
+  void* dataStruct,
+  size_t dataStructSize,
+  bool autoReading,
+  bool autoWriting,
+  FLOAT64 maxAgeTime,
+  UINT64 maxAgeTicks) {
+  ID id = idGenerator.getNextId();
+  std::shared_ptr<DataDefinitionVariable> var =
+    std::make_shared<DataDefinitionVariable>(
+      hSimConnect,
+      name,
+      dataDefinitions,
+      id, // TODO: test if both ID can be the same
+      id,
+      dataStruct,
+      dataStructSize,
+      autoReading,
+      autoWriting,
+      maxAgeTime,
+      maxAgeTicks);
+
+  dataDefinitionVariables.push_back(var);
+  return var;
+}
+
+// =================================================================================================
+// Private methods
+// =================================================================================================
+
+void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* cbData) {
+  switch (pRecv->dwID) {
+
+    case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
+      processSimObjectData(static_cast<SIMCONNECT_RECV_SIMOBJECT_DATA*>(pRecv));
+      break;
+
+    case SIMCONNECT_RECV_ID_OPEN:
+      std::cout << "DataManager: SimConnect connection established" << std::endl;
+      break;
+
+    case SIMCONNECT_RECV_ID_QUIT:
+      std::cout << "DataManager: Received SimConnect connection quit message" << std::endl;
+      break;
+
+    case SIMCONNECT_RECV_ID_EXCEPTION:
+      std::cout << "DataManager: Exception in SimConnect connection: ";
+      std::cout << SimconnectExceptionStrings::getSimConnectExceptionString(
+        static_cast<SIMCONNECT_EXCEPTION>(
+          static_cast<SIMCONNECT_RECV_EXCEPTION*>(pRecv)->dwException));
+      std::cout << std::endl;
+      break;
+
+    default:
+      break;
+  }
+}
+

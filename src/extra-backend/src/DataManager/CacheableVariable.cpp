@@ -8,7 +8,7 @@
 FLOAT64 CacheableVariable::get() const {
   if (cachedValue.has_value()) {
     if (dirty) {
-      std::cerr << "CacheableVariable::updateFromSim() called on \"" << varName
+      std::cerr << "CacheableVariable::requestUpdateFromSim() called on \"" << varName
                 << "\" but the value is dirty" << std::endl;
     }
     return cachedValue.value();
@@ -22,12 +22,8 @@ FLOAT64 CacheableVariable::updateFromSim(FLOAT64 timeStamp, UINT64 tickCounter) 
   if (!cachedValue.has_value()) {
     return getFromSim();
   }
-  // only update if the value is equal or older than the max age for sim time
-  if (timeStampSimTime + maxAgeTime >= timeStamp) {
-    return cachedValue.value();
-  }
-  // only update if the value is equal or older than the max age for ticks
-  if (tickStamp + maxAgeTicks >= tickCounter) {
+  // only update if the value is equal or older than the max age for sim time or ticks
+  if (timeStampSimTime + maxAgeTime >= timeStamp || tickStamp + maxAgeTicks >= tickCounter) {
     return cachedValue.value();
   }
   // update the value from the sim

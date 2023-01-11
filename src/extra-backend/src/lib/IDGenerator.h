@@ -4,6 +4,10 @@
 #ifndef FLYBYWIRE_A32NX_IDGENERATOR_H
 #define FLYBYWIRE_A32NX_IDGENERATOR_H
 
+#include <cstdint>
+
+#include <MSFS/Legacy/gauges.h>
+
 /**
  * This class is used to generate unique IDs for the modules.
  * Uniqueness is only guaranteed within the same instance of this class.
@@ -11,10 +15,10 @@
  */
 class IDGenerator {
 private:
-  int nextId = 1;
+  ID nextId = 1;
 
 public:
-  inline int getNextId() { return nextId++; };
+  inline ID getNextId() { return nextId++; };
 };
 
 #endif // FLYBYWIRE_A32NX_IDGENERATOR_H

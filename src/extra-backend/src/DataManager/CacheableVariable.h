@@ -14,7 +14,7 @@
 
 /**
  * Virtual base class for sim variable like named variables, aircraft variables and DataDefinitions.
- * Specialized classes must implement the getFromSim and setToSim methods.
+ * Specialized classes must implement the requestFromSim and setToSim methods.
  */
 class CacheableVariable {
 protected:
@@ -59,7 +59,7 @@ protected:
 
   /**
    * The maximum age of the value in sim time before it is updated from the sim by the
-   * updateFromSim() method.
+   * requestUpdateFromSim() method.
    */
   FLOAT64 maxAgeTime = 0;
 
@@ -88,7 +88,7 @@ protected:
   bool dirty = false;
 
   /**
-   * The sim's data ID for the variable
+   * The sim's data ID for the variable or the data definition id for a data definition variable.
    */
   ID dataID = -1;
 
@@ -100,7 +100,7 @@ public:
    * @param unit The unit ENUM of the variable as per the sim
    * @param autoReading Used by external classes to determine if the variable should be automatically updated from the sim
    * @param autoWriting Used by external classes to determine if the variable should be automatically written to the sim
-   * @param maxAgeTime The maximum age of the variable in seconds when using updateFromSim()
+   * @param maxAgeTime The maximum age of the variable in seconds when using requestUpdateFromSim()
    * @param maxAgeTicks The maximum age of the variable in ticks when using updateToSim()
    */
   explicit CacheableVariable(
@@ -135,7 +135,7 @@ public:
    * Reads the value from the sim and updates the cache (clears dirty flag).
    * This does not update the timeStampSimTime or tickStamp.
    * Must be implemented by specialized classes. This method is called by the
-   * updateFromSim() method.
+   * requestUpdateFromSim() method.
    * @return the value read from the sim
    */
   virtual FLOAT64 getFromSim() = 0;
@@ -243,6 +243,9 @@ public:
   [[nodiscard]]
   bool isStoredToSim() const { return !dirty; }
 
+  bool getAsBool() const  { return static_cast<bool>(get()); }
+
+  bool getAsInt64() const  { return static_cast<INT64>(get()); }
 };
 
 /**

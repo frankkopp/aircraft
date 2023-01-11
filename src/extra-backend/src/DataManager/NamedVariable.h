@@ -5,6 +5,7 @@
 #define FLYBYWIRE_A32NX_NAMEDVARIABLE_H
 
 #include <string>
+#include <SimConnect.h>
 
 #include "CacheableVariable.h"
 
@@ -27,7 +28,7 @@ public:
    * @param maxAgeTicks The maximum age of an auto updated the variable in sim ticks.
    */
   explicit NamedVariable(
-    std::string varName,
+    const std::string& varName,
     ENUM unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,
@@ -37,7 +38,6 @@ public:
   FLOAT64 getFromSim() override;
 
   void setToSim() override;
-
 };
 
 #endif // FLYBYWIRE_A32NX_NAMEDVARIABLE_H

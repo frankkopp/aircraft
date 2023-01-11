@@ -60,9 +60,25 @@ class MsfsHandler {
   bool isInitialized = false;
 
   // Common variables required by the MsfsHandler itself
-  std::shared_ptr<NamedVariable> a32nxIsDevelopmentState;
   std::shared_ptr<NamedVariable> a32nxIsReady;
-  std::shared_ptr<AircraftVariable> simOnGround; // test value
+  std::shared_ptr<NamedVariable> a32nxIsDevelopmentState;
+  std::shared_ptr<DataDefinitionVariable> baseSimData;
+
+  /**
+   * This struct is used to define the data definition for the base sim data.
+   */
+  struct BaseSimData {
+    FLOAT64 simulationTime;
+  } simData{};
+
+  /**
+   * Used to detect pause in the sim.
+   */
+  FLOAT64 previousSimulationTime{};
+
+  // DEBUG value
+  std::shared_ptr<AircraftVariable> simOnGround;
+
 
 public:
   /**
@@ -106,6 +122,15 @@ private:
    * @return
    */
   bool initializeSimConnect();
+
+
+// Getters and setters
+public:
+  [[nodiscard]]
+  bool getA32NxIsReady() const { return a32nxIsReady->getAsBool(); }
+
+  [[nodiscard]]
+  FLOAT64 getA32NxIsDevelopmentState() const { return a32nxIsDevelopmentState->get(); }
 };
 
 #endif // FLYBYWIRE_A32NX_MSFSHANDLER_H

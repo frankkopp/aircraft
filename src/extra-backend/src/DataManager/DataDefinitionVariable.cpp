@@ -1,0 +1,110 @@
+// Copyright (c) 2022 FlyByWire Simulations
+// SPDX-License-Identifier: GPL-3.0
+
+#include <iostream>
+#include <utility>
+
+#include <MSFS/Legacy/gauges.h>
+#include <SimConnect.h>
+
+#include "Units.h"
+#include "DataDefinitionVariable.h"
+
+DataDefinitionVariable::DataDefinitionVariable(
+  HANDLE hdlSimConnect,
+  std::string varName,
+  std::vector<DataDefinition> &dataDefinitions,
+  ID dataDefinitionId,
+  ID requestId,
+  void* pDataStruct,
+  size_t structSize,
+  bool autoReading,
+  bool autoWriting,
+  FLOAT64 maxAgeTime,
+  UINT64 maxAgeTicks)
+  :
+  hSimConnect(hdlSimConnect),
+  name(std::move(varName)),
+  dataDefinitions(dataDefinitions),
+  dataDefId(dataDefinitionId),
+  requestId(requestId),
+  pDataStruct(pDataStruct),
+  structSize(structSize),
+  autoRead(autoReading),
+  autoWrite(autoWriting),
+  maxAgeTime(maxAgeTime),
+  maxAgeTicks(maxAgeTicks) {
+
+  // TODO: what happens if definition is wrong - will this cause a sim crash?
+  //  Might need to move this out of the constructor and into a separate method
+  for (auto &ddef: dataDefinitions) {
+    if (!SUCCEEDED(SimConnect_AddToDataDefinition(
+      hSimConnect,
+      dataDefinitionId,
+      ddef.name.c_str(),
+      UNITS.unitStrings[ddef.unit].c_str(),
+      SIMCONNECT_DATATYPE_FLOAT64))) {
+
+      std::cerr << "Failed to add " << ddef.name << " to data definition." << std::endl;
+    }
+  }
+
+}
+
+bool DataDefinitionVariable::requestFromSim() const {
+  if (!SUCCEEDED(SimConnect_RequestDataOnSimObject(
+    hSimConnect,
+    requestId,
+    dataDefId,
+    SIMCONNECT_OBJECT_ID_USER,
+    SIMCONNECT_PERIOD_ONCE))) { // TODO: support PERIOD directly??
+
+    std::cerr << "Failed to request data from sim." << std::endl;
+    return false;
+  }
+  return true;
+}
+
+bool DataDefinitionVariable::requestUpdateFromSim(FLOAT64 timeStamp, UINT64 tickCounter) {
+  //  std::cout << "Requesting update from sim for " << name << " called" << std::endl;
+  //  std::cout << "Time stamp: " << timeStamp << " Tick counter: " << tickCounter << std::endl;
+  //  std::cout << timeStampSimTime + maxAgeTime << " " << tickStamp + maxAgeTicks << std::endl;
+  // only update if the value is equal or older than the max age for sim time ot ticks
+  if (timeStampSimTime + maxAgeTime >= timeStamp || tickStamp + maxAgeTicks >= tickCounter) {
+    return true;
+  }
+  timeStampSimTime = timeStamp;
+  tickStamp = tickCounter;
+  //  std::cout << "Requesting update from sim for " << name << " executing" << std::endl;
+  if (!SUCCEEDED(SimConnect_RequestDataOnSimObject(
+    hSimConnect,
+    requestId,
+    dataDefId,
+    SIMCONNECT_OBJECT_ID_USER,
+    SIMCONNECT_PERIOD_ONCE))) { // TODO: support PERIOD directly??
+
+    std::cerr << "Failed to request data from sim." << std::endl;
+    return false;
+  }
+  return true;
+}
+
+bool DataDefinitionVariable::updateFromSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* pData) {
+  // std::cout << "DataDefinitionVariable::updateFromSimObjectData for " << name << std::endl;
+  // std::cout << "structSize: " << structSize << " == " << pData->dwDefineCount * sizeof(FLOAT64) << std::endl;
+  std::memcpy(pDataStruct, &pData->dwData, structSize);
+  return false;
+}
+
+// TODO: implement this
+void DataDefinitionVariable::setToSim() {
+
+}
+
+// TODO: implement this
+void DataDefinitionVariable::updateToSim(FLOAT64 timeStamp, UINT64 tickCounter) {
+
+}
+// TODO: implement this
+
+
