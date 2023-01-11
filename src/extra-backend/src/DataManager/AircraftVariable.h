@@ -9,16 +9,13 @@
 #include "CacheableVariable.h"
 
 /**
- * Specialized class for aircraft variables.
- * Aircraft variables can't be written via the SDK.
- * Use a DataDefinition variable instead.
- *
- * AircraftVariable can't by copy constructed or assigned. They can be moved.
- * Create a AircraftVariable instance instead.
- *
- * @see CacheableVariable
+ * This class uses events or calculator code to write to a variable as
+ * AircraftVariables are read-only
+ * TODO: add event as an alternative to calculator code
  */
 class AircraftVariable : public CacheableVariable {
+private:
+  std::string setterEventName;
 
 public:
 
@@ -27,53 +24,51 @@ public:
   AircraftVariable& operator=(const AircraftVariable&) = delete; // no copy assignment
 
   /**
-   * Creates an instance of an aircraft variable.
-   * @param varName The name of the variable in the sim
-   * @param varIndex The index of an indexed variable in the sim
+   * Creates an instance of a writable aircraft variable.
+   * @param varName The name of the variable in the sim.
    * @param unit The unit ENUM of the variable as per the sim.
-   * @param autoReading Used by external classes to determine if the variable should updated
-   * automatically from the sim
+   * @param autoReading Used by external classes to determine if the variable should be updated
+   * automatically from the sim.
+   * @param autoWriting Used by external classes to determine if the variable should be written
+   * back to the sim automatically.
    * @param maxAgeTime The maximum age of an auto updated the variable in seconds.
    * @param maxAgeTicks The maximum age of an auto updated the variable in sim ticks.
-   *
-   * @see Units.h
+   * @param setterEventName The calculator code to write to the variable.
    */
   explicit AircraftVariable(
-    const std::string& varName,
-    int varIndex = 0,
+    const std::string &varName,
+    int varIndex,
+    std::string setterEventName,
     ENUM unit = UNITS.Number,
     bool autoReading = false,
+    bool autoWriting = false,
     FLOAT64 maxAgeTime = 0.0,
     UINT64 maxAgeTicks = 0);
 
   FLOAT64 getFromSim() override;
 
-  /**
-   * Aircraft variables cannot be set outside a data definition.
-   * This method prints an error to std::cerr but is otherwise a no-op.
-   * (MSFS does not allow exceptions)
-   */
+  void setToSim() override;
+
+
   void setAutoWrite(bool autoWriting) override {
-    std::cerr << "Aircraft variable " << varName << " cannot be set outside a data definition" << std::endl;
+    if (setterEventName.empty()) {
+      std::cerr << "AircraftVariable::setAutoWrite() called on [" << varName
+                << "] but no setter event name is set" << std::endl;
+      return;
+    }
+    CacheableVariable::setAutoWrite(autoWriting);
   };
 
-  /**
-   * Aircraft variables cannot be set outside a data definition.
-   * This method prints an error to std::cerr but is otherwise a no-op.
-   * (MSFS does not allow exceptions)
-   */
   void set(FLOAT64 value) override {
-    std::cerr << "Aircraft variable " << varName << " cannot be set outside a data definition" << std::endl;
+    if (setterEventName.empty()) {
+      std::cerr << "AircraftVariable::set() called on [" << varName
+                << "] but no setter event name is set" << std::endl;
+      return;
+    }
+    CacheableVariable::set(value);
   };
 
-  /**
-   * Aircraft variables cannot be set outside a data definition.
-   * This method prints an error to std::cerr but is otherwise a no-op.
-   * (MSFS does not allow exceptions)
-   */
-  void setToSim() override {
-    std::cerr << "Aircraft variable " << varName << " cannot be set outside a data definition" << std::endl;
-  };
+
 };
 
 

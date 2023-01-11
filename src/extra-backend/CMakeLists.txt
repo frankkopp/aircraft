@@ -28,4 +28,4 @@ add_executable(flybywire-a32nx-extra-backend
         src/DataManager/NamedVariable.cpp src/DataManager/NamedVariable.h
         src/DataManager/AircraftVariable.cpp src/DataManager/AircraftVariable.h
         src/DataManager/DataDefinitionVariable.cpp src/DataManager/DataDefinitionVariable.h
-        src/DataManager/WritableAircraftVariable.cpp src/DataManager/WritableAircraftVariable.h)
+)

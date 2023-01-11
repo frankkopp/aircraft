@@ -63,26 +63,26 @@ private:
   std::shared_ptr<NamedVariable> mcduRightLightLevel;
 
   // Lighting Aircraft Vars
-  std::shared_ptr<WritableAircraftVariable> lightCabin;
-  std::shared_ptr<WritableAircraftVariable> lightCabinLevel;
-  std::shared_ptr<WritableAircraftVariable> ovhdIntegralLightLevel;
-  std::shared_ptr<WritableAircraftVariable> glareshieldIntegralLightLevel;
-  std::shared_ptr<WritableAircraftVariable> glareshieldLcdLightLevel;
-  std::shared_ptr<WritableAircraftVariable> tableLightCptLevel;
-  std::shared_ptr<WritableAircraftVariable> tableLightFoLevel;
-  std::shared_ptr<WritableAircraftVariable> pfdBrtCptLevel;
-  std::shared_ptr<WritableAircraftVariable> ndBrtCptLevel;
-  std::shared_ptr<WritableAircraftVariable> wxTerrainBrtCptLevel;
-  std::shared_ptr<WritableAircraftVariable> consoleLightCptLevel;
-  std::shared_ptr<WritableAircraftVariable> pfdBrtFoLevel;
-  std::shared_ptr<WritableAircraftVariable> ndBrtFoLevel;
-  std::shared_ptr<WritableAircraftVariable> wxTerrainBrtFoLevel;
-  std::shared_ptr<WritableAircraftVariable> consoleLightFoLevel;
-  std::shared_ptr<WritableAircraftVariable> ecamUpperLightLevel;
-  std::shared_ptr<WritableAircraftVariable> ecamLowerLightLevel;
-  std::shared_ptr<WritableAircraftVariable> floodPnlLightLevel;
-  std::shared_ptr<WritableAircraftVariable> pedestalIntegralLightLevel;
-  std::shared_ptr<WritableAircraftVariable> floodPedLightLevel;
+  std::shared_ptr<AircraftVariable> lightCabin;
+  std::shared_ptr<AircraftVariable> lightCabinLevel;
+  std::shared_ptr<AircraftVariable> ovhdIntegralLightLevel;
+  std::shared_ptr<AircraftVariable> glareshieldIntegralLightLevel;
+  std::shared_ptr<AircraftVariable> glareshieldLcdLightLevel;
+  std::shared_ptr<AircraftVariable> tableLightCptLevel;
+  std::shared_ptr<AircraftVariable> tableLightFoLevel;
+  std::shared_ptr<AircraftVariable> pfdBrtCptLevel;
+  std::shared_ptr<AircraftVariable> ndBrtCptLevel;
+  std::shared_ptr<AircraftVariable> wxTerrainBrtCptLevel;
+  std::shared_ptr<AircraftVariable> consoleLightCptLevel;
+  std::shared_ptr<AircraftVariable> pfdBrtFoLevel;
+  std::shared_ptr<AircraftVariable> ndBrtFoLevel;
+  std::shared_ptr<AircraftVariable> wxTerrainBrtFoLevel;
+  std::shared_ptr<AircraftVariable> consoleLightFoLevel;
+  std::shared_ptr<AircraftVariable> ecamUpperLightLevel;
+  std::shared_ptr<AircraftVariable> ecamLowerLightLevel;
+  std::shared_ptr<AircraftVariable> floodPnlLightLevel;
+  std::shared_ptr<AircraftVariable> pedestalIntegralLightLevel;
+  std::shared_ptr<AircraftVariable> floodPedLightLevel;
 
   // Lighting values
   LightingValues localLightValues{};
@@ -152,7 +152,7 @@ private:
   void loadFromData(LightingValues lv);
 
   [[nodiscard]]
-  std::shared_ptr<WritableAircraftVariable> getLightPotentiometerVar(int index) const;
+  std::shared_ptr<AircraftVariable> getLightPotentiometerVar(int index) const;
 
   /**
    * cabin lights in the A32NX need to be controlled by two vars

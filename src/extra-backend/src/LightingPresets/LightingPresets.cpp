@@ -316,7 +316,7 @@ double LightingPresets::iniGetOrDefault(
   return defaultValue;
 }
 
-std::shared_ptr<WritableAircraftVariable>
+std::shared_ptr<AircraftVariable>
 LightingPresets::getLightPotentiometerVar(int index) const {
   return dataManager->make_writable_aircraft_var(
     "LIGHT POTENTIOMETER",

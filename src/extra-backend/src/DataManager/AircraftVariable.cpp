@@ -1,18 +1,22 @@
 // Copyright (c) 2022 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
 
-#include <iostream>
 #include "AircraftVariable.h"
 
+#include <utility>
+
 AircraftVariable::AircraftVariable(
-  const std::string& varName,
+  const std::string &varName,
   int varIndex,
+  std::string setterEventName,
   ENUM unit,
   bool autoReading,
+  bool autoWriting,
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks)
-  : CacheableVariable(varName, varIndex, unit, autoReading, false, maxAgeTime, maxAgeTicks)
-{
+  : CacheableVariable(varName, varIndex, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks),
+    setterEventName(std::move(setterEventName)) {
+
   // check if variable is indexed and register the correct index
   dataID = get_aircraft_var_enum(varName.c_str());
   if (dataID == -1) { // cannot throw an exception in MSFS
@@ -32,4 +36,42 @@ FLOAT64 AircraftVariable::getFromSim() {
   return value;
 }
 
+void AircraftVariable::setToSim() {
+  if (setterEventName.empty()) {
+    std::cerr << "AircraftVariable::setAndWriteToSim() called on \"" << varName
+              << "\" but no setter event name is set" << std::endl;
+    return;
+  }
+  if (cachedValue.has_value()) {
+    dirty = false;
+
+    std::string calculator_code;
+    calculator_code += std::to_string(cachedValue.value());
+    calculator_code += " ";
+    if (index != 0) {
+      calculator_code += std::to_string(index);
+      calculator_code += " ";
+      calculator_code += " (>K:2:" + setterEventName + ")";
+    }
+    else {
+      calculator_code += " (>K:" + setterEventName + ")";
+    }
+
+    PCSTRINGZ pCompiled{};
+    UINT32 pCompiledSize{};
+    if (!gauge_calculator_code_precompile(&pCompiled, &pCompiledSize, calculator_code.c_str())) {
+      std::cerr << "Failed to precompile calculator code for " << varName << std::endl;
+      return;
+    }
+    if (!execute_calculator_code(pCompiled, nullptr, nullptr, nullptr)) {
+      std::cerr << "AircraftVariable::setAndWriteToSim() failed to execute calculator code: ["
+                << calculator_code << "]" << std::endl;
+    }
+
+    return;
+  }
+  std::cerr << "AircraftVariable::setAndWriteToSim() called on [" << varName
+            << "] but no value is cached"
+            << std::endl;
+}
 

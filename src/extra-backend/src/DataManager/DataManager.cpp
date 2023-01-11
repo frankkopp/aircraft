@@ -124,23 +124,6 @@ DataManager::make_named_var(
 }
 
 std::shared_ptr<AircraftVariable>
-DataManager::make_aircraft_var(
-  const std::string &varName,
-  int index,
-  ENUM unit,
-  bool autoReading,
-  FLOAT64 maxAgeTime,
-  UINT64 maxAgeTicks) {
-
-  // TODO - check if variable already exists and if use the faster updating one
-  std::shared_ptr<AircraftVariable> var =
-    std::make_shared<AircraftVariable>(varName, index, unit, autoReading, maxAgeTime, maxAgeTicks);
-  const std::string &fullName = var->getVarName() + ":" + std::to_string(index);
-  variables[fullName] = var;
-  return var;
-}
-
-std::shared_ptr<WritableAircraftVariable>
 DataManager::make_writable_aircraft_var(
   const std::string &varName,
   int index,
@@ -152,8 +135,8 @@ DataManager::make_writable_aircraft_var(
   UINT64 maxAgeTicks) {
 
   // TODO - check if variable already exists and if use the faster updating one
-  std::shared_ptr<WritableAircraftVariable> var =
-    std::make_shared<WritableAircraftVariable>(varName, index, setterEventName, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
+  std::shared_ptr<AircraftVariable> var =
+    std::make_shared<AircraftVariable>(varName, index, setterEventName, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
   const std::string &fullName = var->getVarName() + ":" + std::to_string(index);
   variables[fullName] = var;
   return var;

@@ -26,6 +26,7 @@ LightingPresets lightingPresets(&msfsHandler);
  * Gauge Callback
  * There can by multiple gauges in a single wasm module. Just add another gauge callback function and register it in the
  * panel.cfg file.
+ * Try no to put any logic in the gauge callback function. Instead, create a new class and put the logic there.
  * @see
  * https://docs.flightsimulator.com/html/Content_Configuration/SimObjects/Aircraft_SimO/Instruments/C_C++_Gauges.htm?rhhlterm=_gauge_callback&rhsearch=_gauge_callback
  */
