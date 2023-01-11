@@ -26,6 +26,9 @@ FLOAT64 CacheableVariable::updateFromSim(FLOAT64 timeStamp, UINT64 tickCounter) 
   if (timeStampSimTime + maxAgeTime >= timeStamp || tickStamp + maxAgeTicks >= tickCounter) {
     return cachedValue.value();
   }
+
+  //  std::cout << "CacheableVariable::updateFromSim() called on [" << varName << ":" << index << "]" << std::endl;
+
   // update the value from the sim
   const FLOAT64 simValue = getFromSim();
   timeStampSimTime = timeStamp;
@@ -47,7 +50,7 @@ void CacheableVariable::set(FLOAT64 value) {
   dirty = true;
 }
 
-void CacheableVariable::setToSim(FLOAT64 value) {
+void CacheableVariable::setAndWriteToSim(FLOAT64 value) {
   set(value);
   setToSim();
 }

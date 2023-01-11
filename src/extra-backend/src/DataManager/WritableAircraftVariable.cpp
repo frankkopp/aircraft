@@ -56,13 +56,13 @@ void WritableAircraftVariable::setToSim() {
     UINT32 pCompiledSize{};
     gauge_calculator_code_precompile(&pCompiled, &pCompiledSize, calculator_code.c_str());
     if (!execute_calculator_code(pCompiled, nullptr, nullptr, nullptr)) {
-      std::cerr << "WritableAircraftVariable::setToSim() failed to execute calculator code: ["
+      std::cerr << "WritableAircraftVariable::setAndWriteToSim() failed to execute calculator code: ["
                 << calculator_code << "]" << std::endl;
     }
 
     return;
   }
-  std::cerr << "WritableAircraftVariable::setToSim() called on [" << varName
+  std::cerr << "WritableAircraftVariable::setAndWriteToSim() called on [" << varName
             << "] but no value is cached"
             << std::endl;
 }

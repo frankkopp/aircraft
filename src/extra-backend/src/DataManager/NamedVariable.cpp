@@ -33,7 +33,7 @@ void NamedVariable::setToSim() {
     set_named_variable_value(dataID, cachedValue.value());
     return;
   }
-  std::cerr << "NamedVariable::setToSim() called on \"" << varName << "\" but no value is cached"
+  std::cerr << "NamedVariable::setAndWriteToSim() called on \"" << varName << "\" but no value is cached"
             << std::endl;
 }
 

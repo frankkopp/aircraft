@@ -15,7 +15,7 @@
 
 /**
  * Virtual base class for sim variable like named variables, aircraft variables and DataDefinitions.
- * Specialized classes must implement the requestFromSim and setToSim methods.
+ * Specialized classes must implement the requestFromSim and setAndWriteToSim methods.
  */
 class CacheableVariable {
 protected:
@@ -167,7 +167,7 @@ public:
    * Writes the current value to the sim.
    * Clears the dirty flag.
    * Must be implemented by specialized classes.
-   * This method is called by the updateToSim() and setToSim(FLOAT64 v) methods.
+   * This method is called by the updateToSim() and setAndWriteToSim(FLOAT64 v) methods.
    */
   virtual void setToSim() = 0;
 
@@ -176,7 +176,7 @@ public:
    * Clears the dirty flag.
    * @param value The value to set the variable to.
    */
-  virtual void setToSim(FLOAT64 value);
+  virtual void setAndWriteToSim(FLOAT64 value);
 
   /**
    * Writes the cached value to the sim if the dirty flag is set.

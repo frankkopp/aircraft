@@ -14,20 +14,20 @@ bool LightingPresets::initialize() {
 
   dataManager = &msfsHandler->getDataManager();
 
-  // Control LVARs
+  // Control LVARs - auto updated with every tick - LOAD/SAVE also auto written to sim
   elecAC1Powered = dataManager->make_named_var("A32NX_ELEC_AC_1_BUS_IS_POWERED", UNITS.Number, true, false);
   loadLightingPresetRequest = dataManager->make_named_var("A32NX_LIGHTING_PRESET_LOAD", UNITS.Number, true, true);
   saveLightingPresetRequest = dataManager->make_named_var("A32NX_LIGHTING_PRESET_SAVE", UNITS.Number, true, true);
 
-  // Lighting LVARs
-  efbBrightness = dataManager->make_named_var("A32NX_EFB_BRIGHTNESS", UNITS.Number, true, true);
-  dcduLeftLightLevel = dataManager->make_named_var("A32NX_PANEL_DCDU_L_BRIGHTNESS", UNITS.Number, true, true);
-  dcduRightLightLevel = dataManager->make_named_var("A32NX_PANEL_DCDU_R_BRIGHTNESS", UNITS.Number, true, true);
-  mcduLeftLightLevel = dataManager->make_named_var("A32NX_MCDU_L_BRIGHTNESS", UNITS.Number, true, true);
-  mcduRightLightLevel = dataManager->make_named_var("A32NX_MCDU_R_BRIGHTNESS", UNITS.Number, true, true);
+  // Lighting LVARs - manual update and write when load/saving is requested
+  efbBrightness = dataManager->make_named_var("A32NX_EFB_BRIGHTNESS", UNITS.Number, false, false);
+  dcduLeftLightLevel = dataManager->make_named_var("A32NX_PANEL_DCDU_L_BRIGHTNESS", UNITS.Number, false, false);
+  dcduRightLightLevel = dataManager->make_named_var("A32NX_PANEL_DCDU_R_BRIGHTNESS", UNITS.Number, false, false);
+  mcduLeftLightLevel = dataManager->make_named_var("A32NX_MCDU_L_BRIGHTNESS", UNITS.Number, false, false);
+  mcduRightLightLevel = dataManager->make_named_var("A32NX_MCDU_R_BRIGHTNESS", UNITS.Number, false, false);
 
-  // Light Potentiometers
-  lightCabin = dataManager->make_writable_aircraft_var("LIGHT CABIN", 0, "CABIN_LIGHTS_SET", UNITS.Percent, true, true);
+  // Light Potentiometers - manual update and write when load/saving is requested
+  lightCabin = dataManager->make_writable_aircraft_var("LIGHT CABIN", 0, "CABIN_LIGHTS_SET", UNITS.Percent, false, false);
   lightCabinLevel  = getLightPotentiometerVar(7);
   ovhdIntegralLightLevel = getLightPotentiometerVar(86);
   glareshieldIntegralLightLevel = getLightPotentiometerVar(84);
@@ -119,57 +119,57 @@ void LightingPresets::saveLightingPreset(int64_t savePresetRequest) {
 }
 
 void LightingPresets::readFromAircraft() {
-  localLightValues.efbBrightness = efbBrightness->get();
-  localLightValues.cabinLightLevel = lightCabinLevel->get();
-  localLightValues.ovhdIntegralLightLevel = ovhdIntegralLightLevel->get();
-  localLightValues.glareshieldIntegralLightLevel = glareshieldIntegralLightLevel->get();
-  localLightValues.glareshieldLcdLightLevel = glareshieldLcdLightLevel->get();
-  localLightValues.tableLightCptLevel = tableLightCptLevel->get();
-  localLightValues.tableLightFoLevel = tableLightFoLevel->get();
-  localLightValues.pfdBrtCptLevel = pfdBrtCptLevel->get();
-  localLightValues.ndBrtCptLevel = ndBrtCptLevel->get();
-  localLightValues.wxTerrainBrtCptLevel = wxTerrainBrtCptLevel->get();
-  localLightValues.consoleLightCptLevel = consoleLightCptLevel->get();
-  localLightValues.pfdBrtFoLevel = pfdBrtFoLevel->get();
-  localLightValues.ndBrtFoLevel = ndBrtFoLevel->get();
-  localLightValues.wxTerrainBrtFoLevel = wxTerrainBrtFoLevel->get();
-  localLightValues.consoleLightFoLevel = consoleLightFoLevel->get();
-  localLightValues.dcduLeftLightLevel = dcduLeftLightLevel->get();
-  localLightValues.dcduRightLightLevel = dcduLeftLightLevel->get();
-  localLightValues.mcduLeftLightLevel = mcduLeftLightLevel->get();
-  localLightValues.mcduRightLightLevel = mcduRightLightLevel->get();
-  localLightValues.ecamUpperLightLevel = ecamUpperLightLevel->get();
-  localLightValues.ecamLowerLightLevel = ecamLowerLightLevel->get();
-  localLightValues.floodPnlLightLevel = floodPnlLightLevel->get();
-  localLightValues.pedestalIntegralLightLevel = pedestalIntegralLightLevel->get();
-  localLightValues.floodPedLightLevel = floodPedLightLevel->get();
+  localLightValues.efbBrightness = efbBrightness->getFromSim();
+  localLightValues.cabinLightLevel = lightCabinLevel->getFromSim();
+  localLightValues.ovhdIntegralLightLevel = ovhdIntegralLightLevel->getFromSim();
+  localLightValues.glareshieldIntegralLightLevel = glareshieldIntegralLightLevel->getFromSim();
+  localLightValues.glareshieldLcdLightLevel = glareshieldLcdLightLevel->getFromSim();
+  localLightValues.tableLightCptLevel = tableLightCptLevel->getFromSim();
+  localLightValues.tableLightFoLevel = tableLightFoLevel->getFromSim();
+  localLightValues.pfdBrtCptLevel = pfdBrtCptLevel->getFromSim();
+  localLightValues.ndBrtCptLevel = ndBrtCptLevel->getFromSim();
+  localLightValues.wxTerrainBrtCptLevel = wxTerrainBrtCptLevel->getFromSim();
+  localLightValues.consoleLightCptLevel = consoleLightCptLevel->getFromSim();
+  localLightValues.pfdBrtFoLevel = pfdBrtFoLevel->getFromSim();
+  localLightValues.ndBrtFoLevel = ndBrtFoLevel->getFromSim();
+  localLightValues.wxTerrainBrtFoLevel = wxTerrainBrtFoLevel->getFromSim();
+  localLightValues.consoleLightFoLevel = consoleLightFoLevel->getFromSim();
+  localLightValues.dcduLeftLightLevel = dcduLeftLightLevel->getFromSim();
+  localLightValues.dcduRightLightLevel = dcduLeftLightLevel->getFromSim();
+  localLightValues.mcduLeftLightLevel = mcduLeftLightLevel->getFromSim();
+  localLightValues.mcduRightLightLevel = mcduRightLightLevel->getFromSim();
+  localLightValues.ecamUpperLightLevel = ecamUpperLightLevel->getFromSim();
+  localLightValues.ecamLowerLightLevel = ecamLowerLightLevel->getFromSim();
+  localLightValues.floodPnlLightLevel = floodPnlLightLevel->getFromSim();
+  localLightValues.pedestalIntegralLightLevel = pedestalIntegralLightLevel->getFromSim();
+  localLightValues.floodPedLightLevel = floodPedLightLevel->getFromSim();
 }
 
 void LightingPresets::applyToAircraft() {
-  efbBrightness->set(localLightValues.efbBrightness);
+  efbBrightness->setAndWriteToSim(localLightValues.efbBrightness);
   setValidCabinLightValue(localLightValues.cabinLightLevel);
-  ovhdIntegralLightLevel->set(localLightValues.ovhdIntegralLightLevel);
-  glareshieldIntegralLightLevel->set(localLightValues.glareshieldIntegralLightLevel);
-  glareshieldLcdLightLevel->set(localLightValues.glareshieldLcdLightLevel);
-  tableLightCptLevel->set(localLightValues.tableLightCptLevel);
-  tableLightFoLevel->set(localLightValues.tableLightFoLevel);
-  pfdBrtCptLevel->set(localLightValues.pfdBrtCptLevel);
-  ndBrtCptLevel->set(localLightValues.ndBrtCptLevel);
-  wxTerrainBrtCptLevel->set(localLightValues.wxTerrainBrtCptLevel);
-  consoleLightCptLevel->set(localLightValues.consoleLightCptLevel);
-  pfdBrtFoLevel->set(localLightValues.pfdBrtFoLevel);
-  ndBrtFoLevel->set(localLightValues.ndBrtFoLevel);
-  wxTerrainBrtFoLevel->set(localLightValues.wxTerrainBrtFoLevel);
-  consoleLightFoLevel->set(localLightValues.consoleLightFoLevel);
-  dcduLeftLightLevel->set(localLightValues.dcduLeftLightLevel);
-  dcduRightLightLevel->set(localLightValues.dcduRightLightLevel);
-  mcduLeftLightLevel->set(localLightValues.mcduLeftLightLevel);
-  mcduRightLightLevel->set(localLightValues.mcduRightLightLevel);
-  ecamUpperLightLevel->set(localLightValues.ecamUpperLightLevel);
-  ecamLowerLightLevel->set(localLightValues.ecamLowerLightLevel);
-  floodPnlLightLevel->set(localLightValues.floodPnlLightLevel);
-  pedestalIntegralLightLevel->set(localLightValues.pedestalIntegralLightLevel);
-  floodPedLightLevel->set(localLightValues.floodPedLightLevel);
+  ovhdIntegralLightLevel->setAndWriteToSim(localLightValues.ovhdIntegralLightLevel);
+  glareshieldIntegralLightLevel->setAndWriteToSim(localLightValues.glareshieldIntegralLightLevel);
+  glareshieldLcdLightLevel->setAndWriteToSim(localLightValues.glareshieldLcdLightLevel);
+  tableLightCptLevel->setAndWriteToSim(localLightValues.tableLightCptLevel);
+  tableLightFoLevel->setAndWriteToSim(localLightValues.tableLightFoLevel);
+  pfdBrtCptLevel->setAndWriteToSim(localLightValues.pfdBrtCptLevel);
+  ndBrtCptLevel->setAndWriteToSim(localLightValues.ndBrtCptLevel);
+  wxTerrainBrtCptLevel->setAndWriteToSim(localLightValues.wxTerrainBrtCptLevel);
+  consoleLightCptLevel->setAndWriteToSim(localLightValues.consoleLightCptLevel);
+  pfdBrtFoLevel->setAndWriteToSim(localLightValues.pfdBrtFoLevel);
+  ndBrtFoLevel->setAndWriteToSim(localLightValues.ndBrtFoLevel);
+  wxTerrainBrtFoLevel->setAndWriteToSim(localLightValues.wxTerrainBrtFoLevel);
+  consoleLightFoLevel->setAndWriteToSim(localLightValues.consoleLightFoLevel);
+  dcduLeftLightLevel->setAndWriteToSim(localLightValues.dcduLeftLightLevel);
+  dcduRightLightLevel->setAndWriteToSim(localLightValues.dcduRightLightLevel);
+  mcduLeftLightLevel->setAndWriteToSim(localLightValues.mcduLeftLightLevel);
+  mcduRightLightLevel->setAndWriteToSim(localLightValues.mcduRightLightLevel);
+  ecamUpperLightLevel->setAndWriteToSim(localLightValues.ecamUpperLightLevel);
+  ecamLowerLightLevel->setAndWriteToSim(localLightValues.ecamLowerLightLevel);
+  floodPnlLightLevel->setAndWriteToSim(localLightValues.floodPnlLightLevel);
+  pedestalIntegralLightLevel->setAndWriteToSim(localLightValues.pedestalIntegralLightLevel);
+  floodPedLightLevel->setAndWriteToSim(localLightValues.floodPedLightLevel);
 }
 
 bool LightingPresets::readFromStore(int64_t presetNr) {
@@ -321,8 +321,10 @@ LightingPresets::getLightPotentiometerVar(int index) const {
     index,
     "LIGHT_POTENTIOMETER_SET",
     UNITS.Percent,
-    true,
-    true);
+    false,
+    false,
+    0.0,
+    0);
 }
 
 void LightingPresets::setValidCabinLightValue(FLOAT64 level) {
@@ -339,6 +341,6 @@ void LightingPresets::setValidCabinLightValue(FLOAT64 level) {
   }
   // cabin lights in the A32NX need to be controlled by two vars
   // one for the switch position and one for the actual light
-  lightCabin->set(level > 0 ? 1 : 0);
-  lightCabinLevel->set(level);
+  lightCabin->setAndWriteToSim(level > 0 ? 1 : 0);
+  lightCabinLevel->setAndWriteToSim(level);
 }
