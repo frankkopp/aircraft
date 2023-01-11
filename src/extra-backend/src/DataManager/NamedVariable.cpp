@@ -31,6 +31,7 @@ void NamedVariable::setToSim() {
   if (cachedValue.has_value()) {
     dirty = false;
     set_named_variable_value(dataID, cachedValue.value());
+    return;
   }
   std::cerr << "NamedVariable::setToSim() called on \"" << varName << "\" but no value is cached"
             << std::endl;

@@ -252,6 +252,12 @@ public:
 
   [[nodiscard]]
   bool getAsInt64() const  { return static_cast<INT64>(get()); }
+
+  [[nodiscard]]
+  void setAsBool(bool b)  { set(b ? 1.0 : 0.0); }
+
+  [[nodiscard]]
+  void setAsInt64(UINT64 i) { set(static_cast<FLOAT64>(i)); }
 };
 
 /**
