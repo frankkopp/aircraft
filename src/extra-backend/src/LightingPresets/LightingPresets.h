@@ -47,6 +47,7 @@ class LightingPresets : public Module {
 private:
   const std::string CONFIGURATION_FILEPATH = "\\work\\InteriorLightingPresets.ini";
 
+  // CConvenience pointer to the data manager
   DataManager* dataManager{};
 
   // Control LVARs
@@ -87,7 +88,15 @@ private:
   LightingValues localLightValues{};
 
 public:
+
+  LightingPresets() = delete;
+
+  /**
+ * Creates a new LightingPresets instance and takes a reference to the MsfsHandler instance.
+ * @param msfsHandler The MsfsHandler instance that is used to communicate with the simulator.
+ */
   explicit LightingPresets(MsfsHandler* msfsHandler);
+
   bool initialize() override;
   bool preUpdate(sGaugeDrawData* pData) override;
   bool update(sGaugeDrawData* pData) override;

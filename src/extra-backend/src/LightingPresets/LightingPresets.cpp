@@ -80,10 +80,12 @@ bool LightingPresets::update(sGaugeDrawData* pData) {
 
   return true;
 }
+
 bool LightingPresets::postUpdate(sGaugeDrawData* pData) {
   //  std::cout << "LightingPresets::postUpdate()" << std::endl;
   return true;
 }
+
 bool LightingPresets::shutdown() {
   //  std::cout << "LightingPresets::shutdown()" << std::endl;
   return true;
