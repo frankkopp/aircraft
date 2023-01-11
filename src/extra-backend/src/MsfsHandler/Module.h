@@ -5,10 +5,11 @@
 #define FLYBYWIRE_A32NX_MODULE_H
 
 #include <MSFS/Legacy/gauges.h>
+
 class MsfsHandler;
 
 /**
- * Base class and interface for all modules.
+ * Base class and interface for all modules to ensure that they are compatible with the MsfsHandler.
  */
 class Module {
 protected:

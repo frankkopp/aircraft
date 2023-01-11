@@ -10,7 +10,7 @@
 #include "IDGenerator.h"
 
 /**
- * A class that represents a data definition variable.<br/>
+ * A class that represents a data definition variable (sim object).<br/>
  * Data definition variables are used to define a sim data objects that can be used to retrieve and
  * write data from and to the sim.<br/>
  * For this a memory area need to be reserved via a data struct instance. This data struct instance

@@ -18,7 +18,7 @@ include_directories(src/DataManager)
 add_executable(flybywire-a32nx-extra-backend
         src/lib/simple_assert.h
         src/lib/IDGenerator.h
-        src/lib/SimconnectExceptionStrings.h
+        src/DataManager/SimconnectExceptionStrings.h
         src/Gauge_Extra_Backend.cpp
         src/MsfsHandler/MsfsHandler.cpp src/MsfsHandler/MsfsHandler.h
         src/LightingPresets/LightingPresets.cpp src/LightingPresets/LightingPresets.h
@@ -28,4 +28,5 @@ add_executable(flybywire-a32nx-extra-backend
         src/DataManager/NamedVariable.cpp src/DataManager/NamedVariable.h
         src/DataManager/AircraftVariable.cpp src/DataManager/AircraftVariable.h
         src/DataManager/DataDefinitionVariable.cpp src/DataManager/DataDefinitionVariable.h
-)
+        src/DataManager/ClientDataAreaVariable.cpp src/DataManager/ClientDataAreaVariable.h
+        src/DataManager/Event.cpp src/DataManager/Event.h)

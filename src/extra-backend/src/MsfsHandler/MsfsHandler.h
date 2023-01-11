@@ -23,6 +23,7 @@ class Module;
  * It does not limit the usage of the SDK or Simconnect in any way!
  */
 class MsfsHandler {
+
   /**
    * A list of all modules that are currently loaded.
    * This list is used to call the preUpdate, update and postUpdate methods of each module.

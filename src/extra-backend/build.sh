@@ -54,6 +54,8 @@ clang++ \
   "${DIR}/src/DataManager/NamedVariable.cpp" \
   "${DIR}/src/DataManager/AircraftVariable.cpp" \
   "${DIR}/src/DataManager/DataDefinitionVariable.cpp" \
+  "${DIR}/src/DataManager/ClientDataAreaVariable.cpp" \
+  "${DIR}/src/DataManager/Event.cpp" \
   "${DIR}/src/LightingPresets/LightingPresets.cpp"
 
 # restore directory
