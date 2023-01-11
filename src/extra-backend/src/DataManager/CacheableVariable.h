@@ -7,6 +7,7 @@
 #include <optional>
 #include <string>
 #include <sstream>
+#include <utility>
 
 #include <MSFS/Legacy/gauges.h>
 
@@ -93,6 +94,9 @@ protected:
   ID dataID = -1;
 
 public:
+
+  virtual ~CacheableVariable() = default;
+
   /**
    * Constructor
    * @param varName The name of the variable in the sim
@@ -111,14 +115,14 @@ public:
     bool autoWriting,
     FLOAT64 maxAgeTime,
     UINT64 maxAgeTicks)
-    : varName(nameInSim),
+    : varName(std::move(nameInSim)),
       index(index),
       unit(unit),
       autoRead(autoReading),
       autoWrite(autoWriting),
       maxAgeTime(maxAgeTime),
       maxAgeTicks(maxAgeTicks) {}
-  // clang-format on
+
 
   /**
    * Returns the cached value or the default value (FLOAT64{}) if the cache is empty.
@@ -243,8 +247,10 @@ public:
   [[nodiscard]]
   bool isStoredToSim() const { return !dirty; }
 
+  [[nodiscard]]
   bool getAsBool() const  { return static_cast<bool>(get()); }
 
+  [[nodiscard]]
   bool getAsInt64() const  { return static_cast<INT64>(get()); }
 };
 

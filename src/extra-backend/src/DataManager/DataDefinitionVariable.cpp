@@ -6,9 +6,11 @@
 
 #include <MSFS/Legacy/gauges.h>
 #include <SimConnect.h>
+#include <cassert>
 
 #include "Units.h"
 #include "DataDefinitionVariable.h"
+#include "simple_assert.h"
 
 DataDefinitionVariable::DataDefinitionVariable(
   HANDLE hdlSimConnect,
@@ -89,22 +91,26 @@ bool DataDefinitionVariable::requestUpdateFromSim(FLOAT64 timeStamp, UINT64 tick
   return true;
 }
 
-bool DataDefinitionVariable::updateFromSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* pData) {
-  // std::cout << "DataDefinitionVariable::updateFromSimObjectData for " << name << std::endl;
-  // std::cout << "structSize: " << structSize << " == " << pData->dwDefineCount * sizeof(FLOAT64) << std::endl;
+void DataDefinitionVariable::updateFromSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* pData) {
+  SIMPLE_ASSERT(structSize == pData->dwDefineCount * sizeof(FLOAT64),
+                "DataDefinitionVariable::updateFromSimObjectData: Struct size mismatch");
+  SIMPLE_ASSERT(pData->dwRequestID == requestId,
+                "DataDefinitionVariable::updateFromSimObjectData: Request ID mismatch");
   std::memcpy(pDataStruct, &pData->dwData, structSize);
+}
+
+bool DataDefinitionVariable::setToSim() {
+  return SUCCEEDED(SimConnect_SetDataOnSimObject(
+    hSimConnect, dataDefId, SIMCONNECT_OBJECT_ID_USER, 0, 0, structSize, pDataStruct));
+}
+
+bool DataDefinitionVariable::updateToSim(FLOAT64 timeStamp, UINT64 tickCounter) {
+  if (setToSim()) {
+    timeStampSimTime = timeStamp;
+    tickStamp = tickCounter;
+    return true;
+  }
   return false;
 }
-
-// TODO: implement this
-void DataDefinitionVariable::setToSim() {
-
-}
-
-// TODO: implement this
-void DataDefinitionVariable::updateToSim(FLOAT64 timeStamp, UINT64 tickCounter) {
-
-}
-// TODO: implement this
 
 

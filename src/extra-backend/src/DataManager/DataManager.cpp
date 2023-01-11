@@ -11,22 +11,27 @@ DataManager::DataManager() = default;
 
 bool DataManager::initialize(HANDLE hdl) {
   hSimConnect = hdl;
+  isInitialized = true;
   return true;
 }
 
 bool DataManager::preUpdate(sGaugeDrawData* pData) {
+  if (!isInitialized) {
+    std::cerr << "DataManager::preUpdate() called but DataManager is not initialized" << std::endl;
+    return false;
+  }
+
   tickCounter++;
   timeStamp = pData->t;
-  //  std::cout << "DataManager::preUpdate(): " << tickCounter << " " << timeStampSimTime << std::endl;
 
-  // get variables
+  // get all variables set to automatically read
   for (auto &var: variables) {
     if (var.second->isAutoRead()) {
       var.second->updateFromSim(timeStamp, tickCounter);
     }
   }
 
-  // request data
+  // request all data definitions set to automatically read
   for (auto &ddv: dataDefinitionVariables) {
     if (ddv->isAutoRead()) {
       if (!ddv->requestUpdateFromSim(timeStamp, tickCounter)) {
@@ -41,23 +46,44 @@ bool DataManager::preUpdate(sGaugeDrawData* pData) {
 
   return true;
 }
+
 bool DataManager::update(sGaugeDrawData* pData) {
+  if (!isInitialized) {
+    std::cerr << "DataManager::update() called but DataManager is not initialized" << std::endl;
+    return false;
+  }
   // empty
   return true;
 }
 
 bool DataManager::postUpdate(sGaugeDrawData* pData) {
+  if (!isInitialized) {
+    std::cerr << "DataManager::postUpdate() called but DataManager is not initialized" << std::endl;
+    return false;
+  }
+
   for (auto &var: variables) {
     if (var.second->isAutoWrite()) {
-      // aircraft variables will return false for isAutoWrite() so this will not be called
+      // aircraft variables are not writeable and will return false for isAutoWrite()
+      // so this will not be called
       var.second->updateToSim(timeStamp, tickCounter);
     }
   }
+
+  // write all data definitions set to automatically write
+  for (auto &ddv: dataDefinitionVariables) {
+    if (ddv->isAutoWrite()) {
+      if (!ddv->updateToSim(timeStamp, tickCounter)) {
+        std::cerr << "DataManager::postUpdate(): updateToSim() failed for "
+                  << ddv->getName() << std::endl;
+      }
+    }
+  }
+
   return true;
 }
 
 bool DataManager::processSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* data) {
-  //  std::cout << "DataManager::processSimObjectData(): ID = " << data->dwRequestID << std::endl;
   for (auto &ddv: dataDefinitionVariables) {
     if (ddv->getRequestId() == data->dwRequestID) {
       ddv->updateFromSimObjectData(data);

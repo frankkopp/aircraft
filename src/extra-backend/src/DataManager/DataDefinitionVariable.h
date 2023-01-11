@@ -9,7 +9,21 @@
 
 #include "IDGenerator.h"
 
-// TODO: Comment
+/**
+ * A class that represents a data definition variable.<br/>
+ * Data definition variables are used to define a sim data objects that can be used to retrieve and
+ * write data from and to the sim.<br/>
+ * For this a memory area need to be reserved via a data struct instance. This data struct instance
+ * and its size (sizeof) need to be passed to the constructor of this class.
+ * It works in three steps:<br/>
+ * 1. a vector of data definitions will be registered with the sim as data definitions (provided in
+ *    the constructor<br/>
+ * 2. a data request will be send to the sim to have the sim prepare the requested data<br/>
+ * 3. the sim will send an message (SIMCONNECT_RECV_ID_SIMOBJECT_DATA) to signal that the data is
+ *    ready to be read. This event also contains a pointer to the provided data. <br/>
+ * <br/>
+ * This class handles this for you via simplified methods.
+ */
 class DataDefinitionVariable {
 public:
   struct DataDefinition {
@@ -19,23 +33,48 @@ public:
   };
 
 private:
+  /**
+   * SimConnect handle is required for data definitions.
+   */
   HANDLE hSimConnect;
 
+  /**
+   * Arbitrary name for the data definition variable for debugging purposes
+   */
   std::string name{};
 
+  /**
+   * List of data definitions to add to the sim object data
+   * Used for "SimConnect_AddToDataDefinition"
+   */
   std::vector<DataDefinition> dataDefinitions;
 
+  /**
+   * Each data definition variable has its own unique id so the sim can map registered data sim
+   * objects to data definitions.
+   */
   ID dataDefId = -1;
 
+  /**
+   * Each request for sim object data requires a unique id so the sim can provide the request ID
+   * in the response (message SIMCONNECT_RECV_ID_SIMOBJECT_DATA).
+   */
   ID requestId = -1;
 
+  /**
+   * Pointer to the data struct that will be used to store the data from the sim.
+   */
   void* pDataStruct = nullptr;
 
+  /**
+   * Size of the data struct that will be used to store the data from the sim.
+   *
+   */
   size_t structSize = 0;
 
   /**
   * Used by external classes to determine if the variable should updated from the sim when
-  * a sim update call occurs.
+  * a sim update call occurs. <br/>
   * E.g. if autoRead is true the variable will be updated from the sim every time the
   * DataManager::preUpdate() method is called
   */
@@ -43,7 +82,7 @@ private:
 
   /**
    * Used by external classes to determine if the variable should written tothe sim when
-   * a sim update call occurs.
+   * a sim update call occurs. <br/>
    * E.g. if autoWrite is true the variable will be updated from the sim every time the
    * DataManager::postUpdate() method is called
    */
@@ -72,8 +111,26 @@ private:
 
 
 public:
-  DataDefinitionVariable() = delete;
 
+  DataDefinitionVariable() = delete; // no default constructor
+  DataDefinitionVariable(const DataDefinitionVariable&) = delete; // no copy constructor
+  DataDefinitionVariable& operator=(const DataDefinitionVariable&) = delete; // no copy assignment
+  ~DataDefinitionVariable() = default;
+
+  /**
+   * Creates a new instance of a DataDefinitionVariable.
+   * @param hSimConnect Handle to the SimConnect object.
+   * @param name Arbitrary name for the data definition variable for debugging purposes
+   * @param dataDefinitions List of data definitions to add to the sim object data
+   * @param dataDefinitionId Each data definition variable has its own unique id so the sim can map registered data sim objects to data definitions.
+   * @param requestId Each request for sim object data requires a unique id so the sim can provide the request ID in the response (message SIMCONNECT_RECV_ID_SIMOBJECT_DATA).
+   * @param pDataStruct Pointer to the data struct that will be used to store the data from the sim.
+   * @param structSize Size of the data struct that will be used to store the data from the sim.
+   * @param autoReading Used by external classes to determine if the variable should updated from the sim when a sim update call occurs.
+   * @param autoWriting Used by external classes to determine if the variable should written to the sim when a sim update call occurs.
+   * @param maxAgeTime The maximum age of the value in sim time before it is updated from the sim by the requestUpdateFromSim() method.
+   * @param maxAgeTicks The maximum age of the value in ticks before it is updated from the sim by the requestUpdateFromSim() method.
+   */
   DataDefinitionVariable(
     HANDLE hSimConnect,
     std::string name,
@@ -87,38 +144,50 @@ public:
     FLOAT64 maxAgeTime = 0,
     UINT64 maxAgeTicks = 0);
 
-  // TODO: Comment
+  /**
+   * Sends a data request to the sim to have the sim prepare the requested data.
+   * @return true if the request was successful, false otherwise
+   * @See SimConnect_RequestDataOnSimObject
+   */
+  [[nodiscard]]
   bool requestFromSim() const;
 
   /**
-   * Reads the value fom the sim if the cached value is older than the max age (time or ticks).
-   * It updates the cache (clears dirty flag) and the timeStampSimTime and tickStamp.
-   * If the value has been set by the set() method since the last read from the sim (is dirty)
-   * but has not been written to the sim yet an error message is printed to std::cerr.
-   * (MSFS does not allow exceptions)
+   * Checks the age (time/ticks) of the data and requests an update from the sim if the data is too old.
    * @param timeStamp the current sim time (taken from the sim update event)
    * @param tickCounter the current tick counter (taken from a custom counter at each update event
-   * @return the value read from the sim
+   * @return false if the request was not successful, true otherwise
+   *         (also true when max age is not exceeded - no request will be sent to the sim in this case
    */
   [[nodiscard]]
   bool requestUpdateFromSim(FLOAT64 timeStamp, UINT64 tickCounter);
 
-  bool updateFromSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* data);
-
-  // TODO: Comment
-  void setToSim();
+  /**
+   * Called by the DataManager when a SIMCONNECT_RECV_ID_SIMOBJECT_DATA message for this
+   * variables request ID is received.
+   * @param pointer to the SIMCONNECT_RECV_SIMOBJECT_DATA structure
+   * @See SIMCONNECT_RECV_SIMOBJECT_DATA
+   */
+  void updateFromSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* pData);
 
   /**
-   * Writes the cached value to the sim if the dirty flag is set.
-   * If the cached value has never been set this method does nothing.
-   * This does not update the timeStampSimTime or tickStamp.
+   * Writes the data to the sim without updating the time stamps for time and ticks.
+   * @return true if the write was successful, false otherwise
    */
-  void updateToSim(FLOAT64 timeStamp, UINT64 tickCounter);
+  bool setToSim();
+
+  /**
+   * Writes the data to the sim and updates the time stamps for time and ticks.
+   * @param timeStamp the current sim time (taken from the sim update event)
+   * @param tickCounter the current tick counter (taken from a custom counter at each update event)
+   * @return true if the write was successful, false otherwise
+   */
+  bool updateToSim(FLOAT64 timeStamp, UINT64 tickCounter);
 
   // Getters and setters
 
   [[nodiscard]]
-  const std::string &getName() const;
+  const std::string &getName() const { return name; }
 
   [[nodiscard]]
   const std::vector<DataDefinition> &getDataDefinitions() const { return dataDefinitions; }
@@ -140,7 +209,7 @@ public:
   [[nodiscard]]
   bool isAutoWrite() const { return autoWrite; }
 
-  virtual void setAutoWrite(bool autoWriting) { autoRead = autoWriting; }
+  void setAutoWrite(bool autoWriting) { autoRead = autoWriting; }
 
   [[nodiscard]]
   FLOAT64 getTimeStamp() const { return timeStampSimTime; }

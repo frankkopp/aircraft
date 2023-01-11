@@ -22,6 +22,8 @@ clang++ \
   -c \
   "${CLANG_ARGS}" \
   -std=c++20 \
+  -Wall \
+  -Wno-unused-function \
   -Wno-unused-command-line-argument \
   -Wno-ignored-attributes \
   -Wno-macro-redefined \

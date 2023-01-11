@@ -12,10 +12,20 @@
  * Specialized class for aircraft variables.
  * Aircraft variables can't be written via the SDK.
  * Use a DataDefinition variable instead.
+ *
+ * AircraftVariable can't by copy constructed or assigned. They can be moved.
+ * Create a AircraftVariable instance instead.
+ *
+ * @see CacheableVariable
  */
 class AircraftVariable : public CacheableVariable {
 
 public:
+
+  AircraftVariable() = delete; // no default constructor
+  AircraftVariable(const AircraftVariable&) = delete; // no copy constructor
+  AircraftVariable& operator=(const AircraftVariable&) = delete; // no copy assignment
+
   /**
    * Creates an instance of an aircraft variable.
    * @param varName The name of the variable in the sim

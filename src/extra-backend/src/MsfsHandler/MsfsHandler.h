@@ -126,6 +126,9 @@ private:
 
 // Getters and setters
 public:
+
+  DataManager &getDataManager() { return dataManager; }
+
   [[nodiscard]]
   bool getA32NxIsReady() const { return a32nxIsReady->getAsBool(); }
 

@@ -10,11 +10,21 @@
 #include "CacheableVariable.h"
 
 /**
- * Specialized class for named variables (LVARS)
+ * Specialized class for named variables (LVARS).
+ *
+ * NamedVariables can't by copy constructed or assigned. They can be moved.
+ * Create a NamedVariable instance instead.
+ *
+ * @see CacheableVariable
  */
 class NamedVariable: public CacheableVariable {
 
 public:
+
+  NamedVariable() = delete; // no default constructor
+  NamedVariable(const NamedVariable&) = delete; // no copy constructor
+  NamedVariable& operator=(const NamedVariable&) = delete; // no copy assignment
+
   /**
    * Creates an instance of a named variable.
    * If the variable is not found in the sim it will be created.

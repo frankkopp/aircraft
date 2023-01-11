@@ -12,6 +12,8 @@ include_directories("${MSFS_SDK}/SimConnect SDK/include")
 
 include_directories(src)
 include_directories(src/lib)
+include_directories(src/MsfsHandler)
+include_directories(src/DataManager)
 
 add_executable(flybywire-a32nx-extra-backend
         src/lib/IDGenerator.h
@@ -23,4 +25,4 @@ add_executable(flybywire-a32nx-extra-backend
         src/DataManager/CacheableVariable.cpp src/DataManager/CacheableVariable.h
         src/DataManager/NamedVariable.cpp src/DataManager/NamedVariable.h
         src/DataManager/AircraftVariable.cpp src/DataManager/AircraftVariable.h
-        src/DataManager/DataDefinitionVariable.cpp src/DataManager/DataDefinitionVariable.h src/lib/SimconnectExceptionStrings.h)
+        src/DataManager/DataDefinitionVariable.cpp src/DataManager/DataDefinitionVariable.h src/lib/SimconnectExceptionStrings.h src/lib/simple_assert.h)

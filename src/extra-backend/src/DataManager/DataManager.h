@@ -25,6 +25,12 @@
  * It is still possible to use the SDK and Simconnect directly but it is recommended to use the
  * DataManager instead as the data manager is able to de-duplicate variables and events and automatically
  * update and write back variables from/to the sim.
+ *
+ * TODO
+ *  - write DataDefinitionVariable to sim
+ *  - de duplication
+ *  - add support for events
+ *  - add register methods for variables (currently only factory methods register variables
  */
 class DataManager {
 private:
@@ -118,18 +124,21 @@ public:
 
   /**
    * Must be called to retrieve requested sim object data (data definition variables) from the sim.
+   * Will be called everytime preUpdate() is called.
+   * Request data by calling DataDefinitions::requestFromSim() on the data definition variable.
    */
   void requestData();
 
   /**
    * Creates a new named variable and adds it to the list of managed variables
    * @param varName Name of the variable in the sim
-   * @param unit Unit of the variable - @see Units.h
-   * @param autoReading Flag to indicate if the variable should be read automatically
-   * @param autoWriting Flag to indicate if the variable should be written automatically
-   * @param maxAgeTime Maximum age of the variable in seconds
-   * @param maxAgeTicks Maximum age of the variable in ticks
+   * @param optional unit Unit of the variable (default=Number)
+   * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
+   * @param autoWriting optional flag to indicate if the variable should be written automatically (default=false)
+   * @param maxAgeTime optional maximum age of the variable in seconds (default=0)
+   * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
    * @return A shared pointer to the variable
+   * @see Units.h for available units
    */
   std::shared_ptr<NamedVariable> make_named_var(
     const std::string &varName,
@@ -145,11 +154,12 @@ public:
    * instead.
    * @param varName Name of the variable in the sim
    * @param index Index of the indexed variable in the sim
-   * @param unit Unit of the variable - @see Units.h
-   * @param autoReading Flag to indicate if the variable should be read automatically
-   * @param maxAgeTime Maximum age of the variable in seconds
-   * @param maxAgeTicks Maximum age of the variable in ticks
+   * @param optional unit Unit of the variable (default=Number)
+   * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
+   * @param maxAgeTime optional maximum age of the variable in seconds (default=0)
+   * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
    * @return A shared pointer to the variable
+   * @see Units.h for available units
    */
   std::shared_ptr<AircraftVariable> make_aircraft_var(
     const std::string &varName,
@@ -166,10 +176,10 @@ public:
    * @param dataStruct A pointer to the data structure for the data definition variable.
    * THIS STRUCTURE MUST MATCH THE DATA DEFINITIONS!
    * @param dataStructSize The size of the data structure for the data definition variable.
-   * @param autoReading Flag to indicate if the variable should be read automatically
-   * @param autoWriting Flag to indicate if the variable should be written automatically
-   * @param maxAgeTime Maximum age of the variable in seconds
-   * @param maxAgeTicks Maximum age of the variable in ticks
+   * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
+   * @param autoWriting optional flag to indicate if the variable should be written automatically (default=false)
+   * @param maxAgeTime optional maximum age of the variable in seconds (default=0)
+   * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
    * @return A shared pointer to the variable
    */
   std::shared_ptr<DataDefinitionVariable> make_datadefinition_var(
