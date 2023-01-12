@@ -37,8 +37,8 @@ public:
    */
   explicit AircraftVariable(
     const std::string &varName,
-    int varIndex,
-    std::string setterEventName,
+    int varIndex = 0,
+    std::string setterEventName = "",
     ENUM unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,

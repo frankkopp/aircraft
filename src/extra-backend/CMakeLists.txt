@@ -13,20 +13,26 @@ include_directories("${MSFS_SDK}/SimConnect SDK/include")
 include_directories(src)
 include_directories(src/lib)
 include_directories(src/MsfsHandler)
-include_directories(src/DataManager)
+include_directories(src/MsfsHandler/DataManager)
+include_directories(src/Modules)
+include_directories(src/Modules/LightingPresets)
+include_directories(src/Modules/Pushback)
 
 add_executable(flybywire-a32nx-extra-backend
         src/lib/simple_assert.h
         src/lib/IDGenerator.h
-        src/DataManager/SimconnectExceptionStrings.h
+        src/MsfsHandler/DataManager/SimconnectExceptionStrings.h
         src/Gauge_Extra_Backend.cpp
         src/MsfsHandler/MsfsHandler.cpp src/MsfsHandler/MsfsHandler.h
-        src/LightingPresets/LightingPresets.cpp src/LightingPresets/LightingPresets.h
+        src/MsfsHandler/DataManager/DataManager.cpp src/MsfsHandler/DataManager/DataManager.h
+        src/MsfsHandler/DataManager/CacheableVariable.cpp src/MsfsHandler/DataManager/CacheableVariable.h
+        src/MsfsHandler/DataManager/NamedVariable.cpp src/MsfsHandler/DataManager/NamedVariable.h
+        src/MsfsHandler/DataManager/AircraftVariable.cpp src/MsfsHandler/DataManager/AircraftVariable.h
+        src/MsfsHandler/DataManager/DataDefinitionVariable.cpp src/MsfsHandler/DataManager/DataDefinitionVariable.h
+        src/MsfsHandler/DataManager/ClientDataAreaVariable.cpp src/MsfsHandler/DataManager/ClientDataAreaVariable.h
+        src/MsfsHandler/DataManager/Event.cpp src/MsfsHandler/DataManager/Event.h
         src/MsfsHandler/Module.cpp src/MsfsHandler/Module.h
-        src/DataManager/DataManager.cpp src/DataManager/DataManager.h
-        src/DataManager/CacheableVariable.cpp src/DataManager/CacheableVariable.h
-        src/DataManager/NamedVariable.cpp src/DataManager/NamedVariable.h
-        src/DataManager/AircraftVariable.cpp src/DataManager/AircraftVariable.h
-        src/DataManager/DataDefinitionVariable.cpp src/DataManager/DataDefinitionVariable.h
-        src/DataManager/ClientDataAreaVariable.cpp src/DataManager/ClientDataAreaVariable.h
-        src/DataManager/Event.cpp src/DataManager/Event.h)
+        src/Modules/LightingPresets/LightingPresets.cpp src/Modules/LightingPresets/LightingPresets.h
+        src/Modules/Pushback/Pushback.cpp src/Modules/Pushback/Pushback.h
+        src/Modules/Pushback/InertialDampener.cpp src/Modules/Pushback/InertialDampener.h
+        src/Modules/Pushback/Pushback.cpp src/Modules/Pushback/Pushback.h)

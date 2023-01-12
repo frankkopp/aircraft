@@ -108,8 +108,7 @@ void DataManager::requestData() {
   }
 }
 
-std::shared_ptr<NamedVariable>
-DataManager::make_named_var(
+NamedVariablePtr DataManager::make_named_var(
   const std::string &varName,
   ENUM unit,
   bool autoReading,
@@ -123,11 +122,10 @@ DataManager::make_named_var(
   return var;
 }
 
-std::shared_ptr<AircraftVariable>
-DataManager::make_writable_aircraft_var(
+AircraftVariablePtr DataManager::make_aircraft_var(
   const std::string &varName,
   int index,
-  const std::string &setterEventName,
+  std::string setterEventName,
   ENUM unit,
   bool autoReading,
   bool autoWriting,
@@ -136,14 +134,13 @@ DataManager::make_writable_aircraft_var(
 
   // TODO - check if variable already exists and if use the faster updating one
   std::shared_ptr<AircraftVariable> var =
-    std::make_shared<AircraftVariable>(varName, index, setterEventName, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
+    std::make_shared<AircraftVariable>(varName, index, std::move(setterEventName), unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
   const std::string &fullName = var->getVarName() + ":" + std::to_string(index);
   variables[fullName] = var;
   return var;
 }
 
-std::shared_ptr<DataDefinitionVariable>
-DataManager::make_datadefinition_var(
+DataDefinitionVariablePtr DataManager::make_datadefinition_var(
   const std::string &name,
   std::vector<DataDefinitionVariable::DataDefinition> &dataDefinitions,
   void* dataStruct,
@@ -201,5 +198,11 @@ void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* cbData) 
     default:
       break;
   }
+}
+std::shared_ptr<Event> DataManager::make_event(const std::string &eventName) {
+  // TODO - check if event already exists
+  std::shared_ptr<Event> event = std::make_shared<Event>(hSimConnect, eventName);
+  events[eventName] = event;
+  return event;
 }
 

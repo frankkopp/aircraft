@@ -30,6 +30,8 @@ public:
   const ENUM Celsius = get_units_enum("Celsius");
   const ENUM Hours = get_units_enum("Hours");
   const ENUM Seconds = get_units_enum("Seconds");
+  const ENUM RadiansSec = get_units_enum("Radians per second");
+  const ENUM RadiansSecSquared = get_units_enum("Radians per second squared");
 
   std::map<ENUM, std::string> unitStrings = {
     {Percent,    "Percent"},
@@ -48,6 +50,8 @@ public:
     {Celsius,    "Celsius"},
     {Hours,      "Hours"},
     {Seconds,    "Seconds"},
+    {RadiansSec, "RadiansSec"},
+    {RadiansSecSquared, "RadiansSecSquared"}
   };
 };
 

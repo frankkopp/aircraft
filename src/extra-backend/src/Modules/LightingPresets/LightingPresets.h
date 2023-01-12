@@ -8,6 +8,7 @@
 #include "DataManager.h"
 #include "inih/ini.h"
 
+
 class MsfsHandler;
 
 struct LightingValues {
@@ -47,42 +48,42 @@ class LightingPresets : public Module {
 private:
   const std::string CONFIGURATION_FILEPATH = "\\work\\InteriorLightingPresets.ini";
 
-  // CConvenience pointer to the data manager
+  // Convenience pointer to the data manager
   DataManager* dataManager{};
 
   // Control LVARs
-  std::shared_ptr<NamedVariable> elecAC1Powered;
-  std::shared_ptr<NamedVariable> loadLightingPresetRequest;
-  std::shared_ptr<NamedVariable> saveLightingPresetRequest;
+  NamedVariablePtr elecAC1Powered;
+  NamedVariablePtr loadLightingPresetRequest;
+  NamedVariablePtr saveLightingPresetRequest;
 
   // Lighting LVARs
-  std::shared_ptr<NamedVariable> efbBrightness;
-  std::shared_ptr<NamedVariable> dcduLeftLightLevel;
-  std::shared_ptr<NamedVariable> dcduRightLightLevel;
-  std::shared_ptr<NamedVariable> mcduLeftLightLevel;
-  std::shared_ptr<NamedVariable> mcduRightLightLevel;
+  NamedVariablePtr efbBrightness;
+  NamedVariablePtr dcduLeftLightLevel;
+  NamedVariablePtr dcduRightLightLevel;
+  NamedVariablePtr mcduLeftLightLevel;
+  NamedVariablePtr mcduRightLightLevel;
 
   // Lighting Aircraft Vars
-  std::shared_ptr<AircraftVariable> lightCabin;
-  std::shared_ptr<AircraftVariable> lightCabinLevel;
-  std::shared_ptr<AircraftVariable> ovhdIntegralLightLevel;
-  std::shared_ptr<AircraftVariable> glareshieldIntegralLightLevel;
-  std::shared_ptr<AircraftVariable> glareshieldLcdLightLevel;
-  std::shared_ptr<AircraftVariable> tableLightCptLevel;
-  std::shared_ptr<AircraftVariable> tableLightFoLevel;
-  std::shared_ptr<AircraftVariable> pfdBrtCptLevel;
-  std::shared_ptr<AircraftVariable> ndBrtCptLevel;
-  std::shared_ptr<AircraftVariable> wxTerrainBrtCptLevel;
-  std::shared_ptr<AircraftVariable> consoleLightCptLevel;
-  std::shared_ptr<AircraftVariable> pfdBrtFoLevel;
-  std::shared_ptr<AircraftVariable> ndBrtFoLevel;
-  std::shared_ptr<AircraftVariable> wxTerrainBrtFoLevel;
-  std::shared_ptr<AircraftVariable> consoleLightFoLevel;
-  std::shared_ptr<AircraftVariable> ecamUpperLightLevel;
-  std::shared_ptr<AircraftVariable> ecamLowerLightLevel;
-  std::shared_ptr<AircraftVariable> floodPnlLightLevel;
-  std::shared_ptr<AircraftVariable> pedestalIntegralLightLevel;
-  std::shared_ptr<AircraftVariable> floodPedLightLevel;
+  AircraftVariablePtr lightCabin;
+  AircraftVariablePtr lightCabinLevel;
+  AircraftVariablePtr ovhdIntegralLightLevel;
+  AircraftVariablePtr glareshieldIntegralLightLevel;
+  AircraftVariablePtr glareshieldLcdLightLevel;
+  AircraftVariablePtr tableLightCptLevel;
+  AircraftVariablePtr tableLightFoLevel;
+  AircraftVariablePtr pfdBrtCptLevel;
+  AircraftVariablePtr ndBrtCptLevel;
+  AircraftVariablePtr wxTerrainBrtCptLevel;
+  AircraftVariablePtr consoleLightCptLevel;
+  AircraftVariablePtr pfdBrtFoLevel;
+  AircraftVariablePtr ndBrtFoLevel;
+  AircraftVariablePtr wxTerrainBrtFoLevel;
+  AircraftVariablePtr consoleLightFoLevel;
+  AircraftVariablePtr ecamUpperLightLevel;
+  AircraftVariablePtr ecamLowerLightLevel;
+  AircraftVariablePtr floodPnlLightLevel;
+  AircraftVariablePtr pedestalIntegralLightLevel;
+  AircraftVariablePtr floodPedLightLevel;
 
   // Lighting values
   LightingValues localLightValues{};
@@ -152,7 +153,7 @@ private:
   void loadFromData(LightingValues lv);
 
   [[nodiscard]]
-  std::shared_ptr<AircraftVariable> getLightPotentiometerVar(int index) const;
+  AircraftVariablePtr getLightPotentiometerVar(int index) const;
 
   /**
    * cabin lights in the A32NX need to be controlled by two vars

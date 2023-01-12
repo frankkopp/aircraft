@@ -27,7 +27,7 @@ bool LightingPresets::initialize() {
   mcduRightLightLevel = dataManager->make_named_var("A32NX_MCDU_R_BRIGHTNESS", UNITS.Number, false, false);
 
   // Light Potentiometers - manual update and write when load/saving is requested
-  lightCabin = dataManager->make_writable_aircraft_var("LIGHT CABIN", 0, "CABIN_LIGHTS_SET", UNITS.Percent, false, false);
+  lightCabin = dataManager->make_aircraft_var("LIGHT CABIN", 0, "CABIN_LIGHTS_SET", UNITS.Percent, false, false);
   lightCabinLevel  = getLightPotentiometerVar(7);
   ovhdIntegralLightLevel = getLightPotentiometerVar(86);
   glareshieldIntegralLightLevel = getLightPotentiometerVar(84);
@@ -49,7 +49,8 @@ bool LightingPresets::initialize() {
   floodPedLightLevel = getLightPotentiometerVar(76);
 
   std::cout << "LightingPresets::initialized()" << std::endl;
-  return isInitialized = true;
+  isInitialized = true;
+  return true;
 }
 
 bool LightingPresets::preUpdate(sGaugeDrawData* pData) {
@@ -318,7 +319,7 @@ double LightingPresets::iniGetOrDefault(
 
 std::shared_ptr<AircraftVariable>
 LightingPresets::getLightPotentiometerVar(int index) const {
-  return dataManager->make_writable_aircraft_var(
+  return dataManager->make_aircraft_var(
     "LIGHT POTENTIOMETER",
     index,
     "LIGHT_POTENTIOMETER_SET",

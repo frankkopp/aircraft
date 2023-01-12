@@ -17,6 +17,12 @@
 #include "AircraftVariable.h"
 #include "AircraftVariable.h"
 #include "DataDefinitionVariable.h"
+#include "Event.h"
+
+typedef std::shared_ptr<NamedVariable> NamedVariablePtr;
+typedef std::shared_ptr<AircraftVariable> AircraftVariablePtr;
+typedef std::shared_ptr<DataDefinitionVariable> DataDefinitionVariablePtr;
+typedef std::shared_ptr<Event> EventPtr;
 
 /**
  * DataManager is responsible for managing all variables and events.
@@ -46,6 +52,11 @@ private:
    * A vector of all registered data definitions.
    */
   std::vector<std::shared_ptr<DataDefinitionVariable>> dataDefinitionVariables{};
+
+  /**
+   * A vector of all registered events
+   */
+  std::map<std::string, std::shared_ptr<Event>> events{};
 
   /**
    * Handle to the simconnect instance.
@@ -164,10 +175,10 @@ public:
    * @return A shared pointer to the variable
    * @see Units.h for available units
    */
-  std::shared_ptr<AircraftVariable> make_writable_aircraft_var(
+  std::shared_ptr<AircraftVariable> make_aircraft_var(
     const std::string &varName,
-    int index,
-    const std::string &setterEventName,
+    int index = 0,
+    std::string setterEventName = "",
     ENUM unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,
@@ -196,6 +207,11 @@ public:
     bool autoWriting = false,
     FLOAT64 maxAgeTime = 0.0,
     UINT64 maxAgeTicks = 0);
+
+  /**
+   * Creates a new event and adds it to the list of managed events.
+   */
+  std::shared_ptr<Event> make_event(const std::string &eventName);
 
 private:
   void processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* pInt);

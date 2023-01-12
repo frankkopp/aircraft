@@ -58,9 +58,9 @@ class MsfsHandler {
   bool isInitialized = false;
 
   // Common variables required by the MsfsHandler itself
-  std::shared_ptr<NamedVariable> a32nxIsReady;
-  std::shared_ptr<NamedVariable> a32nxIsDevelopmentState;
-  std::shared_ptr<DataDefinitionVariable> baseSimData;
+  NamedVariablePtr a32nxIsReady;
+  NamedVariablePtr a32nxIsDevelopmentState;
+  DataDefinitionVariablePtr  baseSimData;
 
   /**
    * This struct is used to define the data definition for the base sim data.

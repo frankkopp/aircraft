@@ -44,19 +44,20 @@ clang++ \
   -I "${DIR}/src" \
   -I "${DIR}/src/lib" \
   -I "${DIR}/src/MsfsHandler" \
-  -I "${DIR}/src/DataManager" \
-  -I "${DIR}/src/LightingPresets" \
+  -I "${DIR}/src/MsfsHandler/DataManager" \
+  -I "${DIR}/src/Modules/" \
+  -I "${DIR}/src/Modules/LightingPresets" \
   "${DIR}/src/Gauge_Extra_Backend.cpp" \
   "${DIR}/src/MsfsHandler/MsfsHandler.cpp" \
   "${DIR}/src/MsfsHandler/Module.cpp" \
-  "${DIR}/src/DataManager/DataManager.cpp" \
-  "${DIR}/src/DataManager/CacheableVariable.cpp" \
-  "${DIR}/src/DataManager/NamedVariable.cpp" \
-  "${DIR}/src/DataManager/AircraftVariable.cpp" \
-  "${DIR}/src/DataManager/DataDefinitionVariable.cpp" \
-  "${DIR}/src/DataManager/ClientDataAreaVariable.cpp" \
-  "${DIR}/src/DataManager/Event.cpp" \
-  "${DIR}/src/LightingPresets/LightingPresets.cpp"
+  "${DIR}/src/MsfsHandler/DataManager/DataManager.cpp" \
+  "${DIR}/src/MsfsHandler/DataManager/CacheableVariable.cpp" \
+  "${DIR}/src/MsfsHandler/DataManager/NamedVariable.cpp" \
+  "${DIR}/src/MsfsHandler/DataManager/AircraftVariable.cpp" \
+  "${DIR}/src/MsfsHandler/DataManager/DataDefinitionVariable.cpp" \
+  "${DIR}/src/MsfsHandler/DataManager/ClientDataAreaVariable.cpp" \
+  "${DIR}/src/MsfsHandler/DataManager/Event.cpp" \
+  "${DIR}/src/Modules/LightingPresets/LightingPresets.cpp"
 
 # restore directory
 popd
