@@ -19,6 +19,7 @@ include_directories(src/Modules/LightingPresets)
 include_directories(src/Modules/Pushback)
 
 add_executable(flybywire-a32nx-extra-backend
+        src/lib/Units.h
         src/lib/simple_assert.h
         src/lib/IDGenerator.h
         src/MsfsHandler/DataManager/SimconnectExceptionStrings.h

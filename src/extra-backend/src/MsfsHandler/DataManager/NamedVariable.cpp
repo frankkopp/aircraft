@@ -8,15 +8,14 @@
 #include "NamedVariable.h"
 
 NamedVariable::NamedVariable(
-  const std::string& varName,
+  const std::string &varName,
   Unit unit,
   bool autoReading,
   bool autoWriting,
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks)
-  : CacheableVariable(varName, 0, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks)
-{
-  // check if variable is indexed and register the correct index
+  : CacheableVariable(varName, 0, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks) {
+
   dataID = register_named_variable(varName.c_str());
 }
 
@@ -33,7 +32,8 @@ void NamedVariable::writeToSim() {
     set_named_variable_value(dataID, cachedValue.value());
     return;
   }
-  std::cerr << "NamedVariable::setAndWriteToSim() called on \"" << varName << "\" but no value is cached"
+  std::cerr << "NamedVariable::setAndWriteToSim() called on \"" << varName
+            << "\" but no value is cached"
             << std::endl;
 }
 

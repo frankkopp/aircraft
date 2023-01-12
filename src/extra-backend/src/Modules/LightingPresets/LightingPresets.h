@@ -10,6 +10,7 @@
 
 class MsfsHandler;
 
+// Struct to hold all relevant light levels
 struct LightingValues {
   // EFB
   FLOAT64 efbBrightness;                  // A32NX_EFB_BRIGHTNESS
@@ -45,8 +46,15 @@ struct LightingValues {
 
 /**
  * This module is responsible for the lighting presets.
- * TODO: docs commenting
- * TODO: transition for light knobs to new values as animation is bugged
+ * It stores and reads the current lighting preset from and to an ini-file in the work folder.
+ *
+ * It is controlled by two LVARs:
+ * - A32NX_LIGHTING_PRESET_LOAD
+ * - A32NX_LIGHTING_PRESET_SAVE
+ *
+ * If these are set to a number >0 the module will load or save the preset with the given number
+ * from and to the ini-file or create a new preset based on default (load) or current (save)
+ * lighting values.
  */
 class LightingPresets : public Module {
 private:

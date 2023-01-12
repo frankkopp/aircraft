@@ -3,13 +3,9 @@
 
 #include "Event.h"
 
-// define/instantiate the state id generator
-IDGenerator Event::idGenerator{};
+Event::Event(HANDLE hdlSimConnect, const std::string &eventName, DWORD eventClientID)
+    : hSimConnect(hdlSimConnect), eventName(eventName), eventClientID(eventClientID) {
 
-Event::Event(HANDLE hdlSimConnect, const std::string &eventName)
-  : hSimConnect(hdlSimConnect), eventName(eventName) {
-
-  eventClientID = Event::idGenerator.getNextId();
   if (!SUCCEEDED(SimConnect_MapClientEventToSimEvent(hSimConnect, eventClientID, eventName.c_str()))) {
     std::cerr << "Failed to map event " << eventName << " to client event " << eventClientID
               << std::endl;
@@ -34,6 +30,7 @@ void Event::trigger_ex1(DWORD data0, DWORD data1, DWORD data2, DWORD data3, DWOR
   }
 }
 
+[[maybe_unused]]
 void Event::trigger(DWORD data0) const {
   const bool result = SUCCEEDED(SimConnect_TransmitClientEvent(
     hSimConnect,

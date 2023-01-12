@@ -59,11 +59,34 @@ void AircraftVariable::writeToSim() {
             << std::endl;
 }
 
+void AircraftVariable::setAutoWrite(bool autoWriting) {
+  if (setterEventName.empty() && setterEvent == nullptr) {
+    std::cerr << "AircraftVariable::setAutoWrite() called on [" << varName
+              << "] but no setter event name is set" << std::endl;
+    return;
+  }
+  CacheableVariable::setAutoWrite(autoWriting);
+};
+
+void AircraftVariable::set(FLOAT64 value) {
+  if (setterEventName.empty() && setterEvent == nullptr) {
+    std::cerr << "AircraftVariable::set() called on [" << varName
+              << "] but no setter event name is set" << std::endl;
+    return;
+  }
+  CacheableVariable::set(value);
+};
+
+// =================================================================================================
+// PRIVATE METHODS
+// =================================================================================================
+
 void AircraftVariable::useEventSetter() {
   const auto data = static_cast<DWORD>(cachedValue.value());
   if (index) {
     setterEvent->trigger_ex1(index, data);
-  } else {
+  }
+  else {
     setterEvent->trigger_ex1(data);
   }
 }
@@ -88,7 +111,8 @@ void AircraftVariable::useCalculatorCodeSetter() {
       std::cerr << "AircraftVariable::setAndWriteToSim() failed to execute calculator code: ["
                 << calculator_code << "]" << std::endl;
     }
-  } else {
+  }
+  else {
     std::cerr << "Failed to precompile calculator code for " << varName << std::endl;
   }
 }

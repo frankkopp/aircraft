@@ -10,22 +10,27 @@
 #include "IDGenerator.h"
 
 /**
- * A class that represents a data definition variable (sim object).<br/>
+ * A class that represents a data definition variable (custom sim object).<br/>
+ *
  * Data definition variables are used to define a sim data objects that can be used to retrieve and
  * write data from and to the sim.<br/>
- * For this a memory area need to be reserved via a data struct instance. This data struct instance
- * and its size (sizeof) need to be passed to the constructor of this class.
- * It works in three steps:<br/>
+ *
+ * For this a memory area needs to be reserved e.g. via a data struct instance. This data struct
+ * instance and its size (sizeof) need to be passed to the constructor of this class.
+ *
+ * Usage in three steps:<br/>
  * 1. a vector of data definitions will be registered with the sim as data definitions (provided in
- *    the constructor<br/>
+ *    the constructor)<br/>
  * 2. a data request will be send to the sim to have the sim prepare the requested data<br/>
  * 3. the sim will send an message (SIMCONNECT_RECV_ID_SIMOBJECT_DATA) to signal that the data is
  *    ready to be read. This event also contains a pointer to the provided data. <br/>
- * <br/>
- * This class handles this for you via simplified methods.
+ *
+ * The DataManager class will provide the requestData() method to read the sim's message queue.
+ * Currently SIMCONNECT_PERIOD is not used and data is requested on demand via the DataManager.
  */
 class DataDefinitionVariable {
 public:
+
   /**
    * DataDefinition to be used to register a data definition with the sim. <p/>
    * name: the name of the variable <br/>
@@ -195,13 +200,13 @@ public:
   [[nodiscard]]
   const std::string &getName() const { return name; }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   const std::vector<DataDefinition> &getDataDefinitions() const { return dataDefinitions; }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   void* getPDataStruct() const { return pDataStruct; }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   ID getDataDefID() const { return dataDefId; }
 
   [[nodiscard]]
@@ -210,27 +215,31 @@ public:
   [[nodiscard]]
   bool isAutoRead() const { return autoRead; }
 
+  [[maybe_unused]]
   void setAutoRead(bool autoReading) { autoRead = autoReading; }
 
   [[nodiscard]]
   bool isAutoWrite() const { return autoWrite; }
 
+  [[maybe_unused]]
   void setAutoWrite(bool autoWriting) { autoRead = autoWriting; }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   FLOAT64 getTimeStamp() const { return timeStampSimTime; }
 
   [[nodiscard]]
   FLOAT64 getMaxAgeTime() const { return maxAgeTime; }
 
+  [[maybe_unused]]
   void setMaxAgeTime(FLOAT64 maxAgeTimeInMilliseconds) { maxAgeTime = maxAgeTimeInMilliseconds; }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   UINT64 getTickStamp() const { return tickStamp; }
 
   [[nodiscard]]
   UINT64 getMaxAgeTicks() const { return maxAgeTicks; }
 
+  [[maybe_unused]]
   void setMaxAgeTicks(int64_t newMaxAgeTicks) { maxAgeTicks = newMaxAgeTicks; }
 
   [[nodiscard]]

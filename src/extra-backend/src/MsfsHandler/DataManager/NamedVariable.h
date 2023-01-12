@@ -10,9 +10,9 @@
 #include "CacheableVariable.h"
 
 /**
- * Specialized class for named variables (LVARS).
+ * Specialized class for named cacheable variables (LVARS).
  *
- * NamedVariables can't by copy constructed or assigned. They can be moved.
+ * NamedVariables can't by copy constructed or assigned. They can only be moved.
  * Create a NamedVariable instance instead.
  *
  * @see CacheableVariable
@@ -29,13 +29,13 @@ public:
    * Creates an instance of a named variable.
    * If the variable is not found in the sim it will be created.
    * @param varName The name of the variable in the sim.
-   * @param unit The unit ENUM of the variable as per the sim.
+   * @param unit The unit  of the variable as per the sim. See Units.h
    * @param autoReading Used by external classes to determine if the variable should be updated
    * automatically from the sim.
    * @param autoWriting Used by external classes to determine if the variable should be written
    * back to the sim automatically.
-   * @param maxAgeTime The maximum age of an auto updated the variable in seconds.
-   * @param maxAgeTicks The maximum age of an auto updated the variable in sim ticks.
+   * @param maxAgeTime The maximum age of an auto updated variable in seconds.
+   * @param maxAgeTicks The maximum age of an auto updated variable in sim ticks.
    */
   explicit NamedVariable(
     const std::string& varName,
@@ -46,7 +46,6 @@ public:
     UINT64 maxAgeTicks = 0);
 
   FLOAT64 readFromSim() override;
-
   void writeToSim() override;
 };
 

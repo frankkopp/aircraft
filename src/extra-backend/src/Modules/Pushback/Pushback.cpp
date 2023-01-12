@@ -38,13 +38,14 @@ bool Pushback::initialize() {
 
   // LVARs
   pushbackSystemEnabled = dataManager->make_named_var("A32NX_PUSHBACK_SYSTEM_ENABLED", UNITS.Bool, true);
-  updateDelta = dataManager->make_named_var("A32NX_PUSHBACK_UPDT_DELTA");
   parkingBrakeEngaged = dataManager->make_named_var("A32NX_PARK_BRAKE_LEVER_POS");
   tugCommandedSpeedFactor = dataManager->make_named_var("A32NX_PUSHBACK_SPD_FACTOR");
   tugCommandedHeadingFactor = dataManager->make_named_var("A32NX_PUSHBACK_HDG_FACTOR");
+  // debug purposes
   tugCommandedSpeed = dataManager->make_named_var("A32NX_PUSHBACK_SPD");
   tugCommandedHeading = dataManager->make_named_var("A32NX_PUSHBACK_HDG");
   tugInertiaSpeed = dataManager->make_named_var("A32NX_PUSHBACK_INERTIA_SPD");
+  updateDelta = dataManager->make_named_var("A32NX_PUSHBACK_UPDT_DELTA");
   rotXOut = dataManager->make_named_var("A32NX_PUSHBACK_R_X_OUT");
 
   // Simvars
@@ -83,7 +84,6 @@ bool Pushback::update(sGaugeDrawData* pData) {
     return true;
   }
 
-  updateDelta->setAndWriteToSim(pData->dt); // debug value
 
   // read all data from sim - could be done inline but better readability this way
   parkingBrakeEngaged->readFromSim();
@@ -93,10 +93,8 @@ bool Pushback::update(sGaugeDrawData* pData) {
 
   const double parkBrakeSpdFactor = parkingBrakeEngaged->getAsBool() ? (SPEED_RATIO / 10) : SPEED_RATIO;
   const FLOAT64 tugCmdSpd = tugCommandedSpeedFactor->get() * parkBrakeSpdFactor;
-  tugCommandedSpeed->setAndWriteToSim(tugCmdSpd); // debug value
 
   const FLOAT64 inertiaSpeed = inertialDampener.updateSpeed(tugCmdSpd);
-  tugInertiaSpeed->setAndWriteToSim(inertiaSpeed); // debug value
 
   const double parkingBrakeHdgFactor =
     parkingBrakeEngaged->getAsBool() ? (TURN_SPEED_RATIO / 10) : TURN_SPEED_RATIO;
@@ -111,19 +109,24 @@ bool Pushback::update(sGaugeDrawData* pData) {
   if (inertiaSpeed > 0) movementCounterRotAccel -= 0.5;
   else if (inertiaSpeed < 0) movementCounterRotAccel += 1.0;
   else movementCounterRotAccel = 0.0;
-  rotXOut->setAndWriteToSim(movementCounterRotAccel); // debug value
 
   // K:KEY_TUG_HEADING expects an unsigned integer scaling 360° to 0 to 2^32-1 (0xffffffff / 360)
   FLOAT64 aircraftHeadingDeg = aircraftHeading->get() * (180.0 / PI);
   const FLOAT64 computedHdg = angleAdd(aircraftHeadingDeg,
                                        -90 * tugCommandedHeadingFactor->get());
-  tugCommandedHeading->setAndWriteToSim(computedHdg); // debug value
 
   // TUG_HEADING units are a 32-bit integer (0 to 4294967295) which represent 0 to 360 degrees.
   // To set a 45-degree angle, for example, set the value to 4294967295 / 8.
   // https://docs.flightsimulator.com/html/Programming_Tools/Event_IDs/Aircraft_Misc_Events.htm#TUG_HEADING
   constexpr DWORD headingToInt32 = 0xffffffff / 360;
   const DWORD convertedComputedHeading = static_cast<DWORD>(computedHdg) * headingToInt32;
+
+  // send as LVARs for debugging in the flyPad
+  updateDelta->setAndWriteToSim(pData->dt); // debug value
+  tugInertiaSpeed->setAndWriteToSim(inertiaSpeed); // debug value
+  tugCommandedSpeed->setAndWriteToSim(tugCmdSpd); // debug value
+  rotXOut->setAndWriteToSim(movementCounterRotAccel); // debug value
+  tugCommandedHeading->setAndWriteToSim(computedHdg); // debug value
 
   // send K:KEY_TUG_HEADING event
   tugHeadingEvent->trigger_ex1(convertedComputedHeading);

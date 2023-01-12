@@ -17,26 +17,36 @@ constexpr double PI = 3.14159265358979323846;
 
 class MsfsHandler;
 
-// TODO: To be implemented
+/**
+ * This module is responsible for the pushback process.
+ *
+ * It is controlled by two LVARs:
+ * - A32NX_PUSHBACK_SYSTEM_ENABLED
+ * - A32NX_PUSHBACK_SPD_FACTOR
+ * - A32NX_PUSHBACK_HDG_FACTOR
+ *
+ * - Pushback Attached (simvar)
+ * - SIM ON GROUND (simvar)
+ */
 class Pushback : public Module {
 private:
 
   // Convenience pointer to the data manager
   DataManager* dataManager{};
 
+  // Used to smoothen acceleration and deceleration
   InertialDampener inertialDampener{0.0, 0.15};
 
   // LVARs
   NamedVariablePtr pushbackSystemEnabled;
-  NamedVariablePtr pushbackPaused;
+  NamedVariablePtr parkingBrakeEngaged;
   NamedVariablePtr tugCommandedHeadingFactor;
-  NamedVariablePtr tugCommandedHeading;
   NamedVariablePtr tugCommandedSpeedFactor;
+  // debug purposes - send as LVARs for debugging in the flyPad
+  NamedVariablePtr tugCommandedHeading;
   NamedVariablePtr tugCommandedSpeed;
   NamedVariablePtr tugInertiaSpeed;
-  NamedVariablePtr parkingBrakeEngaged;
   NamedVariablePtr updateDelta;
-  NamedVariablePtr rotXInput;
   NamedVariablePtr rotXOut;
 
   // Sim-vars
@@ -47,8 +57,6 @@ private:
 
   // Data structure for PushbackDataID
   DataDefinitionVariablePtr pushbackData;
-
-  // Data structure for PushbackDataID
   struct PushbackData {
     [[maybe_unused]] FLOAT64 pushbackWait;
     [[maybe_unused]] FLOAT64 velBodyZ;

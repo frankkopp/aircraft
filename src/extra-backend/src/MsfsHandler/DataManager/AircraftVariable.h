@@ -12,15 +12,23 @@
 typedef std::shared_ptr<Event> EventPtr;
 
 /**
+ * Specialized class for aircraft cacheable variables (aka simvars or A:VARS).
+ *
  * This class uses events or calculator code to write to a variable as
- * AircraftVariables are read-only
- * TODO: add event as an alternative to calculator code
- * TODO: updates all doc comments
- * TODO: comment that a event needs to have the order index/data to be able to be used
+ * AircraftVariables are read-only.
+ *
+ * If no setter code or event is provided the variable will be read-only.
  */
 class AircraftVariable : public CacheableVariable {
 private:
+  /**
+   * the event used in the calculator code to write to the variable.
+   */
   std::string setterEventName;
+
+  /**
+   * the event used to write to the variable.
+   */
   EventPtr setterEvent{};
 
 public:
@@ -31,8 +39,14 @@ public:
 
   /**
    * Creates an instance of a writable aircraft variable.
+   *
+   * If a setter event name or event object is provided the variable will be writable.
+   * (the reason both are given as there seem to be differences in how the sim handles
+   * calculator code and events).
+   *
    * @param varName The name of the variable in the sim.
-   * @param unit The unit ENUM of the variable as per the sim.
+   * @param varIndex The index of the variable in the sim.
+   * @param unit The unit of the variable as per the sim. See Units.h
    * @param autoReading Used by external classes to determine if the variable should be updated
    * automatically from the sim.
    * @param autoWriting Used by external classes to determine if the variable should be written
@@ -53,27 +67,10 @@ public:
     UINT64 maxAgeTicks = 0);
 
   FLOAT64 readFromSim() override;
-
   void writeToSim() override;
 
-
-  void setAutoWrite(bool autoWriting) override {
-    if (setterEventName.empty() && setterEvent == nullptr) {
-      std::cerr << "AircraftVariable::setAutoWrite() called on [" << varName
-                << "] but no setter event name is set" << std::endl;
-      return;
-    }
-    CacheableVariable::setAutoWrite(autoWriting);
-  };
-
-  void set(FLOAT64 value) override {
-    if (setterEventName.empty() && setterEvent == nullptr) {
-      std::cerr << "AircraftVariable::set() called on [" << varName
-                << "] but no setter event name is set" << std::endl;
-      return;
-    }
-    CacheableVariable::set(value);
-  };
+  void setAutoWrite(bool autoWriting) override;
+  void set(FLOAT64 value) override;
 
 private:
   void useEventSetter();

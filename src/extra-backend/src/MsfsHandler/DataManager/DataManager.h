@@ -33,13 +33,15 @@ typedef std::shared_ptr<Event> EventPtr;
  * DataManager instead as the data manager is able to de-duplicate variables and events and automatically
  * update and write back variables from/to the sim.
  *
+ * Currently variables do not use SIMCONNECT_PERIOD from the simconnect API but instead use a more
+ * controlled on-demand update mechanism in this class' preUpdate method.
+ *
  * TODO
- *  - write DataDefinitionVariable to sim
  *  - de duplication
- *  - add support for events
- *  - add register methods for variables (currently only factory methods register variables
+ *  - add support for receiving events
  *  - add ClientDataArea Variable
  *  - maybe rename classes DataDefinitionVariable to SimObject or similar
+ *  - add register methods for variables (currently only factory methods register variables
  *  - add additional make_ overload methods for variables for easier creation
  */
 class DataManager {
@@ -80,9 +82,11 @@ HANDLE hSimConnect{};
   FLOAT64 timeStamp{};
 
   /**
-   * Instance of an IDGenerator to generate unique IDs for variables and events.
+   * Instances of an IDGenerator to generate unique IDs for variables and events.
    */
-  IDGenerator idGenerator{};
+  IDGenerator dataDefIDGen{};
+  IDGenerator dataReqIDGen{};
+  IDGenerator eventIDGen{};
 
 public:
   /**
@@ -216,7 +220,17 @@ public:
   std::shared_ptr<Event> make_event(const std::string &eventName);
 
 private:
-  void processDispatchMessage(SIMCONNECT_RECV* pRecv, [[maybe_unused]] DWORD* pInt);
+  /**
+   * This is called everytime we receive a message from the sim.
+   * Currently this only happens when manually calling requestData().
+   * Evtl. this can be used a callback directly called from the sim.
+   *
+   * @param pRecv
+   * @param cbData
+   *
+   * @see https://docs.flightsimulator.com/html/Programming_Tools/SimConnect/API_Reference/Structures_And_Enumerations/SIMCONNECT_RECV.htm
+   */
+  void processDispatchMessage(SIMCONNECT_RECV* pRecv, [[maybe_unused]] DWORD* cbData);
 };
 
 #endif // FLYBYWIRE_A32NX_DATAMANAGER_H

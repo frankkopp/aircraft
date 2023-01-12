@@ -5,17 +5,19 @@
 #define FLYBYWIRE_A32NX_CACHEABLEVARIABLE_H
 
 #include <optional>
-#include <string>
 #include <sstream>
+#include <string>
 #include <utility>
 
 #include <MSFS/Legacy/gauges.h>
 
-#include "Units.h"
+#include "lib/Units.h"
 
 /**
- * Virtual base class for sim variable like named variables, aircraft variables and DataDefinitions.
- * Specialized classes must implement the requestFromSim and setAndWriteToSim methods.
+ * Virtual base class for sim variable like named variables, aircraft variables and
+ * DataDefinitions (custom defined SimObjects).
+ * Specialized classes must implement the readFromSim and writeToSim methods and can
+ * overwrite any other method if the default implementation is not sufficient.
  */
 class CacheableVariable {
 protected:
@@ -31,22 +33,23 @@ protected:
   int index = 0;
 
   /**
-   * The unit ENUM of the variable as per the sim
+   * The unit of the variable as per the sim
    * @See Units.h
    * @See https://docs.flightsimulator.com/html/Programming_Tools/SimVars/Simulation_Variable_Units.htm
    */
   Unit unit{UNITS.Number};
 
   /**
-   * Used by external classes to determine if the variable should updated from the sim when
-   * a sim update call occurs.
+   * Used by external classes to determine if the variable should be updated from the sim when
+   * a sim update call occurs. Updates are currently done manually by the external classes.
+   * not using the SimConnect SIMCONNECT_PERIOD.
    * E.g. if autoRead is true the variable will be updated from the sim every time the
-   * DataManager::preUpdate() method is called
+   * DataManager::preUpdate() method is called.
    */
   bool autoRead = false;
 
   /**
-   * Used by external classes to determine if the variable should written tothe sim when
+   * Used by external classes to determine if the variable should written to the sim when
    * a sim update call occurs.
    * E.g. if autoWrite is true the variable will be updated from the sim every time the
    * DataManager::postUpdate() method is called
@@ -94,35 +97,27 @@ protected:
   ID dataID = -1;
 
 public:
-
   virtual ~CacheableVariable() = default;
+
+  CacheableVariable() = delete; // no default constructor
+  CacheableVariable(const CacheableVariable&) = delete; // no copy constructor
+  CacheableVariable& operator=(const CacheableVariable&) = delete; // no copy assignment
 
   /**
    * Constructor
-   * @param varName The name of the variable in the sim
-   * @param varIndex The index of an indexed sim variable
-   * @param unit The unit ENUM of the variable as per the sim
-   * @param autoReading Used by external classes to determine if the variable should be automatically updated from the sim
+   * @param name The name of the variable in the sim
+   * @param index The index of an indexed sim variable
+   * @param unit The unit of the variable as per the sim (see Unit.h)
+   * @param autoReading Used by external classes to determine if the variable should be automatically updated from the
+   * sim
    * @param autoWriting Used by external classes to determine if the variable should be automatically written to the sim
    * @param maxAgeTime The maximum age of the variable in seconds when using requestUpdateFromSim()
    * @param maxAgeTicks The maximum age of the variable in ticks when using updateToSim()
    */
-  explicit CacheableVariable(
-    std::string nameInSim,
-    int index,
-    Unit unit,
-    bool autoReading,
-    bool autoWriting,
-    FLOAT64 maxAgeTime,
-    UINT64 maxAgeTicks)
-    : varName(std::move(nameInSim)),
-      index(index),
-      unit(unit),
-      autoRead(autoReading),
-      autoWrite(autoWriting),
-      maxAgeTime(maxAgeTime),
-      maxAgeTicks(maxAgeTicks) {}
-
+  explicit CacheableVariable(std::string name, int index, Unit unit, bool autoReading, bool autoWriting,
+                             FLOAT64 maxAgeTime, UINT64 maxAgeTicks)
+      : varName(std::move(name)), index(index), unit(unit), autoRead(autoReading), autoWrite(autoWriting),
+        maxAgeTime(maxAgeTime), maxAgeTicks(maxAgeTicks) {}
 
   /**
    * Returns the cached value or the default value (FLOAT64{}) if the cache is empty.
@@ -132,8 +127,7 @@ public:
    * (MSFS does not allow exceptions)
    * @return cached value or default value
    */
-  [[nodiscard]]
-  FLOAT64 get() const;
+  [[nodiscard]] FLOAT64 get() const;
 
   /**
    * Reads the value from the sim and updates the cache (clears dirty flag).
@@ -189,8 +183,7 @@ public:
    * Returns a string representing the object
    * @return object as string
    */
-  [[nodiscard]]
-  std::string str() const {
+  [[nodiscard]] std::string str() const {
     std::stringstream os;
     os << "Variable{ name='" << getVarName() << "'";
     os << " index=" << getIndex();
@@ -206,58 +199,43 @@ public:
   };
 
 private:
-
-// Getters and Setters
+  // Getters and Setters
 public:
-  [[nodiscard]]
-  const std::string &getVarName() const { return varName; }
+  [[nodiscard]] const std::string &getVarName() const { return varName; }
 
-  [[nodiscard]]
-  Unit getUnit() const { return unit; }
+  [[nodiscard]] Unit getUnit() const { return unit; }
 
-  [[nodiscard]]
-  int getIndex() const { return index; }
+  [[nodiscard]] int getIndex() const { return index; }
 
-  [[nodiscard]]
-  bool isAutoRead() const { return autoRead; }
+  [[nodiscard]] bool isAutoRead() const { return autoRead; }
 
   void setAutoRead(bool autoReading) { autoRead = autoReading; }
 
-  [[nodiscard]]
-  bool isAutoWrite() const { return autoWrite; }
+  [[nodiscard]] bool isAutoWrite() const { return autoWrite; }
 
   virtual void setAutoWrite(bool autoWriting) { autoRead = autoWriting; }
 
-  [[nodiscard]]
-  FLOAT64 getTimeStamp() const { return timeStampSimTime; }
+  [[nodiscard]] FLOAT64 getTimeStamp() const { return timeStampSimTime; }
 
-  [[nodiscard]]
-  FLOAT64 getMaxAgeTime() const { return maxAgeTime; }
+  [[nodiscard]] FLOAT64 getMaxAgeTime() const { return maxAgeTime; }
 
   void setMaxAgeTime(FLOAT64 maxAgeTimeInMilliseconds) { maxAgeTime = maxAgeTimeInMilliseconds; }
 
-  [[nodiscard]]
-  UINT64 getTickStamp() const { return tickStamp; }
+  [[nodiscard]] UINT64 getTickStamp() const { return tickStamp; }
 
-  [[nodiscard]]
-  UINT64 getMaxAgeTicks() const { return maxAgeTicks; }
+  [[nodiscard]] UINT64 getMaxAgeTicks() const { return maxAgeTicks; }
 
   void setMaxAgeTicks(int64_t newMaxAgeTicks) { maxAgeTicks = newMaxAgeTicks; }
 
-  [[nodiscard]]
-  bool isStoredToSim() const { return !dirty; }
+  [[nodiscard]] bool isStoredToSim() const { return !dirty; }
 
-  [[nodiscard]]
-  bool getAsBool() const  { return static_cast<bool>(get()); }
+  [[nodiscard]] bool getAsBool() const { return static_cast<bool>(get()); }
 
-  [[nodiscard]]
-  INT64 getAsInt64() const  { return static_cast<INT64>(get()); }
+  [[nodiscard]] INT64 getAsInt64() const { return static_cast<INT64>(get()); }
 
-  [[nodiscard]]
-  void setAsBool(bool b)  { set(b ? 1.0 : 0.0); }
+  [[nodiscard]] void setAsBool(bool b) { set(b ? 1.0 : 0.0); }
 
-  [[nodiscard]]
-  void setAsInt64(UINT64 i) { set(static_cast<FLOAT64>(i)); }
+  [[nodiscard]] void setAsInt64(UINT64 i) { set(static_cast<FLOAT64>(i)); }
 };
 
 /**

@@ -67,7 +67,7 @@ bool DataDefinitionVariable::requestFromSim() const {
     requestId,
     dataDefId,
     SIMCONNECT_OBJECT_ID_USER,
-    SIMCONNECT_PERIOD_ONCE))) { // TODO: support PERIOD directly??
+    SIMCONNECT_PERIOD_ONCE))) { // TODO - evtl. support using SIMCONNECT_PERIOD
 
     std::cerr << "Failed to request data from sim." << std::endl;
     return false;
@@ -76,22 +76,19 @@ bool DataDefinitionVariable::requestFromSim() const {
 }
 
 bool DataDefinitionVariable::requestUpdateFromSim(FLOAT64 timeStamp, UINT64 tickCounter) {
-  //  std::cout << "Requesting update from sim for " << name << " with requestID=" << requestId << std::endl;
-  //  std::cout << "Time stamp: " << timeStamp << " Tick counter: " << tickCounter << std::endl;
-  //  std::cout << timeStampSimTime + maxAgeTime << " " << tickStamp + maxAgeTicks << std::endl;
   // only update if the value is equal or older than the max age for sim time ot ticks
   if (timeStampSimTime + maxAgeTime >= timeStamp || tickStamp + maxAgeTicks >= tickCounter) {
     return true;
   }
   timeStampSimTime = timeStamp;
   tickStamp = tickCounter;
-  //  std::cout << "Requesting update from sim for " << name << " executing" << std::endl;
+
   if (!SUCCEEDED(SimConnect_RequestDataOnSimObject(
     hSimConnect,
     requestId,
     dataDefId,
     SIMCONNECT_OBJECT_ID_USER,
-    SIMCONNECT_PERIOD_ONCE))) { // TODO: support PERIOD directly??
+    SIMCONNECT_PERIOD_ONCE))) { // TODO: evtl. support SIMCONNECT_PERIOD
 
     std::cerr << "Failed to request data from sim." << std::endl;
     return false;

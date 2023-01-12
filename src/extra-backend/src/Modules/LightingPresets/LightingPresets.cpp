@@ -7,6 +7,24 @@
 #include "MsfsHandler.h"
 #include "LightingPresets.h"
 
+///
+// DataManager Howto Note:
+// =======================
+
+// The LightingPresets module uses the DataManager to get and set variables.
+// Looking at the make_xxx_var functions, you can see that they are updated
+// with different update cycles.
+//
+// Some variables are read from the sim at every tick:
+// - A32NX_ELEC_AC_1_BUS_IS_POWERED
+//
+// Some variables are read and written from/to the sim at every tick:
+// - A32NX_LIGHTING_PRESET_LOAD
+// - A32NX_LIGHTING_PRESET_SAVE
+//
+// The rest are read on demand after the state of the above variables have been checked.
+///
+
 LightingPresets::LightingPresets(MsfsHandler* msfsHandler) : Module(msfsHandler) {}
 
 bool LightingPresets::initialize() {

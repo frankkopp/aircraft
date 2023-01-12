@@ -153,14 +153,13 @@ DataDefinitionVariablePtr DataManager::make_datadefinition_var(
   bool autoWriting,
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
-  ID id = idGenerator.getNextId();
   std::shared_ptr<DataDefinitionVariable> var =
     std::make_shared<DataDefinitionVariable>(
       hSimConnect,
       name,
       dataDefinitions,
-      id, // TODO: test if both ID can be the same
-      id,
+      dataDefIDGen.getNextId(),
+      dataReqIDGen.getNextId(),
       dataStruct,
       dataStructSize,
       autoReading,
@@ -180,7 +179,7 @@ std::shared_ptr<Event> DataManager::make_event(const std::string &eventName) {
     return events[eventName];
   }
   std::cout << "DataManager::make_event(): creating new event" << std::endl;
-  std::shared_ptr<Event> event = std::make_shared<Event>(hSimConnect, eventName);
+  std::shared_ptr<Event> event = std::make_shared<Event>(hSimConnect, eventName, eventIDGen.getNextId());
   events[eventName] = event;
   return event;
 }
