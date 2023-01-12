@@ -50,7 +50,6 @@ enum Events {
 
 //class LightPreset;
 class AircraftPreset;
-class Pushback;
 
 class FlyPadBackend {
 private:

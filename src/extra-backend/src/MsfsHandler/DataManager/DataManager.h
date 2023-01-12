@@ -172,6 +172,7 @@ public:
    * @param varName Name of the variable in the sim
    * @param index Index of the indexed variable in the sim
    * @param setterEventName the name of the event to set the variable with an event or calculator code
+   * @param setterEvent an instance of an event variable to set the variable with an event or calculator code
    * @param optional unit Unit of the variable (default=Number)
    * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
    * @param autoWriting optional flag to indicate if the variable should be written automatically (default=false)
@@ -188,6 +189,23 @@ public:
     Unit unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,
+    FLOAT64 maxAgeTime = 0.0,
+    UINT64 maxAgeTicks = 0);
+
+  /**
+   * Creates a new readonly non-indexed AircraftVariable and adds it to the list of managed variables.
+   * @param varName Name of the variable in the sim
+   * @param optional unit Unit of the variable (default=Number)
+   * @param autoReading optional flag to indicate if the variable should be read automatically (default=false)
+   * @param maxAgeTime optional maximum age of the variable in seconds (default=0)
+   * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
+   * @return A shared pointer to the variable
+   * @see Units.h for available units
+   */
+  std::shared_ptr<AircraftVariable> make_simple_aircraft_var(
+    const std::string &varName,
+    Unit unit = UNITS.Number,
+    bool autoReading = false,
     FLOAT64 maxAgeTime = 0.0,
     UINT64 maxAgeTicks = 0);
 

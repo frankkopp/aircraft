@@ -4,9 +4,12 @@
 #ifndef FLYBYWIRE_A32NX_MODULE_H
 #define FLYBYWIRE_A32NX_MODULE_H
 
+#include <memory>
+
 #include <MSFS/Legacy/gauges.h>
 
 class MsfsHandler;
+class DataManager;
 
 /**
  * Base class and interface for all modules to ensure that they are compatible with the MsfsHandler.

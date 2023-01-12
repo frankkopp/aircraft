@@ -10,8 +10,6 @@
 static constexpr double SPEED_RATIO = 18.0;
 static constexpr double TURN_SPEED_RATIO = 0.16;
 
-Pushback::Pushback(MsfsHandler* msfsHandler) : Module(msfsHandler) {}
-
 ///
 // DataManager Howto Note:
 // =======================
@@ -30,6 +28,7 @@ Pushback::Pushback(MsfsHandler* msfsHandler) : Module(msfsHandler) {}
 // No variable is written automatically.
 ///
 
+Pushback::Pushback(MsfsHandler* msfsHandler) : Module(msfsHandler) {}
 
 bool Pushback::initialize() {
   std::cout << "Pushback::initialize()" << std::endl;
@@ -49,10 +48,10 @@ bool Pushback::initialize() {
   rotXOut = dataManager->make_named_var("A32NX_PUSHBACK_R_X_OUT");
 
   // Simvars
-  pushbackAttached = dataManager->make_aircraft_var("Pushback Attached", 0, "", nullptr, UNITS.Bool, true);
-  simOnGround = dataManager->make_aircraft_var("SIM ON GROUND", 0, "", nullptr, UNITS.Bool, true);
-  aircraftHeading = dataManager->make_aircraft_var("PLANE HEADING DEGREES TRUE", 0, "", nullptr, UNITS.Rad);
-  windVelBodyZ = dataManager->make_aircraft_var("RELATIVE WIND VELOCITY BODY Z");
+  pushbackAttached = dataManager->make_simple_aircraft_var("Pushback Attached", UNITS.Bool, true);
+  simOnGround = dataManager->make_simple_aircraft_var("SIMULATION TIME", UNITS.Number, true);
+  aircraftHeading = dataManager->make_simple_aircraft_var("PLANE HEADING DEGREES TRUE", UNITS.Rad);
+  windVelBodyZ = dataManager->make_simple_aircraft_var("RELATIVE WIND VELOCITY BODY Z");
 
   // Data definitions for PushbackDataID
   std::vector<DataDefinitionVariable::DataDefinition> pushBackDataDef = {

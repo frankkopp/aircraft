@@ -81,7 +81,7 @@ bool LightingPresets::preUpdate(sGaugeDrawData* pData) {
 
 bool LightingPresets::update(sGaugeDrawData* pData) {
   if (!isInitialized) {
-    std::cout << "LightingPresets::update() - not initialized" << std::endl;
+    std::cerr << "LightingPresets::update() - not initialized" << std::endl;
     return false;
   }
 

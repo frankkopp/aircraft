@@ -17,6 +17,7 @@ include_directories(src/MsfsHandler/DataManager)
 include_directories(src/Modules)
 include_directories(src/Modules/LightingPresets)
 include_directories(src/Modules/Pushback)
+include_directories(src/Modules/AircraftPresets)
 
 add_executable(flybywire-a32nx-extra-backend
         src/lib/Units.h
@@ -35,4 +36,6 @@ add_executable(flybywire-a32nx-extra-backend
         src/MsfsHandler/Module.cpp src/MsfsHandler/Module.h
         src/Modules/LightingPresets/LightingPresets.cpp src/Modules/LightingPresets/LightingPresets.h
         src/Modules/Pushback/Pushback.cpp src/Modules/Pushback/Pushback.h
-        src/Modules/Pushback/InertialDampener.cpp src/Modules/Pushback/InertialDampener.h)
+        src/Modules/Pushback/InertialDampener.cpp src/Modules/Pushback/InertialDampener.h
+        src/Modules/AircraftPresets/AircraftPresets.cpp src/Modules/AircraftPresets/AircraftPresets.h
+        src/Modules/AircraftPresets/AircraftProcedures.h)

@@ -144,6 +144,23 @@ AircraftVariablePtr DataManager::make_aircraft_var(
   return var;
 }
 
+std::shared_ptr<AircraftVariable>
+DataManager::make_simple_aircraft_var(
+  const std::string &varName,
+  Unit unit,
+  bool autoReading,
+  FLOAT64 maxAgeTime,
+  UINT64 maxAgeTicks) {
+
+  // TODO - check if variable already exists and if use the faster updating one
+  std::shared_ptr<AircraftVariable> var =
+    std::make_shared<AircraftVariable>(
+      varName, 0, "", nullptr, unit, autoReading, false, maxAgeTime, maxAgeTicks);
+  const std::string &fullName = var->getVarName() + ":" + std::to_string(0);
+  variables[fullName] = var;
+  return var;
+}
+
 DataDefinitionVariablePtr DataManager::make_datadefinition_var(
   const std::string &name,
   std::vector<DataDefinitionVariable::DataDefinition> &dataDefinitions,
@@ -173,12 +190,9 @@ DataDefinitionVariablePtr DataManager::make_datadefinition_var(
 
 
 std::shared_ptr<Event> DataManager::make_event(const std::string &eventName) {
-  std::cout << "DataManager::make_event(): " << eventName << std::endl;
   if (events.find(eventName) != events.end()) {
-    std::cout << "DataManager::make_event(): event already exists" << std::endl;
     return events[eventName];
   }
-  std::cout << "DataManager::make_event(): creating new event" << std::endl;
   std::shared_ptr<Event> event = std::make_shared<Event>(hSimConnect, eventName, eventIDGen.getNextId());
   events[eventName] = event;
   return event;
@@ -212,4 +226,5 @@ void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, [[maybe_unused]
       break;
   }
 }
+
 

@@ -48,6 +48,7 @@ clang++ \
   -I "${DIR}/src/Modules/" \
   -I "${DIR}/src/Modules/LightingPresets" \
   -I "${DIR}/src/Modules/Pushback" \
+  -I "${DIR}/src/Modules/AircraftPresets" \
   "${DIR}/src/Gauge_Extra_Backend.cpp" \
   "${DIR}/src/MsfsHandler/MsfsHandler.cpp" \
   "${DIR}/src/MsfsHandler/DataManager/DataManager.cpp" \
@@ -60,7 +61,8 @@ clang++ \
   "${DIR}/src/MsfsHandler/Module.cpp" \
   "${DIR}/src/Modules/LightingPresets/LightingPresets.cpp" \
   "${DIR}/src/Modules/Pushback/Pushback.cpp" \
-  "${DIR}/src/Modules/Pushback/InertialDampener.cpp"
+  "${DIR}/src/Modules/Pushback/InertialDampener.cpp" \
+  "${DIR}/src/Modules/AircraftPresets/AircraftPresets.cpp"
 
 # restore directory
 popd
