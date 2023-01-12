@@ -179,6 +179,7 @@ public:
     const std::string &varName,
     int index = 0,
     std::string setterEventName = "",
+    EventPtr setterEvent = nullptr,
     ENUM unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,

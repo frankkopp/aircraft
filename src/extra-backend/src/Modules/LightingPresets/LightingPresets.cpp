@@ -14,6 +14,9 @@ bool LightingPresets::initialize() {
 
   dataManager = &msfsHandler->getDataManager();
 
+  lightPotentiometerSetEvent = dataManager->make_event("LIGHT_POTENTIOMETER_SET");
+  cabinLightSetEvent = dataManager->make_event("CABIN_LIGHTS_SET");
+
   // Control LVARs - auto updated with every tick - LOAD/SAVE also auto written to sim
   elecAC1Powered = dataManager->make_named_var("A32NX_ELEC_AC_1_BUS_IS_POWERED", UNITS.Number, true, false);
   loadLightingPresetRequest = dataManager->make_named_var("A32NX_LIGHTING_PRESET_LOAD", UNITS.Number, true, true);
@@ -27,7 +30,7 @@ bool LightingPresets::initialize() {
   mcduRightLightLevel = dataManager->make_named_var("A32NX_MCDU_R_BRIGHTNESS", UNITS.Number, false, false);
 
   // Light Potentiometers - manual update and write when load/saving is requested
-  lightCabin = dataManager->make_aircraft_var("LIGHT CABIN", 0, "CABIN_LIGHTS_SET", UNITS.Percent, false, false);
+  lightCabin = dataManager->make_aircraft_var("LIGHT CABIN", 0, "", cabinLightSetEvent, UNITS.Percent);
   lightCabinLevel  = getLightPotentiometerVar(7);
   ovhdIntegralLightLevel = getLightPotentiometerVar(86);
   glareshieldIntegralLightLevel = getLightPotentiometerVar(84);
@@ -265,6 +268,7 @@ void LightingPresets::loadFromData(LightingValues lv) {
   localLightValues = lv;
 }
 
+[[maybe_unused]]
 std::string LightingPresets::sprint() const {
   std::ostringstream os;
   os << "EFB Brightness: " << localLightValues.efbBrightness << std::endl;
@@ -322,7 +326,8 @@ LightingPresets::getLightPotentiometerVar(int index) const {
   return dataManager->make_aircraft_var(
     "LIGHT POTENTIOMETER",
     index,
-    "LIGHT_POTENTIOMETER_SET",
+    "",
+    lightPotentiometerSetEvent,
     UNITS.Percent,
     false,
     false,
@@ -344,6 +349,6 @@ void LightingPresets::setValidCabinLightValue(FLOAT64 level) {
   }
   // cabin lights in the A32NX need to be controlled by two vars
   // one for the switch position and one for the actual light
-  lightCabin->setAndWriteToSim(level > 0 ? 1 : 0);
   lightCabinLevel->setAndWriteToSim(level);
+  lightCabin->setAndWriteToSim(level > 0 ? 1 : 0);
 }

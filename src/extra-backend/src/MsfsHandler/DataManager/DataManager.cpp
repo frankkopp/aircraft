@@ -126,6 +126,7 @@ AircraftVariablePtr DataManager::make_aircraft_var(
   const std::string &varName,
   int index,
   std::string setterEventName,
+  EventPtr setterEvent,
   ENUM unit,
   bool autoReading,
   bool autoWriting,
@@ -134,7 +135,9 @@ AircraftVariablePtr DataManager::make_aircraft_var(
 
   // TODO - check if variable already exists and if use the faster updating one
   std::shared_ptr<AircraftVariable> var =
-    std::make_shared<AircraftVariable>(varName, index, std::move(setterEventName), unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
+    std::make_shared<AircraftVariable>(
+      varName, index, std::move(setterEventName), std::move(setterEvent),
+      unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
   const std::string &fullName = var->getVarName() + ":" + std::to_string(index);
   variables[fullName] = var;
   return var;
@@ -168,6 +171,19 @@ DataDefinitionVariablePtr DataManager::make_datadefinition_var(
   return var;
 }
 
+
+std::shared_ptr<Event> DataManager::make_event(const std::string &eventName) {
+  std::cout << "DataManager::make_event(): " << eventName << std::endl;
+  if (events.find(eventName) != events.end()) {
+    std::cout << "DataManager::make_event(): event already exists" << std::endl;
+    return events[eventName];
+  }
+  std::cout << "DataManager::make_event(): creating new event" << std::endl;
+  std::shared_ptr<Event> event = std::make_shared<Event>(hSimConnect, eventName);
+  events[eventName] = event;
+  return event;
+}
+
 // =================================================================================================
 // Private methods
 // =================================================================================================
@@ -198,11 +214,5 @@ void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* cbData) 
     default:
       break;
   }
-}
-std::shared_ptr<Event> DataManager::make_event(const std::string &eventName) {
-  // TODO - check if event already exists
-  std::shared_ptr<Event> event = std::make_shared<Event>(hSimConnect, eventName);
-  events[eventName] = event;
-  return event;
 }
 

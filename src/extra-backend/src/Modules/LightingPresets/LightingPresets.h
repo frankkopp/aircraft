@@ -44,6 +44,11 @@ struct LightingValues {
   FLOAT64 floodPedLightLevel;             // 76
 };
 
+/**
+ * This module is responsible for the lighting presets.
+ * TODO: docs commenting
+ * TODO: transition for light knobs to new values as animation is bugged
+ */
 class LightingPresets : public Module {
 private:
   const std::string CONFIGURATION_FILEPATH = "\\work\\InteriorLightingPresets.ini";
@@ -85,6 +90,9 @@ private:
   AircraftVariablePtr pedestalIntegralLightLevel;
   AircraftVariablePtr floodPedLightLevel;
 
+  EventPtr lightPotentiometerSetEvent;
+  EventPtr cabinLightSetEvent;
+
   // Lighting values
   LightingValues localLightValues{};
 
@@ -108,7 +116,7 @@ public:
  * Produces a string with the current settings and their values.
  * @return string with the current settings and their values.
  */
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   std::string sprint() const;
 
 private:

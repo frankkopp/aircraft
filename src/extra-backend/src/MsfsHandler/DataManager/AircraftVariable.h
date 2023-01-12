@@ -7,21 +7,27 @@
 #include <iostream>
 
 #include "CacheableVariable.h"
+#include "Event.h"
+
+typedef std::shared_ptr<Event> EventPtr;
 
 /**
  * This class uses events or calculator code to write to a variable as
  * AircraftVariables are read-only
  * TODO: add event as an alternative to calculator code
+ * TODO: updates all doc comments
+ * TODO: comment that a event needs to have the order index/data to be able to be used
  */
 class AircraftVariable : public CacheableVariable {
 private:
   std::string setterEventName;
+  EventPtr setterEvent{};
 
 public:
 
   AircraftVariable() = delete; // no default constructor
-  AircraftVariable(const AircraftVariable&) = delete; // no copy constructor
-  AircraftVariable& operator=(const AircraftVariable&) = delete; // no copy assignment
+  AircraftVariable(const AircraftVariable &) = delete; // no copy constructor
+  AircraftVariable &operator=(const AircraftVariable &) = delete; // no copy assignment
 
   /**
    * Creates an instance of a writable aircraft variable.
@@ -39,6 +45,7 @@ public:
     const std::string &varName,
     int varIndex = 0,
     std::string setterEventName = "",
+    EventPtr setterEvent = nullptr,
     ENUM unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,
@@ -51,7 +58,7 @@ public:
 
 
   void setAutoWrite(bool autoWriting) override {
-    if (setterEventName.empty()) {
+    if (setterEventName.empty() && setterEvent == nullptr) {
       std::cerr << "AircraftVariable::setAutoWrite() called on [" << varName
                 << "] but no setter event name is set" << std::endl;
       return;
@@ -60,7 +67,7 @@ public:
   };
 
   void set(FLOAT64 value) override {
-    if (setterEventName.empty()) {
+    if (setterEventName.empty() && setterEvent == nullptr) {
       std::cerr << "AircraftVariable::set() called on [" << varName
                 << "] but no setter event name is set" << std::endl;
       return;
@@ -68,8 +75,9 @@ public:
     CacheableVariable::set(value);
   };
 
-
+private:
+  void useEventSetter();
+  void useCalculatorCodeSetter();
 };
-
 
 #endif //FLYBYWIRE_A32NX_AIRCRAFTVARIABLE_H

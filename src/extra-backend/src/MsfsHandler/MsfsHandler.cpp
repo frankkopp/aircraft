@@ -87,7 +87,7 @@ bool MsfsHandler::update(sGaugeDrawData* pData) {
     //    std::cout << *a32nxIsDevelopmentState << std::endl;
     //    std::cout << *a32nxIsReady << std::endl;
     //    std::cout << *baseSimData << std::endl;
-    std::cout << "time=" << simData.simulationTime << std::endl;
+    //    std::cout << "time=" << simData.simulationTime << std::endl;
   }
 
   return result;
