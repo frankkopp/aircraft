@@ -10,7 +10,7 @@ AircraftVariable::AircraftVariable(
   int varIndex,
   std::string setterEventName,
   EventPtr setterEvent,
-  ENUM unit,
+  Unit unit,
   bool autoReading,
   bool autoWriting,
   FLOAT64 maxAgeTime,
@@ -25,19 +25,19 @@ AircraftVariable::AircraftVariable(
   }
 }
 
-FLOAT64 AircraftVariable::getFromSim() {
+FLOAT64 AircraftVariable::readFromSim() {
   if (dataID == -1) {
     std::cerr << ("Aircraft variable " + varName + " not found") << std::endl;
     dirty = false;
     return FLOAT64{};
   }
-  const FLOAT64 value = aircraft_varget(dataID, unit, index);
+  const FLOAT64 value = aircraft_varget(dataID, unit.id, index);
   cachedValue = value;
   dirty = false;
   return value;
 }
 
-void AircraftVariable::setToSim() {
+void AircraftVariable::writeToSim() {
   if (setterEventName.empty() && setterEvent == nullptr) {
     std::cerr << "AircraftVariable::setAndWriteToSim() called on \"" << varName
               << "\" but no setter event name is set" << std::endl;
@@ -61,15 +61,10 @@ void AircraftVariable::setToSim() {
 
 void AircraftVariable::useEventSetter() {
   const auto data = static_cast<DWORD>(cachedValue.value());
-  bool result;
   if (index) {
-    result = setterEvent->trigger(index, data);
+    setterEvent->trigger_ex1(index, data);
   } else {
-    result = setterEvent->trigger(data);
-  }
-  if (!result) {
-    std::cerr << "AircraftVariable::setAndWriteToSim() called on \"" << varName
-              << "\" but the event could not be triggered" << std::endl;
+    setterEvent->trigger_ex1(data);
   }
 }
 

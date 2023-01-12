@@ -20,7 +20,7 @@ TOC:
 
 The update could be automated via GitHub actions (as the download is - it's basically one command) but this would
 require the write key to be part of env and is very risky. If a dev removes required keys or even removes everything
-from the en.json then this change will immediately be sent to Localazy by everybody who can trigger the GitHub
+from the en.json then this change will immediately be sent to Localazy by everybody who can trigger_ex1 the GitHub
 action.<br/>                   
 Of course, we can include measures to only do this for merges to master etc. but at some point the upload will have to
 happen and then potentially overwrite stuff at Localazy which might impact others.

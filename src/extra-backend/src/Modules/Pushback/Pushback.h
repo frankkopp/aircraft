@@ -22,7 +22,7 @@ class Pushback : public Module {
 private:
 
   // Convenience pointer to the data manager
-  DataManager* dataManager;
+  DataManager* dataManager{};
 
   InertialDampener inertialDampener{0.0, 0.15};
 
@@ -50,15 +50,15 @@ private:
 
   // Data structure for PushbackDataID
   struct PushbackData {
-    INT64 pushbackWait;
-    FLOAT64 velBodyZ;
-    FLOAT64 rotVelBodyY;
-    FLOAT64 rotAccelBodyX;
+    [[maybe_unused]] FLOAT64 pushbackWait;
+    [[maybe_unused]] FLOAT64 velBodyZ;
+    [[maybe_unused]] FLOAT64 rotVelBodyY;
+    [[maybe_unused]] FLOAT64 rotAccelBodyX;
   } pushbackDataStruct{};
 
   // Events
-  EventPtr keyTugHeadingEvent;
-  EventPtr keyTugSpeedEvent;
+  EventPtr tugHeadingEvent;
+  EventPtr tugSpeedEvent;
 
 public:
   Pushback() = delete;

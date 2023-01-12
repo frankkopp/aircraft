@@ -136,7 +136,7 @@
 1. [HYD] Hydraulic system updated. Multiple sections. Better regulation - @Crocket63 (crocket)
 1. [EFB] Added in-flight refueling capabilities - @Taz5150 (TazX [Z+2]#0405)
 1. [EFB] Moved setting for MCDU keyboard input into the EFB - @2hwk (2Cas#1022)
-1. [HYD] Placeholder simvar to trigger ptu high pitch sound - @crocket6 (crocket)
+1. [HYD] Placeholder simvar to trigger_ex1 ptu high pitch sound - @crocket6 (crocket)
 1. [EFB] Neatened up failure buttons on failure page - @nathanmayall (AbsoluteNath#9406)
 1. [SOUND] Added PTU sounds in correct conditions - @hotshotp (Boris)
 1. [ADIRS] Use heading as track at low ground speeds - @beheh (Benedict Etzel)
@@ -322,7 +322,7 @@
 1. [HYD] Smoothed nose wheel steering when pushing back - @Crocket63
 1. [EFB] Add first officer flypad - @tracernz (Mike)
 1. [CLK] Added simvars for Clock CHR and ET - @ssewell (Shane Sewell)
-1. [HYD] Fixed PTU starting sound trigger - @Crocket63
+1. [HYD] Fixed PTU starting sound trigger_ex1 - @Crocket63
 1. [HYD] Removed blue reservoir absolute air sensor (removed on new neo) - @Crocket63
 1. [MODEL] Split master caution and warning lamps - @tracernz (Mike)
 1. [MCDU] Improved resilience of FMGC main loop - @aguther (Andreas Guther)
@@ -363,7 +363,7 @@
 1. [GPWS] Mute "100 above" callout during autoland - @patmack14 (Patrick Macken)
 1. [MCDU] Refactored mcdu key input events - @derl30n - (Leon)
 1. [AUTOTHRUST] Added configuration option to allow change of key increment size - @aguther (Andreas Guther)
-1. [FLIGHTMODEL] Start fuel transfer for both tanks when EITHER inner tank reaches the trigger level - @donstim ( donbikes#4084)
+1. [FLIGHTMODEL] Start fuel transfer for both tanks when EITHER inner tank reaches the trigger_ex1 level - @donstim ( donbikes#4084)
 1. [FMGC] Add lat/lon waypoint ident option - @tracernz (Mike)
 1. [HYD] PTU model refinement and simulated potential wear state probabilities - @Crocket63
 1. [HYD] Reduced engine driven pumps efficiency in active regulation area - @Crocket63

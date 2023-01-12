@@ -6,7 +6,6 @@
 
 #include <MSFS/Legacy/gauges.h>
 #include <SimConnect.h>
-#include <cassert>
 
 #include "Units.h"
 #include "DataDefinitionVariable.h"
@@ -39,6 +38,10 @@ DataDefinitionVariable::DataDefinitionVariable(
 
   // TODO: what happens if definition is wrong - will this cause a sim crash?
   //  Might need to move this out of the constructor and into a separate method
+
+  SIMPLE_ASSERT(structSize == dataDefinitions.size() * sizeof(FLOAT64),
+                "DataDefinitionVariable::updateFromSimObjectData: Struct size mismatch")
+
   for (auto &ddef: dataDefinitions) {
     std::string fullVarName = ddef.name;
     if (ddef.index != 0) {
@@ -49,7 +52,7 @@ DataDefinitionVariable::DataDefinitionVariable(
       hSimConnect,
       dataDefinitionId,
       fullVarName.c_str(),
-      UNITS.unitStrings[ddef.unit].c_str(),
+      ddef.unit.name,
       SIMCONNECT_DATATYPE_FLOAT64))) {
 
       std::cerr << "Failed to add " << ddef.name << " to data definition." << std::endl;
@@ -98,13 +101,13 @@ bool DataDefinitionVariable::requestUpdateFromSim(FLOAT64 timeStamp, UINT64 tick
 
 void DataDefinitionVariable::updateFromSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* pData) {
   SIMPLE_ASSERT(structSize == pData->dwDefineCount * sizeof(FLOAT64),
-                "DataDefinitionVariable::updateFromSimObjectData: Struct size mismatch");
+                "DataDefinitionVariable::updateFromSimObjectData: Struct size mismatch")
   SIMPLE_ASSERT(pData->dwRequestID == requestId,
-                "DataDefinitionVariable::updateFromSimObjectData: Request ID mismatch");
+                "DataDefinitionVariable::updateFromSimObjectData: Request ID mismatch")
   std::memcpy(pDataStruct, &pData->dwData, structSize);
 }
 
-bool DataDefinitionVariable::setToSim() {
+bool DataDefinitionVariable::writeToSim() {
   const bool result = SUCCEEDED(SimConnect_SetDataOnSimObject(
     hSimConnect, dataDefId, SIMCONNECT_OBJECT_ID_USER, 0, 0, structSize, pDataStruct));
   if (!result) {
@@ -114,7 +117,7 @@ bool DataDefinitionVariable::setToSim() {
 }
 
 bool DataDefinitionVariable::updateToSim(FLOAT64 timeStamp, UINT64 tickCounter) {
-  if (setToSim()) {
+  if (writeToSim()) {
     timeStampSimTime = timeStamp;
     tickStamp = tickCounter;
     return true;

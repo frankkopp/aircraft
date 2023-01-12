@@ -653,7 +653,7 @@
     Main Parameters:
             - SYNC_FREQUENCY        Default: 1          Speed of update loop, N per second.
             - SYNC_TOGGLE_BUSES     <no default>        The buses for the lights that should be synced.
-            - SYNC_CONDITION        <no default>        The condition to trigger a sync. This is often two or more switches.
+            - SYNC_CONDITION        <no default>        The condition to trigger_ex1 a sync. This is often two or more switches.
             - SYNC_REQUISITE        <no default>        The required main buses for the circuits.
     -->
     <Template Name="FBW_Light_Sync">
@@ -745,7 +745,7 @@
 
     Main Parameters:
             - SYNC_FREQUENCY        Default: 1          Speed of update loop, N per second.
-            - TOGGLE_CONDITION      <Boolean>           The condition to trigger a toggle.
+            - TOGGLE_CONDITION      <Boolean>           The condition to trigger_ex1 a toggle.
             - TOGGLE_REQUISITE      <Boolean>           The required powered BUS for potentiometer.
             - POTENTIOMETER         <Number>            The potentiometer index # to toggle.
     -->

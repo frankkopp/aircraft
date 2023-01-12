@@ -28,13 +28,16 @@ private:
   DWORD eventClientID;
 
 public:
-  Event(HANDLE hdlSimConnect,  const std::string& eventName);
+  Event(HANDLE hdlSimConnect, const std::string &eventName);
 
   [[nodiscard]]
-  bool trigger(DWORD data0=0, DWORD data1=0, DWORD data2=0, DWORD data3=0, DWORD data4=0) const;
+  void trigger_ex1(DWORD data0 = 0, DWORD data1 = 0, DWORD data2 = 0, DWORD data3 = 0,
+                   DWORD data4 = 0) const;
 
+  [[nodiscard]]
+  void trigger(DWORD data0 = 0) const;
 
-// Getter and setter
+  // Getter and setter
 public:
   [[nodiscard]]
   const std::string &getEventName() const { return eventName; }

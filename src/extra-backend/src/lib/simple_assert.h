@@ -11,8 +11,6 @@
  * not support exceptions, this macro will only print an error message to the console.
  */
 #define SIMPLE_ASSERT(condition, message) \
-    if (!(condition)) { \
-        std::cerr << "Assertion failed: " << message << std::endl; \
-    }
+    if (!(condition)) { std::cerr << "Assertion failed: " << message << std::endl; }
 
 #endif //FLYBYWIRE_A32NX_SIMPLE_ASSERT_H

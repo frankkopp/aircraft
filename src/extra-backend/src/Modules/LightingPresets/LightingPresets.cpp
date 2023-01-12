@@ -91,7 +91,8 @@ bool LightingPresets::postUpdate(sGaugeDrawData* pData) {
 }
 
 bool LightingPresets::shutdown() {
-  //  std::cout << "LightingPresets::shutdown()" << std::endl;
+  isInitialized = false;
+  std::cout << "LightingPresets::shutdown()" << std::endl;
   return true;
 }
 
@@ -125,30 +126,30 @@ void LightingPresets::saveLightingPreset(int64_t savePresetRequest) {
 }
 
 void LightingPresets::readFromAircraft() {
-  localLightValues.efbBrightness = efbBrightness->getFromSim();
-  localLightValues.cabinLightLevel = lightCabinLevel->getFromSim();
-  localLightValues.ovhdIntegralLightLevel = ovhdIntegralLightLevel->getFromSim();
-  localLightValues.glareshieldIntegralLightLevel = glareshieldIntegralLightLevel->getFromSim();
-  localLightValues.glareshieldLcdLightLevel = glareshieldLcdLightLevel->getFromSim();
-  localLightValues.tableLightCptLevel = tableLightCptLevel->getFromSim();
-  localLightValues.tableLightFoLevel = tableLightFoLevel->getFromSim();
-  localLightValues.pfdBrtCptLevel = pfdBrtCptLevel->getFromSim();
-  localLightValues.ndBrtCptLevel = ndBrtCptLevel->getFromSim();
-  localLightValues.wxTerrainBrtCptLevel = wxTerrainBrtCptLevel->getFromSim();
-  localLightValues.consoleLightCptLevel = consoleLightCptLevel->getFromSim();
-  localLightValues.pfdBrtFoLevel = pfdBrtFoLevel->getFromSim();
-  localLightValues.ndBrtFoLevel = ndBrtFoLevel->getFromSim();
-  localLightValues.wxTerrainBrtFoLevel = wxTerrainBrtFoLevel->getFromSim();
-  localLightValues.consoleLightFoLevel = consoleLightFoLevel->getFromSim();
-  localLightValues.dcduLeftLightLevel = dcduLeftLightLevel->getFromSim();
-  localLightValues.dcduRightLightLevel = dcduLeftLightLevel->getFromSim();
-  localLightValues.mcduLeftLightLevel = mcduLeftLightLevel->getFromSim();
-  localLightValues.mcduRightLightLevel = mcduRightLightLevel->getFromSim();
-  localLightValues.ecamUpperLightLevel = ecamUpperLightLevel->getFromSim();
-  localLightValues.ecamLowerLightLevel = ecamLowerLightLevel->getFromSim();
-  localLightValues.floodPnlLightLevel = floodPnlLightLevel->getFromSim();
-  localLightValues.pedestalIntegralLightLevel = pedestalIntegralLightLevel->getFromSim();
-  localLightValues.floodPedLightLevel = floodPedLightLevel->getFromSim();
+  localLightValues.efbBrightness = efbBrightness->readFromSim();
+  localLightValues.cabinLightLevel = lightCabinLevel->readFromSim();
+  localLightValues.ovhdIntegralLightLevel = ovhdIntegralLightLevel->readFromSim();
+  localLightValues.glareshieldIntegralLightLevel = glareshieldIntegralLightLevel->readFromSim();
+  localLightValues.glareshieldLcdLightLevel = glareshieldLcdLightLevel->readFromSim();
+  localLightValues.tableLightCptLevel = tableLightCptLevel->readFromSim();
+  localLightValues.tableLightFoLevel = tableLightFoLevel->readFromSim();
+  localLightValues.pfdBrtCptLevel = pfdBrtCptLevel->readFromSim();
+  localLightValues.ndBrtCptLevel = ndBrtCptLevel->readFromSim();
+  localLightValues.wxTerrainBrtCptLevel = wxTerrainBrtCptLevel->readFromSim();
+  localLightValues.consoleLightCptLevel = consoleLightCptLevel->readFromSim();
+  localLightValues.pfdBrtFoLevel = pfdBrtFoLevel->readFromSim();
+  localLightValues.ndBrtFoLevel = ndBrtFoLevel->readFromSim();
+  localLightValues.wxTerrainBrtFoLevel = wxTerrainBrtFoLevel->readFromSim();
+  localLightValues.consoleLightFoLevel = consoleLightFoLevel->readFromSim();
+  localLightValues.dcduLeftLightLevel = dcduLeftLightLevel->readFromSim();
+  localLightValues.dcduRightLightLevel = dcduLeftLightLevel->readFromSim();
+  localLightValues.mcduLeftLightLevel = mcduLeftLightLevel->readFromSim();
+  localLightValues.mcduRightLightLevel = mcduRightLightLevel->readFromSim();
+  localLightValues.ecamUpperLightLevel = ecamUpperLightLevel->readFromSim();
+  localLightValues.ecamLowerLightLevel = ecamLowerLightLevel->readFromSim();
+  localLightValues.floodPnlLightLevel = floodPnlLightLevel->readFromSim();
+  localLightValues.pedestalIntegralLightLevel = pedestalIntegralLightLevel->readFromSim();
+  localLightValues.floodPedLightLevel = floodPedLightLevel->readFromSim();
 }
 
 void LightingPresets::applyToAircraft() {

@@ -47,7 +47,7 @@ bool DataManager::preUpdate(sGaugeDrawData* pData) {
   return true;
 }
 
-bool DataManager::update(sGaugeDrawData* pData) {
+bool DataManager::update([[maybe_unused]] sGaugeDrawData* pData) const {
   if (!isInitialized) {
     std::cerr << "DataManager::update() called but DataManager is not initialized" << std::endl;
     return false;
@@ -56,7 +56,7 @@ bool DataManager::update(sGaugeDrawData* pData) {
   return true;
 }
 
-bool DataManager::postUpdate(sGaugeDrawData* pData) {
+bool DataManager::postUpdate([[maybe_unused]] sGaugeDrawData* pData) {
   if (!isInitialized) {
     std::cerr << "DataManager::postUpdate() called but DataManager is not initialized" << std::endl;
     return false;
@@ -96,7 +96,8 @@ bool DataManager::processSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* dat
 }
 
 bool DataManager::shutdown() {
-  // empty
+  isInitialized = false;
+  std::cout << "DataManager::shutdown()" << std::endl;
   return true;
 }
 
@@ -110,7 +111,7 @@ void DataManager::requestData() {
 
 NamedVariablePtr DataManager::make_named_var(
   const std::string &varName,
-  ENUM unit,
+  Unit unit,
   bool autoReading,
   bool autoWriting,
   FLOAT64 maxAgeTime,
@@ -127,7 +128,7 @@ AircraftVariablePtr DataManager::make_aircraft_var(
   int index,
   std::string setterEventName,
   EventPtr setterEvent,
-  ENUM unit,
+  Unit unit,
   bool autoReading,
   bool autoWriting,
   FLOAT64 maxAgeTime,
@@ -188,7 +189,7 @@ std::shared_ptr<Event> DataManager::make_event(const std::string &eventName) {
 // Private methods
 // =================================================================================================
 
-void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* cbData) {
+void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, [[maybe_unused]] DWORD* cbData) {
   switch (pRecv->dwID) {
 
     case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
@@ -206,9 +207,6 @@ void DataManager::processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* cbData) 
     case SIMCONNECT_RECV_ID_EXCEPTION:
       std::cerr << "DataManager: Exception in SimConnect connection: ";
       std::cerr << SimconnectExceptionStrings::getSimConnectExceptionString(static_cast<SIMCONNECT_EXCEPTION>(static_cast<SIMCONNECT_RECV_EXCEPTION*>(pRecv)->dwException));
-      // DWORD lastId;
-      // SimConnect_GetLastSentPacketID(hSimConnect, &lastId);
-      // std::cerr << "Last ID: " << lastId << std::endl;
       break;
 
     default:

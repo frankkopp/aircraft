@@ -125,16 +125,16 @@ public:
 
   DataManager &getDataManager() { return dataManager; }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   bool getA32NxIsReady() const { return a32nxIsReady->getAsBool(); }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   FLOAT64 getA32NxIsDevelopmentState() const { return a32nxIsDevelopmentState->get(); }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   FLOAT64 getPreviousSimulationTime() const { return previousSimulationTime; }
 
-  [[nodiscard]]
+  [[maybe_unused]] [[nodiscard]]
   UINT64 getTickCounter() const { return tickCounter; }
 };
 

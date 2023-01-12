@@ -9,7 +9,7 @@
 
 NamedVariable::NamedVariable(
   const std::string& varName,
-  ENUM unit,
+  Unit unit,
   bool autoReading,
   bool autoWriting,
   FLOAT64 maxAgeTime,
@@ -20,14 +20,14 @@ NamedVariable::NamedVariable(
   dataID = register_named_variable(varName.c_str());
 }
 
-FLOAT64 NamedVariable::getFromSim() {
+FLOAT64 NamedVariable::readFromSim() {
   const FLOAT64 value = get_named_variable_value(dataID);
   cachedValue = value;
   dirty = false;
   return value;
 }
 
-void NamedVariable::setToSim() {
+void NamedVariable::writeToSim() {
   if (cachedValue.has_value()) {
     dirty = false;
     set_named_variable_value(dataID, cachedValue.value());

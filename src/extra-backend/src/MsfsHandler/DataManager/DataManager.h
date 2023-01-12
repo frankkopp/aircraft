@@ -62,7 +62,7 @@ private:
   /**
    * Handle to the simconnect instance.
    */
-  HANDLE hSimConnect{};
+HANDLE hSimConnect{};
 
   /**
    * Flag to indicate if the data manager is initialized.
@@ -110,7 +110,7 @@ public:
  * @param pData Pointer to the data structure of gauge pre-draw event
  * @return true if successful, false otherwise
  */
-  bool update(sGaugeDrawData* pData);
+  bool update([[maybe_unused]] sGaugeDrawData* pData) const;
 
   /**
  * Called by the MsfsHandler update() method.
@@ -118,7 +118,7 @@ public:
  * @param pData Pointer to the data structure of gauge pre-draw event
  * @return true if successful, false otherwise
  */
-  bool postUpdate(sGaugeDrawData* pData);
+  bool postUpdate([[maybe_unused]] sGaugeDrawData* pData);
 
   /**
    * Callback for SimConnect_GetNextDispatch events in the MsfsHandler used for data definition
@@ -157,7 +157,7 @@ public:
    */
   std::shared_ptr<NamedVariable> make_named_var(
     const std::string &varName,
-    ENUM unit = UNITS.Number,
+    Unit unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,
     FLOAT64 maxAgeTime = 0.0,
@@ -181,7 +181,7 @@ public:
     int index = 0,
     std::string setterEventName = "",
     EventPtr setterEvent = nullptr,
-    ENUM unit = UNITS.Number,
+    Unit unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,
     FLOAT64 maxAgeTime = 0.0,
@@ -216,7 +216,7 @@ public:
   std::shared_ptr<Event> make_event(const std::string &eventName);
 
 private:
-  void processDispatchMessage(SIMCONNECT_RECV* pRecv, DWORD* pInt);
+  void processDispatchMessage(SIMCONNECT_RECV* pRecv, [[maybe_unused]] DWORD* pInt);
 };
 
 #endif // FLYBYWIRE_A32NX_DATAMANAGER_H

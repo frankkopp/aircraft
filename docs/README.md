@@ -124,7 +124,7 @@ Unfortunately a lot of runways (either using Navigraph or not) have issues for L
 ##### Autopilot
 
 * ❌ Transitions might not be as they should
-* ❌ AP disconnect does not trigger master warning etc.
+* ❌ AP disconnect does not trigger_ex1 master warning etc.
 * ❌ NAV mode being armed might show dashes in the FCU instead of selected HDG
 * ❌ Engine out operations are not yet considered
 * ❌ AP performance when flying turbulence might not be satisfying in all cases
@@ -177,7 +177,7 @@ Unfortunately a lot of runways (either using Navigraph or not) have issues for L
 
 ⚠️ Not all events are working and it's also difficult to map all default events because there is no 100% match.
 
-The recommendation is to use a combination of default events and the custom events to trigger the FCU. This has been tested with the Honeycomb Bravo Throttle using SPAD.next or FSUIPC.
+The recommendation is to use a combination of default events and the custom events to trigger_ex1 the FCU. This has been tested with the Honeycomb Bravo Throttle using SPAD.next or FSUIPC.
 
 ℹ️ You find an event file for FSUIPC in subfolder FSUIPC. This needs to be placed in the FSUIPC folder beside the ini-file to be recognized. Then you can select those custom events for button press (for FS Control).
 
@@ -253,7 +253,7 @@ A32NX.FCU_EXPED_PUSH | Push EXPED button on FCU
 * 🔸 High speed protection
 * 🔸 High angle of attack (AoA) protection
 * 🔸 V_LS, V_alpha_prot, V_alpha_max are not finished and will be further improved
-* 🔸 Increasing thrust rapidly while being in high alpha protection may additionally trigger alpha floor
+* 🔸 Increasing thrust rapidly while being in high alpha protection may additionally trigger_ex1 alpha floor
 
 #### Considered solved
 

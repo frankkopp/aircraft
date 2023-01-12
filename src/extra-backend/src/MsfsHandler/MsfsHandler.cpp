@@ -4,15 +4,15 @@
 #include <iostream>
 #include <utility>
 
-#include "Module.h"
 #include "MsfsHandler.h"
+#include "Module.h"
 #include "Units.h"
 
 // =================================================================================================
 // PUBLIC METHODS
 // =================================================================================================
 
-MsfsHandler::MsfsHandler(std::string name) : simConnectName(std::move(name)) {};
+MsfsHandler::MsfsHandler(std::string name) : simConnectName(std::move(name)) {}
 
 void MsfsHandler::registerModule(Module* pModule) {
   modules.push_back(pModule);

@@ -35,7 +35,7 @@ protected:
    * @See Units.h
    * @See https://docs.flightsimulator.com/html/Programming_Tools/SimVars/Simulation_Variable_Units.htm
    */
-  ENUM unit{};
+  Unit unit{UNITS.Number};
 
   /**
    * Used by external classes to determine if the variable should updated from the sim when
@@ -110,7 +110,7 @@ public:
   explicit CacheableVariable(
     std::string nameInSim,
     int index,
-    ENUM unit,
+    Unit unit,
     bool autoReading,
     bool autoWriting,
     FLOAT64 maxAgeTime,
@@ -142,7 +142,7 @@ public:
    * requestUpdateFromSim() method.
    * @return the value read from the sim
    */
-  virtual FLOAT64 getFromSim() = 0;
+  virtual FLOAT64 readFromSim() = 0;
 
   /**
    * Reads the value fom the sim if the cached value is older than the max age (time or ticks).
@@ -169,7 +169,7 @@ public:
    * Must be implemented by specialized classes.
    * This method is called by the updateToSim() and setAndWriteToSim(FLOAT64 v) methods.
    */
-  virtual void setToSim() = 0;
+  virtual void writeToSim() = 0;
 
   /**
    * Writes the given value to the cache and the sim.
@@ -196,7 +196,7 @@ public:
     os << " index=" << getIndex();
     os << " value=" << get();
     os << " dirty=" << (isStoredToSim() ? "false" : "true");
-    os << " unit=\"" << UNITS.unitStrings[getUnit()] << "\"";
+    os << " unit=\"" << getUnit().name << "\"";
     os << " autoRead=" << (isAutoRead() ? "autoR" : "manualR");
     os << " autoWrite=" << (isAutoWrite() ? "autoW" : "manualW");
     os << " maxAgeTime=" << getMaxAgeTime() << "ms";
@@ -213,7 +213,7 @@ public:
   const std::string &getVarName() const { return varName; }
 
   [[nodiscard]]
-  ENUM getUnit() const { return unit; }
+  Unit getUnit() const { return unit; }
 
   [[nodiscard]]
   int getIndex() const { return index; }

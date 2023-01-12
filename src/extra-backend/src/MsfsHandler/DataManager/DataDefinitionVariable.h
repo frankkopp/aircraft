@@ -26,10 +26,16 @@
  */
 class DataDefinitionVariable {
 public:
+  /**
+   * DataDefinition to be used to register a data definition with the sim. <p/>
+   * name: the name of the variable <br/>
+   * index: the index of the variable <br/>
+   * unit: the unit of the variable <br/>
+   */
   struct DataDefinition {
     std::string name;
     int index;
-    ENUM unit;
+    Unit unit;
   };
 
 private:
@@ -81,7 +87,7 @@ private:
   bool autoRead = false;
 
   /**
-   * Used by external classes to determine if the variable should written tothe sim when
+   * Used by external classes to determine if the variable should written to the sim when
    * a sim update call occurs. <br/>
    * E.g. if autoWrite is true the variable will be updated from the sim every time the
    * DataManager::postUpdate() method is called
@@ -174,7 +180,7 @@ public:
    * Writes the data to the sim without updating the time stamps for time and ticks.
    * @return true if the write was successful, false otherwise
    */
-  bool setToSim();
+  bool writeToSim();
 
   /**
    * Writes the data to the sim and updates the time stamps for time and ticks.

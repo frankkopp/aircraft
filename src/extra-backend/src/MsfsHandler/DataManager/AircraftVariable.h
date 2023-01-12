@@ -46,15 +46,15 @@ public:
     int varIndex = 0,
     std::string setterEventName = "",
     EventPtr setterEvent = nullptr,
-    ENUM unit = UNITS.Number,
+    Unit unit = UNITS.Number,
     bool autoReading = false,
     bool autoWriting = false,
     FLOAT64 maxAgeTime = 0.0,
     UINT64 maxAgeTicks = 0);
 
-  FLOAT64 getFromSim() override;
+  FLOAT64 readFromSim() override;
 
-  void setToSim() override;
+  void writeToSim() override;
 
 
   void setAutoWrite(bool autoWriting) override {
