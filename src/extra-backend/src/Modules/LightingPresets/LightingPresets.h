@@ -8,7 +8,6 @@
 #include "DataManager.h"
 #include "inih/ini.h"
 
-
 class MsfsHandler;
 
 struct LightingValues {

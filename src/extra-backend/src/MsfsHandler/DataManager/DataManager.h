@@ -40,6 +40,7 @@ typedef std::shared_ptr<Event> EventPtr;
  *  - add register methods for variables (currently only factory methods register variables
  *  - add ClientDataArea Variable
  *  - maybe rename classes DataDefinitionVariable to SimObject or similar
+ *  - add additional make_ overload methods for variables for easier creation
  */
 class DataManager {
 private:

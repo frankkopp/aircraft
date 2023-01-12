@@ -65,9 +65,9 @@ bool FlyPadBackend::initialize() {
   result &= SimConnect_MapClientEventToSimEvent(hSimConnect, Events::KEY_TUG_SPEED_EVENT, "KEY_TUG_SPEED");
 
   // initialize submodules
-//  lightPresetPtr->initialize();
+  //  lightPresetPtr->initialize();
   aircraftPresetPtr->initialize();
-  pushbackPtr->initialize();
+//  pushbackPtr->initialize();
 
   std::cout << "FLYPAD_BACKEND: SimConnect connected." << std::endl;
   return (result == S_OK);
@@ -88,7 +88,7 @@ bool FlyPadBackend::onUpdate(double deltaTime) {
     // update sub modules
 //    lightPresetPtr->onUpdate(deltaTime);
     aircraftPresetPtr->onUpdate(deltaTime);
-    pushbackPtr->onUpdate(deltaTime);
+//    pushbackPtr->onUpdate(deltaTime);
 
     return true;
   }
@@ -101,7 +101,7 @@ bool FlyPadBackend::shutdown() {
   // shutdown submodules
 //  lightPresetPtr->shutdown();
   aircraftPresetPtr->shutdown();
-  pushbackPtr->shutdown();
+//  pushbackPtr->shutdown();
 
   isConnected = false;
   unregister_all_named_vars();

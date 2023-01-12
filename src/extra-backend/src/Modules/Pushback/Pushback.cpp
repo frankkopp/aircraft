@@ -2,25 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0
 
 #include <iostream>
-#include <chrono>
 
 #include "MsfsHandler.h"
-#include "MsfsHandler/DataManager/DataManager.h"
-#include "InertialDampener.h"
 #include "Pushback.h"
 #include "Units.h"
-
-using namespace std::chrono;
 
 static constexpr double SPEED_RATIO = 18.0;
 static constexpr double TURN_SPEED_RATIO = 0.16;
 
-Pushback::Pushback(MsfsHandler* msfsHandler) : Module(msfsHandler) {
-  dataManager = &msfsHandler->getDataManager();
-}
+Pushback::Pushback(MsfsHandler* msfsHandler) : Module(msfsHandler) {}
 
 bool Pushback::initialize() {
   std::cout << "Pushback::initialize()" << std::endl;
+
+  dataManager = &msfsHandler->getDataManager();
 
   // LVARs
   pushbackSystemEnabled = dataManager->make_named_var("A32NX_PUSHBACK_SYSTEM_ENABLED", UNITS.Bool, true);
@@ -34,12 +29,12 @@ bool Pushback::initialize() {
   rotXOut = dataManager->make_named_var("A32NX_PUSHBACK_R_X_OUT");
 
   // Simvars
-  pushbackAttached = dataManager->make_aircraft_var("Pushback Attached", 0, "", UNITS.Bool, true);
-  simOnGround = dataManager->make_aircraft_var("SIM ON GROUND", 0, "", UNITS.Bool, true);
+  pushbackAttached = dataManager->make_aircraft_var("Pushback Attached", 0, "", nullptr, UNITS.Bool, true);
+  simOnGround = dataManager->make_aircraft_var("SIM ON GROUND", 0, "", nullptr, UNITS.Bool, true);
   aircraftHeading = dataManager->make_aircraft_var("PLANE HEADING DEGREES TRUE");
   windVelBodyZ = dataManager->make_aircraft_var("RELATIVE WIND VELOCITY BODY Z");
 
-  // base sim data mainly for pause detection
+  // Data definitions for PushbackDataID
   std::vector<DataDefinitionVariable::DataDefinition> pushBackDataDef = {
     {"Pushback Wait",                0, UNITS.Bool},
     {"VELOCITY BODY Z",              0, UNITS.FeetSec},
@@ -48,6 +43,10 @@ bool Pushback::initialize() {
   };
   pushbackData = dataManager->make_datadefinition_var(
     "PUSHBACK DATA", pushBackDataDef, &pushbackDataStruct, sizeof(pushbackDataStruct));
+
+  // Events
+  keyTugHeadingEvent = dataManager->make_event("KEY_TUG_HEADING");
+  keyTugSpeedEvent = dataManager->make_event("KEY_TUG_SPEED");
 
   std::cout << "Pushback::initialized()" << std::endl;
   isInitialized = true;
@@ -60,13 +59,15 @@ bool Pushback::preUpdate(sGaugeDrawData* pData) {
 }
 
 bool Pushback::update(sGaugeDrawData* pData) {
+  std::cout << "Pushback::update() before check" << std::endl;
   if (!isInitialized || !pushbackSystemEnabled->getAsBool()
-      || pushbackAttached->getAsBool() || !simOnGround->getAsBool()) {
+      || !pushbackAttached->getAsBool() || !simOnGround->getAsBool()) {
     return true;
   }
-
-  // TODO IMPLEMENT
   std::cout << "Pushback::update() after check" << std::endl;
+
+
+  return true;
 }
 
 bool Pushback::postUpdate(sGaugeDrawData* pData) {

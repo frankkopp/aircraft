@@ -15,13 +15,15 @@
 #include <MSFS/MSFS.h>
 #include <MSFS/MSFS_Render.h>
 
-#include "LightingPresets/LightingPresets.h"
 #include "MsfsHandler/MsfsHandler.h"
+#include "LightingPresets/LightingPresets.h"
+#include "Pushback.h"
 
 MsfsHandler msfsHandler("Gauge_Extra_Backend");
 [[maybe_unused]]
 LightingPresets lightingPresets(&msfsHandler);
-
+[[maybe_unused]]
+Pushback pushback(&msfsHandler);
 /**
  * Gauge Callback
  * There can by multiple gauges in a single wasm module. Just add another gauge callback function and register it in the

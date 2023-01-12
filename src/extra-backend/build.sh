@@ -47,9 +47,9 @@ clang++ \
   -I "${DIR}/src/MsfsHandler/DataManager" \
   -I "${DIR}/src/Modules/" \
   -I "${DIR}/src/Modules/LightingPresets" \
+  -I "${DIR}/src/Modules/Pushback" \
   "${DIR}/src/Gauge_Extra_Backend.cpp" \
   "${DIR}/src/MsfsHandler/MsfsHandler.cpp" \
-  "${DIR}/src/MsfsHandler/Module.cpp" \
   "${DIR}/src/MsfsHandler/DataManager/DataManager.cpp" \
   "${DIR}/src/MsfsHandler/DataManager/CacheableVariable.cpp" \
   "${DIR}/src/MsfsHandler/DataManager/NamedVariable.cpp" \
@@ -57,7 +57,10 @@ clang++ \
   "${DIR}/src/MsfsHandler/DataManager/DataDefinitionVariable.cpp" \
   "${DIR}/src/MsfsHandler/DataManager/ClientDataAreaVariable.cpp" \
   "${DIR}/src/MsfsHandler/DataManager/Event.cpp" \
-  "${DIR}/src/Modules/LightingPresets/LightingPresets.cpp"
+  "${DIR}/src/MsfsHandler/Module.cpp" \
+  "${DIR}/src/Modules/LightingPresets/LightingPresets.cpp" \
+  "${DIR}/src/Modules/Pushback/Pushback.cpp" \
+  "${DIR}/src/Modules/Pushback/InertialDampener.cpp"
 
 # restore directory
 popd

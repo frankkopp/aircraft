@@ -56,6 +56,10 @@ private:
     FLOAT64 rotAccelBodyX;
   } pushbackDataStruct{};
 
+  // Events
+  EventPtr keyTugHeadingEvent;
+  EventPtr keyTugSpeedEvent;
+
 public:
   Pushback() = delete;
 
@@ -99,9 +103,6 @@ private:
   int sgn(T val) {
     return (T(0) < val) - (val < T(0));
   }
-
-
 };
-
 
 #endif //FLYBYWIRE_A32NX_PUSHBACK_H

@@ -34,5 +34,4 @@ add_executable(flybywire-a32nx-extra-backend
         src/MsfsHandler/Module.cpp src/MsfsHandler/Module.h
         src/Modules/LightingPresets/LightingPresets.cpp src/Modules/LightingPresets/LightingPresets.h
         src/Modules/Pushback/Pushback.cpp src/Modules/Pushback/Pushback.h
-        src/Modules/Pushback/InertialDampener.cpp src/Modules/Pushback/InertialDampener.h
-        src/Modules/Pushback/Pushback.cpp src/Modules/Pushback/Pushback.h)
+        src/Modules/Pushback/InertialDampener.cpp src/Modules/Pushback/InertialDampener.h)
