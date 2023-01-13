@@ -9,8 +9,7 @@
                 "${workspaceFolder}/src/fbw_common/src/**",
                 "${workspaceFolder}/src/fbw_a320/src/**",
                 "${workspaceFolder}/src/fbw_a380/src/**",
-                "${workspaceFolder}/src/flypad-backend/src",
-                "${workspaceFolder}/src/extra-backend/src"
+                "${workspaceFolder}/src/extra-backend/src/**"
             ],
             "defines": [
                 "_MSFS_WASM=1",
@@ -38,6 +37,7 @@
                     "${workspaceFolder}/src/fbw_common/src/**",
                     "${workspaceFolder}/src/fbw_a320/src/**",
                     "${workspaceFolder}/src/fbw_a380/src/**",
+                    "${workspaceFolder}/src/extra-backend/src/**",
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true

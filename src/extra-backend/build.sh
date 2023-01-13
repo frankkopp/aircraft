@@ -8,7 +8,8 @@ OUTPUT="${DIR}/../../flybywire-aircraft-a320-neo/SimObjects/AirPlanes/FlyByWire_
 if [ "$1" == "--debug" ]; then
   CLANG_ARGS="-g -DDEBUG"
 else
-  WASMLD_ARGS="--strip-debug"
+  CLANG_ARGS="-O2 -flto"
+  WASMLD_ARGS="--strip-debug  -O2 --lto-O2"
 fi
 
 set -ex
@@ -30,9 +31,9 @@ clang++ \
   -Wno-macro-redefined \
   --sysroot "${MSFS_SDK}/WASM/wasi-sysroot" \
   -target wasm32-unknown-wasi \
-  -flto \
   -D_MSFS_WASM=1 \
   -D__wasi__ \
+  -D_LIBCC_NO_EXCEPTIONS \
   -D_LIBCPP_HAS_NO_THREADS \
   -D_WINDLL \
   -D_MBCS \
@@ -68,20 +69,20 @@ clang++ \
 # restore directory
 popd
 
+# link modules
 wasm-ld \
   --no-entry \
   --allow-undefined \
   -L "${MSFS_SDK}/WASM/wasi-sysroot/lib/wasm32-wasi" \
   -lc "${MSFS_SDK}/WASM/wasi-sysroot/lib/wasm32-wasi/libclang_rt.builtins-wasm32.a" \
   --export __wasm_call_ctors \
-  ${WASMLD_ARGS} \
   --export-dynamic \
   --export malloc \
   --export free \
   --export __wasm_call_ctors \
   --export-table \
   --gc-sections \
-  -O3 --lto-O3 \
+  ${WASMLD_ARGS} \
   -lc++ -lc++abi \
   ${DIR}/obj/*.o \
   -o $OUTPUT
