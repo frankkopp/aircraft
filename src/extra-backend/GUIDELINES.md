@@ -1,54 +1,63 @@
 # FlyByWire Simulations - C++ WASM Development Guidelines
 
 ## Purpose
-Reading and troubleshooting other developers code is hard. Also, new developers 
-have a hard time to get started with developing new features and functionalities 
-in the FlyByWire Simulations code base. This document aims to provide a set of
-guidelines for the C++ WASM development in the FlyByWire Simulations code base 
-which aims to readability,  maintainability of the code base which is easily 
-accessible for new developers.
+Reading and troubleshooting other developers code is hard in general. Also, new 
+developers have a hard time to get started with developing new features and 
+functionalities in the FlyByWire Simulations code base. 
+
+This document aims to provide a set of guidelines for the C++ WASM development in 
+the FlyByWire Simulations code base which aims to readability, maintainability of
+the code base which is also easily accessible for new developers.
+
+## C++ Code Style
+This guide does not want to enforce any specific code style. But it is helpful
+if the code style is consistent throughout the code base.
+Using styles like the Google C++ Style Guide or the LLVM C++ Style Guide is
+recommended.
 
 ## Commenting
 Good commenting is a very important part of writing readable and maintainable
-software. This is especially true in a multi-developer project as the FlyByWire
-Open-Source project certainly is. 
-
-In general other developers should not have to read the actual code to understand
-what classes, methods and members do and why they exist in the first place. 
+software. This is especially true in a multi-developer project with very different 
+developer backgrounds and level of experience amongst its developers. 
+The FlyByWire Open-Source project certainly falls into this category. 
+           
+As a general rule code should be commented so that other developers should not 
+have to read the actual code to understand what classes, methods and members do 
+and why they exist in the first place. 
 
 In C++ in general, it should be sufficient to read the header file to understand 
-the purpose and usage of a class or method/function. There should be little need 
-to read the code in the definition files (cpp) to know what a class or any of its
-members does or how it should be used. 
+the purpose and usage of a class, method/function or any member. There should be
+little need to read the code in the definition files (cpp) to know what a class 
+or any of its members does or how it should be used. 
 This is especially important for any public members of a class.
                                             
 If you write comments think of the following questions:
 
-- What? Why? Usage? How?
+- What? Why? How to use? 
 - What does the code do?
   - Give a short general description of what the code does
 - Why does the code do it?
   - Explain the purpose of the code 
-  - e.g. why is this function needed?
-  - e.g. why is this variable needed?
+  - e.g. why is this method/function needed and where is it used?
+  - e.g. why is this variable needed and where is it used?
 - Hot to use the code?
   - Explain how to use the code
   - e.g. how to use the method/function?
-- How does the code do it (optional)?
+- How does the code actually do it conceptually (optional)?
   - Although good code speaks for itself it is helpful to explain in very
-    broad strokes how the code does it if the code has more complex logic
-  - e.g. how does the function work?
+    broad strokes how the code does it esp. if the code has more complex logic
 
-Modern IDEs like VSCode or CLion provide a lot of features to help developers 
-by simply hovering over a class, function, variable, etc. to get a quick 
-look at the documentation. Have this in mind when writing comments.
+Modern IDEs like VSCode or JetBrain IDEs provide a lot of features to help 
+developers by simply hovering over a class, function, variable, etc. to get a 
+quick look at the documentation. Have this in mind when writing comments.
 
 It is good practice to comment the code as you write it. Often it is easier to
-visualize what code should be written by writing parts of the documentation 
-first. E.g. writing the header files first by declaring members and document 
-these often helps to achieve a better and faster implementation.  
+start by writing parts of the documentation first. E.g. writing the header files 
+first by declaring members and document these often helps to achieve a better 
+and faster implementation.  
 
 ## Logging
+
 
 TODO                                                          
 - MSFS does not easily allow to attach a debugger for C++
@@ -57,11 +66,16 @@ TODO
 - Logging should print any warning and errors to the console to make it easier 
   to find issues later.  
 
-## C++ Code Style
+## Unit Testing
+Unit testing is a very important part of writing maintainable and readable code.
+
+A C++ Unit-testing framework has not yet been chosen or added to the project.
+This is a TODO.
 
 ## Tips
+<span style="color:yellow">TBD</span>
 
-### Debugging
- 
+## Debugging
+<span style="color:yellow">TBD</span> 
 
 
