@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(flybywire-a32nx)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(MSFS_SDK "C:\\MSFS SDK")
 
 add_subdirectory(src/fadec)

@@ -59,8 +59,6 @@ node_modules
 !igniter.config.mjs
 .igniter
 /src/fdr2csv/*.exe
-obj/
-build/
 .env
 src/instruments/buildSrc/custom/*
 /src/mcdu-server/client/build
@@ -70,4 +68,7 @@ msfs-avionics-mirror/src/sdk/build/**
 *.tgz
 /src/instruments/src/EFB/Localization/downloaded/*.json
 /.ace/
+obj/
+build/
+cmake-build-*/
 !CMakeLists.txt
