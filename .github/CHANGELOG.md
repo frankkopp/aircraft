@@ -27,6 +27,7 @@
 1. [FLIGHT MODEL/EFB] Modified empty weight cg and loading station/fuel tank locations - @donstim (donbikes#4084)
 1. [HYD] Fix gear sequence starting when failing prox sensor - @Crocket63 (crocket)
 1. [MISC] Added aircraft version check and uer notification - @frankkopp (Frank Kopp) 
+1. [GENERAL] Added C++ WASM framework and migrated all flypad-backend code to it - @frankkopp (Frank Kopp)
 
 ## 0.9.0
 
