@@ -8,12 +8,11 @@
 FLOAT64 CacheableVariable::get() const {
   if (cachedValue.has_value()) {
     if (dirty) {
-      std::cerr << "CacheableVariable::requestUpdateFromSim() called on '" << varName
-                << "' but the value is dirty" << std::endl;
+      std::cerr << "CacheableVariable::requestUpdateFromSim() called on " << varName << " but the value is dirty" << std::endl;
     }
     return cachedValue.value();
   }
-  std::cerr << "CacheableVariable::get() called on '" << varName << "' but no value is cached"
+  std::cerr << "CacheableVariable::get() called on " << varName << " but no value is cached"
             << std::endl;
   return FLOAT64{};
 }

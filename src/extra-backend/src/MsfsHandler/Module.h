@@ -13,6 +13,13 @@ class DataManager;
 
 /**
  * Base class and interface for all modules to ensure that they are compatible with the MsfsHandler.
+ * <p/>
+ * Make sure to add an error (std::cerr) message if anything goes wrong and especially if
+ * initialize(), preUpdate(), update() or postUpdate() return false.
+ * MSFS does not support Exception so good logging and error messages are the only way to inform the
+ * user/developer if somethings went wrong and where and what happened.
+ * Non-excessive positive logging about what is happening is also a good idea and helps
+ * tremendously with finding any issues as it will be easier to locate the cause of the issue.
  */
 class Module {
 protected:
@@ -38,7 +45,7 @@ public:
 
   /**
    * Called by the MsfsHandler instance once to initialize the module.
-   * Happens during the PANEL_SERVICE_PRE_INSTALL message from the sim..
+   * Happens during the PANEL_SERVICE_PRE_INSTALL message from the sim.
    * @return true if the module was successfully initialized, false otherwise.
    */
   virtual bool initialize() = 0;

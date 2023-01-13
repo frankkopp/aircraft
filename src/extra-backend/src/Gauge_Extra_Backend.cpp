@@ -14,6 +14,7 @@
 #include <MSFS/Legacy/gauges.h>
 #include <MSFS/MSFS.h>
 #include <MSFS/MSFS_Render.h>
+#include <SimConnect.h>
 
 #include "MsfsHandler/MsfsHandler.h"
 #include "LightingPresets/LightingPresets.h"
@@ -48,8 +49,7 @@ Gauge_Extra_Backend(__attribute__((unused)) FsContext ctx, int service_id, void*
       return msfsHandler.initialize();
     }
     case PANEL_SERVICE_PRE_DRAW: {
-      auto drawData = static_cast<sGaugeDrawData*>(pData);
-      return msfsHandler.update(drawData);
+      return msfsHandler.update(static_cast<sGaugeDrawData*>(pData));
     }
     case PANEL_SERVICE_PRE_KILL: {
       return msfsHandler.shutdown();

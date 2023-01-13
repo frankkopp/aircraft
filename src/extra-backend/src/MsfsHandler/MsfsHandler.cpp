@@ -69,15 +69,19 @@ bool MsfsHandler::update(sGaugeDrawData* pData) {
 
   // Call preUpdate(), update() and postUpdate() for all modules
   bool result = true;
+  // PRE UPDATE
   result &= dataManager.preUpdate(pData);
   result &= std::all_of(modules.begin(), modules.end(), [&pData](
     Module* pModule) { return pModule->preUpdate(pData); });
+  // UPDATE
   result &= dataManager.update(pData);
   result &= std::all_of(modules.begin(), modules.end(), [&pData](
     Module* pModule) { return pModule->update(pData); });
+  // POST UPDATE
   result &= dataManager.postUpdate(pData);
   result &= std::all_of(modules.begin(), modules.end(), [&pData](
     Module* pModule) { return pModule->postUpdate(pData); });
+
   if (!result) {
     std::cout << simConnectName << ": MsfsHandler::update() - failed" << std::endl;
   }

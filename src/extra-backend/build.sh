@@ -20,7 +20,7 @@ pushd "${DIR}/obj"
 # compile c++ code
 clang++ \
   -c \
-  "${CLANG_ARGS}" \
+  ${CLANG_ARGS} \
   -std=c++20 \
   -Wall \
   -Wno-unused-function \
@@ -84,3 +84,4 @@ wasm-ld \
   -lc++ -lc++abi \
   ${DIR}/obj/*.o \
   -o $OUTPUT
+

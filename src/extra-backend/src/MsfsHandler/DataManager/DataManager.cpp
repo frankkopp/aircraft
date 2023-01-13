@@ -7,6 +7,8 @@
 #include "NamedVariable.h"
 #include "SimconnectExceptionStrings.h"
 
+inline constexpr bool DEBUG_DATA_MANAGER = false;
+
 DataManager::DataManager() = default;
 
 bool DataManager::initialize(HANDLE hdl) {
@@ -28,6 +30,10 @@ bool DataManager::preUpdate(sGaugeDrawData* pData) {
   for (auto &var: variables) {
     if (var.second->isAutoRead()) {
       var.second->updateFromSim(timeStamp, tickCounter);
+      if (DEBUG_DATA_MANAGER && tickCounter % 100 == 0) {
+        std::cout << "DataManager::preUpdate() - auto read named and aircraft: "
+        << var.second->getVarName()  << " = " << var.second->get()  << std::endl;
+      }
     }
   }
 
@@ -36,6 +42,10 @@ bool DataManager::preUpdate(sGaugeDrawData* pData) {
     if (ddv->isAutoRead()) {
       if (!ddv->requestUpdateFromSim(timeStamp, tickCounter)) {
         std::cerr << "DataManager::preUpdate(): requestUpdateFromSim() failed for "
+                  << ddv->getName() << std::endl;
+      }
+      if (DEBUG_DATA_MANAGER && tickCounter % 100 == 0) {
+        std::cout << "DataManager::preUpdate() - auto read simobjects: "
                   << ddv->getName() << std::endl;
       }
     }
@@ -68,6 +78,10 @@ bool DataManager::postUpdate([[maybe_unused]] sGaugeDrawData* pData) {
   for (auto &var: variables) {
     if (var.second->isAutoWrite()) {
       var.second->updateToSim();
+      if (DEBUG_DATA_MANAGER && tickCounter % 100 == 0) {
+        std::cout << "DataManager::postUpdate() - auto write named and aircraft: "
+                  << var.second->getVarName()  << " = " << var.second->get()  << std::endl;
+      }
     }
   }
 
@@ -77,6 +91,10 @@ bool DataManager::postUpdate([[maybe_unused]] sGaugeDrawData* pData) {
       if (!ddv->updateToSim(timeStamp, tickCounter)) {
         std::cerr << "DataManager::postUpdate(): updateToSim() failed for "
                   << ddv->getName() << std::endl;
+      }
+      if (DEBUG_DATA_MANAGER && tickCounter % 100 == 0) {
+        std::cout << "DataManager::postUpdate() - auto write simobjects"
+                  << ddv->getName()  << std::endl;
       }
     }
   }
@@ -116,10 +134,17 @@ NamedVariablePtr DataManager::make_named_var(
   bool autoWriting,
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
-  // TODO - check if variable already exists
+
+  // Check if variable already exists and return it if it does
+  if (variables.find(varName) != variables.end()) {
+    return std::dynamic_pointer_cast<NamedVariable>(variables[varName]);
+  }
+
+  // Create new var and store it in the map
   std::shared_ptr<NamedVariable> var =
     std::make_shared<NamedVariable>(varName, unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
   variables[var->getVarName()] = var;
+
   return var;
 }
 
@@ -134,30 +159,41 @@ AircraftVariablePtr DataManager::make_aircraft_var(
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
 
-  // TODO - check if variable already exists and if use the faster updating one
+  // Check if variable already exists and return it if it does
+  const std::string fullName = varName + ":" + std::to_string(0);
+  if (variables.find(fullName) != variables.end()) {
+    return std::dynamic_pointer_cast<AircraftVariable>(variables[fullName]);
+  }
+
+  // Create new var and store it in the map
   std::shared_ptr<AircraftVariable> var =
     std::make_shared<AircraftVariable>(
       varName, index, std::move(setterEventName), std::move(setterEvent),
       unit, autoReading, autoWriting, maxAgeTime, maxAgeTicks);
-  const std::string &fullName = var->getVarName() + ":" + std::to_string(index);
   variables[fullName] = var;
+
   return var;
 }
 
-std::shared_ptr<AircraftVariable>
-DataManager::make_simple_aircraft_var(
+AircraftVariablePtr DataManager::make_simple_aircraft_var(
   const std::string &varName,
   Unit unit,
   bool autoReading,
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
 
-  // TODO - check if variable already exists and if use the faster updating one
-  std::shared_ptr<AircraftVariable> var =
+  // Check if variable already exists and return it if it does
+  const std::string fullName = varName + ":" + std::to_string(0);
+  if (variables.find(fullName) != variables.end()) {
+    return std::dynamic_pointer_cast<AircraftVariable>(variables[fullName]);
+  }
+
+  // Create new var and store it in the map
+  AircraftVariablePtr var =
     std::make_shared<AircraftVariable>(
       varName, 0, "", nullptr, unit, autoReading, false, maxAgeTime, maxAgeTicks);
-  const std::string &fullName = var->getVarName() + ":" + std::to_string(0);
   variables[fullName] = var;
+
   return var;
 }
 
@@ -170,7 +206,7 @@ DataDefinitionVariablePtr DataManager::make_datadefinition_var(
   bool autoWriting,
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
-  std::shared_ptr<DataDefinitionVariable> var =
+  DataDefinitionVariablePtr var =
     std::make_shared<DataDefinitionVariable>(
       hSimConnect,
       name,
@@ -189,7 +225,7 @@ DataDefinitionVariablePtr DataManager::make_datadefinition_var(
 }
 
 
-std::shared_ptr<Event> DataManager::make_event(const std::string &eventName) {
+EventPtr DataManager::make_event(const std::string &eventName) {
   if (events.find(eventName) != events.end()) {
     return events[eventName];
   }

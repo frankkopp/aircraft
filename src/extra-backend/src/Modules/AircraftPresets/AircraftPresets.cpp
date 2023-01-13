@@ -36,13 +36,13 @@ bool AircraftPresets::initialize() {
   dataManager = &msfsHandler->getDataManager();
 
   // LVARs
-  loadAircraftPresetRequest = dataManager->make_named_var("A32NX_LOAD_AIRCRAFT_PRESET", UNITS.Bool, true);
+  loadAircraftPresetRequest = dataManager->make_named_var("A32NX_AIRCRAFT_PRESET_LOAD", UNITS.Bool, true, true);
   loadAircraftPresetRequest->setAndWriteToSim(0);
   progressAircraftPreset = dataManager->make_named_var("A32NX_AIRCRAFT_PRESET_LOAD_PROGRESS");
-  progressAircraftPreset = dataManager->make_named_var("A32NX_AIRCRAFT_PRESET_LOAD_PROGRESS");
+  progressAircraftPresetId = dataManager->make_named_var("A32NX_AIRCRAFT_PRESET_LOAD_CURRENT_ID");
 
   // Simvars
-  simOnGround = dataManager->make_simple_aircraft_var("SIMULATION TIME", UNITS.Number, true);
+  simOnGround = dataManager->make_simple_aircraft_var("SIM ON GROUND", UNITS.Number, true);
 
   std::cout << "AircraftPresets::initialized()" << std::endl;
   isInitialized = true;
@@ -51,7 +51,7 @@ bool AircraftPresets::initialize() {
 
 bool AircraftPresets::preUpdate(sGaugeDrawData* pData) {
   // empty
-  return false;
+  return true;
 }
 
 bool AircraftPresets::update(sGaugeDrawData* pData) {
@@ -71,6 +71,10 @@ bool AircraftPresets::update(sGaugeDrawData* pData) {
       loadingIsActive = false;
       return true;
     }
+
+    // read the progress vars once to get the current state
+    progressAircraftPreset->readFromSim();
+    progressAircraftPresetId->readFromSim();
 
     // check if we already have an active loading process or if this is a new request which
     // needs to be initialized
@@ -93,8 +97,8 @@ bool AircraftPresets::update(sGaugeDrawData* pData) {
       currentDelay = 0;
       currentStep = 0;
       loadingIsActive = true;
-      progressAircraftPreset->set(0);
-      progressAircraftPresetId->set(0);
+      progressAircraftPreset->setAndWriteToSim(0);
+      progressAircraftPresetId->setAndWriteToSim(0);
       std::cout << "AircraftPresets: Aircraft Preset " << currentProcedureID
                 << " starting procedure!" << std::endl;
       return true;
@@ -109,8 +113,8 @@ bool AircraftPresets::update(sGaugeDrawData* pData) {
     if (currentStep >= currentProcedure->size()) {
       std::cout << "AircraftPresets: Aircraft Preset " << currentProcedureID << " done!"
                 << std::endl;
-      progressAircraftPreset->set(0);
-      progressAircraftPresetId->set(0);
+      progressAircraftPreset->setAndWriteToSim(0);
+      progressAircraftPresetId->setAndWriteToSim(0);
       loadAircraftPresetRequest->set(0);
       loadingIsActive = false;
       return true;
@@ -138,8 +142,8 @@ bool AircraftPresets::update(sGaugeDrawData* pData) {
     // check if the current step is a condition step and check the condition
     if (currentStepPtr->isConditional) {
       // update progress var
-      progressAircraftPreset->set(static_cast<double>(currentStep) / currentProcedure->size());
-      progressAircraftPresetId->set(currentStepPtr->id);
+      progressAircraftPreset->setAndWriteToSim(static_cast<double>(currentStep) / currentProcedure->size());
+      progressAircraftPresetId->setAndWriteToSim(currentStepPtr->id);
       execute_calculator_code(currentStepPtr->actionCode.c_str(), &fvalue, &ivalue, &svalue);
       std::cout << "AircraftPresets: Aircraft Preset Step " << currentStep << " Condition: "
                 << currentStepPtr->description
@@ -177,8 +181,8 @@ bool AircraftPresets::update(sGaugeDrawData* pData) {
     }
 
     // update progress var
-    progressAircraftPreset->set(static_cast<double>(currentStep) / currentProcedure->size());
-    progressAircraftPresetId->set(currentStepPtr->id);
+    progressAircraftPreset->setAndWriteToSim(static_cast<double>(currentStep) / currentProcedure->size());
+    progressAircraftPresetId->setAndWriteToSim(currentStepPtr->id);
 
     // execute code to set expected state
     std::cout << "AircraftPresets: Aircraft Preset Step " << currentStep << " Execute: "
@@ -201,7 +205,7 @@ bool AircraftPresets::update(sGaugeDrawData* pData) {
 
 bool AircraftPresets::postUpdate(sGaugeDrawData* pData) {
   // empty
-  return false;
+  return true;
 }
 
 bool AircraftPresets::shutdown() {

@@ -10,6 +10,7 @@
 #include <string>
 
 #include <MSFS/Legacy/gauges.h>
+#include <MSFS/MSFS.h>
 #include <SimConnect.h>
 
 #include "Units.h"
@@ -43,6 +44,7 @@ typedef std::shared_ptr<Event> EventPtr;
  *  - maybe rename classes DataDefinitionVariable to SimObject or similar
  *  - add register methods for variables (currently only factory methods register variables
  *  - add additional make_ overload methods for variables for easier creation
+ *  - more testing with index vars
  */
 class DataManager {
 private:
@@ -159,7 +161,7 @@ public:
    * @return A shared pointer to the variable
    * @see Units.h for available units
    */
-  std::shared_ptr<NamedVariable> make_named_var(
+  NamedVariablePtr make_named_var(
     const std::string &varName,
     Unit unit = UNITS.Number,
     bool autoReading = false,
@@ -181,7 +183,7 @@ public:
    * @return A shared pointer to the variable
    * @see Units.h for available units
    */
-  std::shared_ptr<AircraftVariable> make_aircraft_var(
+AircraftVariablePtr make_aircraft_var(
     const std::string &varName,
     int index = 0,
     std::string setterEventName = "",
@@ -202,7 +204,7 @@ public:
    * @return A shared pointer to the variable
    * @see Units.h for available units
    */
-  std::shared_ptr<AircraftVariable> make_simple_aircraft_var(
+  AircraftVariablePtr make_simple_aircraft_var(
     const std::string &varName,
     Unit unit = UNITS.Number,
     bool autoReading = false,
@@ -222,7 +224,7 @@ public:
    * @param maxAgeTicks optional Maximum age of the variable in ticks (default=0)
    * @return A shared pointer to the variable
    */
-  std::shared_ptr<DataDefinitionVariable> make_datadefinition_var(
+  DataDefinitionVariablePtr make_datadefinition_var(
     const std::string &name,
     std::vector<DataDefinitionVariable::DataDefinition> &dataDefinitions,
     void* dataStruct,

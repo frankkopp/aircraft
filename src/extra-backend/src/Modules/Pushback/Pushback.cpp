@@ -49,7 +49,7 @@ bool Pushback::initialize() {
 
   // Simvars
   pushbackAttached = dataManager->make_simple_aircraft_var("Pushback Attached", UNITS.Bool, true);
-  simOnGround = dataManager->make_simple_aircraft_var("SIMULATION TIME", UNITS.Number, true);
+  simOnGround = dataManager->make_simple_aircraft_var("SIM ON GROUND", UNITS.Number, true);
   aircraftHeading = dataManager->make_simple_aircraft_var("PLANE HEADING DEGREES TRUE", UNITS.Rad);
   windVelBodyZ = dataManager->make_simple_aircraft_var("RELATIVE WIND VELOCITY BODY Z");
 
@@ -78,11 +78,17 @@ bool Pushback::preUpdate(sGaugeDrawData* pData) {
 }
 
 bool Pushback::update(sGaugeDrawData* pData) {
-  if (!isInitialized || !pushbackSystemEnabled->getAsBool()
-      || !pushbackAttached->getAsBool() || !simOnGround->getAsBool()) {
-    return true;
+  if (!isInitialized) {
+    std::cerr << "Pushback::update() - not initialized" << std::endl;
+    return false;
   }
 
+  // Check if the pushback system is enabled and conditions are met
+  if (!pushbackSystemEnabled->getAsBool()
+      || !pushbackAttached->getAsBool()
+      || !simOnGround->getAsBool()) {
+    return true;
+  }
 
   // read all data from sim - could be done inline but better readability this way
   parkingBrakeEngaged->readFromSim();
@@ -105,9 +111,9 @@ bool Pushback::update(sGaugeDrawData* pData) {
   // the aircraft lifting any gears.
   const FLOAT64 windCounterRotAccel = windVelBodyZ->readFromSim() / 2000.0;
   FLOAT64 movementCounterRotAccel = windCounterRotAccel;
-  if (inertiaSpeed > 0) movementCounterRotAccel -= 0.5;
-  else if (inertiaSpeed < 0) movementCounterRotAccel += 1.0;
-  else movementCounterRotAccel = 0.0;
+  if (inertiaSpeed > 0) { movementCounterRotAccel -= 0.5; }
+  else if (inertiaSpeed < 0) { movementCounterRotAccel += 1.0; }
+  else { movementCounterRotAccel = 0.0; }
 
   // K:KEY_TUG_HEADING expects an unsigned integer scaling 360° to 0 to 2^32-1 (0xffffffff / 360)
   FLOAT64 aircraftHeadingDeg = aircraftHeading->get() * (180.0 / PI);
