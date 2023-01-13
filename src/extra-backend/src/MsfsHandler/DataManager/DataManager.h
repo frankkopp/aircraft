@@ -38,7 +38,6 @@ typedef std::shared_ptr<Event> EventPtr;
  * controlled on-demand update mechanism in this class' preUpdate method.
  *
  * TODO
- *  - de duplication
  *  - add support for receiving events
  *  - add ClientDataArea Variable
  *  - maybe rename classes DataDefinitionVariable to SimObject or similar
