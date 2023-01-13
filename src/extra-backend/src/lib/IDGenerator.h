@@ -12,13 +12,15 @@
  * This class is used to generate unique IDs for the modules.
  * Uniqueness is only guaranteed within the same instance of this class.
  * It is used to identify the modules in the MSFS gauges system.
+ *
+ * Starts at one - never returns zero.
  */
 class IDGenerator {
 private:
-  ID nextId = 1;
+  DWORD nextId = 1;
 
 public:
-  inline ID getNextId() { return nextId++; };
+  inline DWORD getNextId() { return nextId++; };
 };
 
 #endif // FLYBYWIRE_A32NX_IDGENERATOR_H

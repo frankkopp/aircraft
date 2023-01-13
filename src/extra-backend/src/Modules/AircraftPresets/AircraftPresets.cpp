@@ -49,7 +49,7 @@ bool AircraftPresets::initialize() {
   return true;
 }
 
-bool AircraftPresets::preUpdate(sGaugeDrawData* pData) {
+bool AircraftPresets::preUpdate([[maybe_unused]] sGaugeDrawData* pData) {
   // empty
   return true;
 }
@@ -203,7 +203,7 @@ bool AircraftPresets::update(sGaugeDrawData* pData) {
   return true;
 }
 
-bool AircraftPresets::postUpdate(sGaugeDrawData* pData) {
+bool AircraftPresets::postUpdate([[maybe_unused]] sGaugeDrawData* pData) {
   // empty
   return true;
 }

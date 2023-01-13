@@ -64,13 +64,13 @@ private:
    * Each data definition variable has its own unique id so the sim can map registered data sim
    * objects to data definitions.
    */
-  ID dataDefId = -1;
+  DWORD dataDefId = 0;
 
   /**
    * Each request for sim object data requires a unique id so the sim can provide the request ID
    * in the response (message SIMCONNECT_RECV_ID_SIMOBJECT_DATA).
    */
-  ID requestId = -1;
+  DWORD requestId = 0;
 
   /**
    * Pointer to the data struct that will be used to store the data from the sim.
@@ -207,10 +207,10 @@ public:
   void* getPDataStruct() const { return pDataStruct; }
 
   [[maybe_unused]] [[nodiscard]]
-  ID getDataDefID() const { return dataDefId; }
+  DWORD getDataDefID() const { return dataDefId; }
 
   [[nodiscard]]
-  ID getRequestId() const { return requestId; }
+  DWORD getRequestId() const { return requestId; }
 
   [[nodiscard]]
   bool isAutoRead() const { return autoRead; }

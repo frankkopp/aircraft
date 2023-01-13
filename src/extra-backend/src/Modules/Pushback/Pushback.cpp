@@ -72,7 +72,7 @@ bool Pushback::initialize() {
   return true;
 }
 
-bool Pushback::preUpdate(sGaugeDrawData* pData) {
+bool Pushback::preUpdate([[maybe_unused]]sGaugeDrawData* pData) {
   // empty
   return true;
 }
@@ -149,7 +149,7 @@ bool Pushback::update(sGaugeDrawData* pData) {
   return true;
 }
 
-bool Pushback::postUpdate(sGaugeDrawData* pData) {
+bool Pushback::postUpdate([[maybe_unused]] sGaugeDrawData* pData) {
   //  empty
   return true;
 }

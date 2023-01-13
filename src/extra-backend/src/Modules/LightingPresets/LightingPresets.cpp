@@ -74,12 +74,12 @@ bool LightingPresets::initialize() {
   return true;
 }
 
-bool LightingPresets::preUpdate(sGaugeDrawData* pData) {
+bool LightingPresets::preUpdate([[maybe_unused]] sGaugeDrawData* pData) {
   //  std::cout << "LightingPresets::preUpdate()" << std::endl;
   return true;
 }
 
-bool LightingPresets::update(sGaugeDrawData* pData) {
+bool LightingPresets::update([[maybe_unused]] sGaugeDrawData* pData) {
   if (!isInitialized) {
     std::cerr << "LightingPresets::update() - not initialized" << std::endl;
     return false;
@@ -103,7 +103,7 @@ bool LightingPresets::update(sGaugeDrawData* pData) {
   return true;
 }
 
-bool LightingPresets::postUpdate(sGaugeDrawData* pData) {
+bool LightingPresets::postUpdate([[maybe_unused]] sGaugeDrawData* pData) {
   //  std::cout << "LightingPresets::postUpdate()" << std::endl;
   return true;
 }

@@ -23,6 +23,7 @@ clang++ \
   ${CLANG_ARGS} \
   -std=c++20 \
   -Wall \
+  -Wextra \
   -Wno-unused-function \
   -Wno-unused-command-line-argument \
   -Wno-ignored-attributes \
