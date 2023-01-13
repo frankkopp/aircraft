@@ -135,7 +135,9 @@ NamedVariablePtr DataManager::make_named_var(
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
 
-  // Check if variable already exists and return it if it does
+  // Check if variable already exists
+  // TODO: change the variable so that the shortest required update and write
+  //  times are used
   if (variables.find(varName) != variables.end()) {
     return std::dynamic_pointer_cast<NamedVariable>(variables[varName]);
   }
@@ -159,7 +161,9 @@ AircraftVariablePtr DataManager::make_aircraft_var(
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
 
-  // Check if variable already exists and return it if it does
+  // Check if variable already exists
+  // TODO: change the variable so that the shortest required update and write
+  //  times are used
   const std::string fullName = varName + ":" + std::to_string(0);
   if (variables.find(fullName) != variables.end()) {
     return std::dynamic_pointer_cast<AircraftVariable>(variables[fullName]);
@@ -182,7 +186,9 @@ AircraftVariablePtr DataManager::make_simple_aircraft_var(
   FLOAT64 maxAgeTime,
   UINT64 maxAgeTicks) {
 
-  // Check if variable already exists and return it if it does
+  // Check if variable already exists
+  // TODO: change the variable so that the shortest required update and write
+  //  times are used
   const std::string fullName = varName + ":" + std::to_string(0);
   if (variables.find(fullName) != variables.end()) {
     return std::dynamic_pointer_cast<AircraftVariable>(variables[fullName]);
