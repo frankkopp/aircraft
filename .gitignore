@@ -112,6 +112,8 @@ localazy.keys.json
 # build artifacts
 node_modules/
 target/
+out/
+build/
 obj/
 build/
 out/
